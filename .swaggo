@@ -1,0 +1,5 @@
+replace sql.NullBool docs.NullBool
+replace sql.NullInt64 docs.NullInt64
+replace sql.NullFloat64 docs.NullFloat64
+replace sql.NullString docs.NullString
+replace time.Time docs.NullTime

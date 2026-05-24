@@ -1,0 +1,2646 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API do Observatorio de Medicamentos - Brasil (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil.",
+        "title": "OBM API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/api/v1/admin/reindex": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Reindexa todos os dados (VMPs, AMPs, Fornecedores) no Meilisearch",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Reindexar Meilisearch",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ReindexResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/amp": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Lista Actual Medicinal Products com paginacao e filtros",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AMP"
+                ],
+                "summary": "Listar AMPs",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Limite por pagina",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor de paginacao",
+                        "name": "cursor",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por nome (ILIKE)",
+                        "name": "nome",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por codigo NU_APID",
+                        "name": "codigo",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por nome do fabricante (ILIKE)",
+                        "name": "fabricante",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filtro por status ativo",
+                        "name": "ativo",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/amp/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna um Actual Medicinal Product pelo seu ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AMP"
+                ],
+                "summary": "Obter AMP por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID do AMP",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.AMPResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/amp/{id}/detail": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna um AMP com detalhes completos (VMP, fornecedor, dominios, ingredientes, rotas, etc.)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AMP"
+                ],
+                "summary": "Obter detalhes do AMP",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID do AMP",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.AMPDetailResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/ampp": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Lista Actual Medicinal Product Packs com paginacao e filtros",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AMPP"
+                ],
+                "summary": "Listar AMPPs",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Limite por pagina",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor de paginacao",
+                        "name": "cursor",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por nome (ILIKE)",
+                        "name": "nome",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filtro por status ativo",
+                        "name": "ativo",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/ampp/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna um Actual Medicinal Product Pack pelo seu ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AMPP"
+                ],
+                "summary": "Obter AMPP por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID do AMPP",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.AMPPResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/dcb": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Lista Denominacoes Comuns Brasileiras com paginacao e filtros",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DCB"
+                ],
+                "summary": "Listar DCBs",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Limite por pagina",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor de paginacao",
+                        "name": "cursor",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por nome (ILIKE)",
+                        "name": "nome",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filtro por status ativo",
+                        "name": "ativo",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/dcb/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna uma Denominacao Comum Brasileira pelo seu ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DCB"
+                ],
+                "summary": "Obter DCB por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID do DCB",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.DCBResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/domains/{domain}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Lista dominios (tabelas td_*) por tipo com paginacao e filtros",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Domain"
+                ],
+                "summary": "Listar dominios por tipo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tipo de dominio (form, route, flavour, legal_category, licensing_authority, etc.)",
+                        "name": "domain",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Limite por pagina",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor de paginacao",
+                        "name": "cursor",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por nome (ILIKE)",
+                        "name": "nome",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filtro por status ativo",
+                        "name": "ativo",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/domains/{domain}/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna um dominio especifico pelo tipo e ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Domain"
+                ],
+                "summary": "Obter dominio por tipo e ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tipo de dominio",
+                        "name": "domain",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID do dominio",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.DomainResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/ingredients": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Lista Ingredient Substances com paginacao e filtros",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ingredient"
+                ],
+                "summary": "Listar ingredientes",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Limite por pagina",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor de paginacao",
+                        "name": "cursor",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por nome (ILIKE)",
+                        "name": "nome",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filtro por status ativo",
+                        "name": "ativo",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/ingredients/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna um Ingredient Substance pelo seu ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ingredient"
+                ],
+                "summary": "Obter ingrediente por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID do ingrediente",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.IngredientResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/search": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Busca medicamentos e fornecedores via Meilisearch com filtros",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Busca global",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Termo de busca",
+                        "name": "q",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Entidades para buscar (vmp,amp,supplier). Separadas por virgula",
+                        "name": "entity",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Limite de resultados",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor de paginacao",
+                        "name": "cursor",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por nome",
+                        "name": "filter[nome]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por codigo",
+                        "name": "filter[codigo]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por fabricante",
+                        "name": "filter[fabricante]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por descricao",
+                        "name": "filter[descricao]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por status ativo",
+                        "name": "filter[ativo]",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.SearchResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/suppliers": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Lista fornecedores com paginacao e filtros",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Supplier"
+                ],
+                "summary": "Listar fornecedores",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Limite por pagina",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor de paginacao",
+                        "name": "cursor",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por nome (ILIKE)",
+                        "name": "nome",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por codigo NU_CD",
+                        "name": "codigo",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filtro por status ativo",
+                        "name": "ativo",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/suppliers/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna um fornecedor pelo seu ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Supplier"
+                ],
+                "summary": "Obter fornecedor por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID do fornecedor",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.SupplierResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/vmp": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Lista Virtual Medicinal Products com paginacao e filtros",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "VMP"
+                ],
+                "summary": "Listar VMPs",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Limite por pagina",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor de paginacao",
+                        "name": "cursor",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por nome (ILIKE)",
+                        "name": "nome",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por codigo NU_VPID",
+                        "name": "codigo",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filtro por status ativo",
+                        "name": "ativo",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/vmp/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna um Virtual Medicinal Product pelo seu ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "VMP"
+                ],
+                "summary": "Obter VMP por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID do VMP",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.VMPResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/vmp/{id}/detail": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna um VMP com detalhes completos (VTM, dominios, ingredientes, rotas, formas, etc.)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "VMP"
+                ],
+                "summary": "Obter detalhes do VMP",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID do VMP",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.VMPDetailResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/vmpp": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Lista Virtual Medicinal Product Packs com paginacao e filtros",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "VMPP"
+                ],
+                "summary": "Listar VMPPs",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Limite por pagina",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor de paginacao",
+                        "name": "cursor",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por nome (ILIKE)",
+                        "name": "nome",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filtro por status ativo",
+                        "name": "ativo",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/vmpp/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna um Virtual Medicinal Product Pack pelo seu ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "VMPP"
+                ],
+                "summary": "Obter VMPP por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID do VMPP",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.VMPPResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/vtm": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Lista Virtual Therapeutic Moieties com paginacao e filtros",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "VTM"
+                ],
+                "summary": "Listar VTMs",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Limite por pagina",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor de paginacao",
+                        "name": "cursor",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filtro por nome (ILIKE)",
+                        "name": "nome",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filtro por status ativo",
+                        "name": "ativo",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/vtm/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna um Virtual Therapeutic Moiety pelo seu ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "VTM"
+                ],
+                "summary": "Obter VTM por ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID do VTM",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.VTMResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "description": "Realiza login e retorna token JWT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Autenticar usuario",
+                "parameters": [
+                    {
+                        "description": "Credenciais",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.LoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "description": "Verifica o status do PostgreSQL e Meilisearch",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Health check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.HealthResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "docs.NullBool": {
+            "type": "object",
+            "properties": {
+                "bool": {
+                    "type": "boolean"
+                },
+                "valid": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "docs.NullFloat64": {
+            "type": "object",
+            "properties": {
+                "float64": {
+                    "type": "number"
+                },
+                "valid": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "docs.NullInt64": {
+            "type": "object",
+            "properties": {
+                "int64": {
+                    "type": "integer"
+                },
+                "valid": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "docs.NullString": {
+            "type": "object",
+            "properties": {
+                "string": {
+                    "type": "string"
+                },
+                "valid": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "docs.NullTime": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_domain_entity.AMP": {
+            "type": "object",
+            "properties": {
+                "co_avail_restrictcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_enteraladminstatuscd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_flavourcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_lic_authcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_lic_authchangecd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_medclscd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_monitoringreasoncd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "co_suppcd": {
+                    "type": "integer"
+                },
+                "co_validityunit": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "co_vpid": {
+                    "type": "integer"
+                },
+                "ds_descr": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "ds_enteraltubesadminobs": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_abbrevnm": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_nm": {
+                    "type": "string"
+                },
+                "nu_apid": {
+                    "type": "string"
+                },
+                "nu_nproc": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_nreg": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "nu_validity": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "nu_vencreg": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_combprodcdd": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_parallel_import": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_domain_entity.AMPIngredient": {
+            "type": "object",
+            "properties": {
+                "co_apid": {
+                    "type": "integer"
+                },
+                "co_isid": {
+                    "type": "integer"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "co_uomcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "ingredient_substance": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.IngredientSubstance"
+                },
+                "qt_strnth": {
+                    "$ref": "#/definitions/docs.NullFloat64"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_domain_entity.Domain": {
+            "type": "object",
+            "properties": {
+                "co_alpha_2": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "co_alpha_3": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "co_ffacd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_latitude": {
+                    "$ref": "#/definitions/docs.NullFloat64"
+                },
+                "co_longitude": {
+                    "$ref": "#/definitions/docs.NullFloat64"
+                },
+                "co_parent": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "ds_catmat": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "ds_limitpresc": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "ds_qtypresc": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "ds_scope": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "ds_valpresc": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "dt_cddt": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "no_abbrevnm": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_descr": {
+                    "type": "string"
+                },
+                "no_descr_pt_br": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_horus": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_sigla": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_catmat": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "nu_cd": {
+                    "type": "string"
+                },
+                "nu_version": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "pni_disponivel": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_hierarchy_level": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_domain_entity.IngredientSubstance": {
+            "type": "object",
+            "properties": {
+                "co_dcbcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_isrcid": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_ncas": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "dt_isiddt": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "no_nm": {
+                    "type": "string"
+                },
+                "no_nm_pt_br": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_isid": {
+                    "type": "string"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_domain_entity.SearchHit": {
+            "type": "object",
+            "properties": {
+                "codigo": {
+                    "type": "string"
+                },
+                "descricao": {
+                    "type": "string"
+                },
+                "entity": {
+                    "type": "string"
+                },
+                "fabricante": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "relevance_score": {
+                    "type": "number"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_domain_entity.Supplier": {
+            "type": "object",
+            "properties": {
+                "co_countrycd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "dt_cddt": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "no_descr": {
+                    "type": "string"
+                },
+                "nu_cd": {
+                    "type": "string"
+                },
+                "nu_cnpj": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_nauth": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_domain_entity.VMP": {
+            "type": "object",
+            "properties": {
+                "co_anvsclscd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_basis_prevcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_basiscd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_brimunocd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_df_indcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_nmchangecd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_non_availcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_pres_statcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "co_targetcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_udfs_uomcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_unit_dose_uomcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_vpidprev": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_vtmid": {
+                    "type": "integer"
+                },
+                "ds_notification": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "dt_nmdt": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "dt_non_availdt": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "dt_vpiddt": {
+                    "type": "integer"
+                },
+                "no_abbrevnm": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_nm": {
+                    "type": "string"
+                },
+                "no_nmprev": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_snomed": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_version": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "nu_vpid": {
+                    "type": "string"
+                },
+                "qt_udfs": {
+                    "$ref": "#/definitions/docs.NullFloat64"
+                },
+                "st_cfc_free": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_combprodcdd": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_ftn": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_glu_f": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_horus": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_invalid": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_pres_f": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                },
+                "st_sug_f": {
+                    "$ref": "#/definitions/docs.NullBool"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_domain_entity.VMPIngredient": {
+            "type": "object",
+            "properties": {
+                "co_basis_strntcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_bs_subid": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_iscd": {
+                    "type": "integer"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "co_strnt_dnmtr_uomcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_strnt_nmrtr_uomcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_vmpid": {
+                    "type": "integer"
+                },
+                "ingredient_substance": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.IngredientSubstance"
+                },
+                "qt_strnt_dnmtr_val": {
+                    "$ref": "#/definitions/docs.NullFloat64"
+                },
+                "qt_strnt_nmrtr_val": {
+                    "$ref": "#/definitions/docs.NullFloat64"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_domain_entity.VTM": {
+            "type": "object",
+            "properties": {
+                "au_audit_change_datetime": {
+                    "$ref": "#/definitions/docs.NullTime"
+                },
+                "au_audit_change_username": {
+                    "type": "string"
+                },
+                "au_audit_create_datetime": {
+                    "$ref": "#/definitions/docs.NullTime"
+                },
+                "au_audit_create_username": {
+                    "type": "string"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "no_abbrevnm": {
+                    "type": "string"
+                },
+                "no_nm": {
+                    "type": "string"
+                },
+                "nu_vtmid": {
+                    "type": "integer"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.AMPDetailResponse": {
+            "type": "object",
+            "properties": {
+                "amp": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.AMP"
+                },
+                "avail_restriction": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                },
+                "flavour": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.AMPIngredient"
+                    }
+                },
+                "lic_auth": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                },
+                "med_class": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                },
+                "preserv_conds": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                    }
+                },
+                "routes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                    }
+                },
+                "supplier": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Supplier"
+                },
+                "vmp": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.VMP"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.AMPPResponse": {
+            "type": "object",
+            "properties": {
+                "co_apid": {
+                    "type": "integer"
+                },
+                "co_disccd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_indfarmpopcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_legal_catcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_primarypck": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_secondarypck": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "co_vppid": {
+                    "type": "integer"
+                },
+                "ds_subp": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "dt_discdt": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "dt_regpublic": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "no_nm": {
+                    "type": "string"
+                },
+                "nu_appid": {
+                    "type": "string"
+                },
+                "nu_ean13a": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_ean13b": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_ean13c": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_sanreg": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_combpackcd": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_hosp": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.AMPResponse": {
+            "type": "object",
+            "properties": {
+                "co_avail_restrictcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_enteraladminstatuscd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_flavourcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_lic_authcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_lic_authchangecd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_medclscd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_monitoringreasoncd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "co_suppcd": {
+                    "type": "integer"
+                },
+                "co_validityunit": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "co_vpid": {
+                    "type": "integer"
+                },
+                "ds_descr": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "ds_enteraltubesadminobs": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_abbrevnm": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_nm": {
+                    "type": "string"
+                },
+                "nu_apid": {
+                    "type": "string"
+                },
+                "nu_nproc": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_nreg": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "nu_validity": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "nu_vencreg": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_combprodcdd": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_parallel_import": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.DCBResponse": {
+            "type": "object",
+            "properties": {
+                "co_cas": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "ds_classif": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "ds_dcb": {
+                    "type": "string"
+                },
+                "nu_dcb": {
+                    "type": "integer"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.DomainResponse": {
+            "type": "object",
+            "properties": {
+                "co_alpha_2": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "co_alpha_3": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "co_ffacd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_latitude": {
+                    "$ref": "#/definitions/docs.NullFloat64"
+                },
+                "co_longitude": {
+                    "$ref": "#/definitions/docs.NullFloat64"
+                },
+                "co_parent": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "ds_catmat": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "ds_limitpresc": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "ds_qtypresc": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "ds_scope": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "ds_valpresc": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "dt_cddt": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "no_abbrevnm": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_descr": {
+                    "type": "string"
+                },
+                "no_descr_pt_br": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_horus": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_sigla": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_catmat": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "nu_cd": {
+                    "type": "string"
+                },
+                "nu_version": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "pni_disponivel": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_hierarchy_level": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.HealthResponse": {
+            "type": "object",
+            "properties": {
+                "meilisearch": {
+                    "type": "string"
+                },
+                "postgres": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.IngredientResponse": {
+            "type": "object",
+            "properties": {
+                "co_dcbcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_isrcid": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_ncas": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "dt_isiddt": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "no_nm": {
+                    "type": "string"
+                },
+                "no_nm_pt_br": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_isid": {
+                    "type": "string"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse": {
+            "type": "object",
+            "properties": {
+                "cursor": {
+                    "type": "string"
+                },
+                "items": {},
+                "limit": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "expires_in": {
+                    "type": "integer"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.ReindexResponse": {
+            "type": "object",
+            "properties": {
+                "indexed": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.SearchResponse": {
+            "type": "object",
+            "properties": {
+                "cursor": {
+                    "type": "string"
+                },
+                "entities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "hits": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.SearchHit"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "query": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.SupplierResponse": {
+            "type": "object",
+            "properties": {
+                "co_countrycd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "dt_cddt": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "no_descr": {
+                    "type": "string"
+                },
+                "nu_cd": {
+                    "type": "string"
+                },
+                "nu_cnpj": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_nauth": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.VMPDetailResponse": {
+            "type": "object",
+            "properties": {
+                "anvs_class": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                },
+                "atc_classes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                    }
+                },
+                "basis_of_name": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                },
+                "br_imunologico": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                },
+                "catmats": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                    }
+                },
+                "control_drug_infos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                    }
+                },
+                "df_indicator": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                },
+                "forms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                    }
+                },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.VMPIngredient"
+                    }
+                },
+                "local_aplicacao": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                    }
+                },
+                "pres_status": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                },
+                "renames_br": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                    }
+                },
+                "routes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain"
+                    }
+                },
+                "vmp": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.VMP"
+                },
+                "vtm": {
+                    "$ref": "#/definitions/github_com_silasrm_api-obm_internal_domain_entity.VTM"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.VMPPResponse": {
+            "type": "object",
+            "properties": {
+                "co_qty_uomcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_qty_uomcd_fornecimento": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "co_vpid": {
+                    "type": "integer"
+                },
+                "no_nm": {
+                    "type": "string"
+                },
+                "nu_vppid": {
+                    "type": "string"
+                },
+                "qt_qtyval": {
+                    "$ref": "#/definitions/docs.NullFloat64"
+                },
+                "qt_qtyval_fornecimento": {
+                    "$ref": "#/definitions/docs.NullFloat64"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_combpackcd": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.VMPResponse": {
+            "type": "object",
+            "properties": {
+                "co_anvsclscd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_basis_prevcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_basiscd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_brimunocd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_df_indcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_nmchangecd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_non_availcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_pres_statcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "co_targetcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_udfs_uomcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_unit_dose_uomcd": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_vpidprev": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "co_vtmid": {
+                    "type": "integer"
+                },
+                "ds_notification": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "dt_nmdt": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "dt_non_availdt": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "dt_vpiddt": {
+                    "type": "integer"
+                },
+                "no_abbrevnm": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "no_nm": {
+                    "type": "string"
+                },
+                "no_nmprev": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_snomed": {
+                    "$ref": "#/definitions/docs.NullString"
+                },
+                "nu_version": {
+                    "$ref": "#/definitions/docs.NullInt64"
+                },
+                "nu_vpid": {
+                    "type": "string"
+                },
+                "qt_udfs": {
+                    "$ref": "#/definitions/docs.NullFloat64"
+                },
+                "st_cfc_free": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_combprodcdd": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_ftn": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_glu_f": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_horus": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_invalid": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_pres_f": {
+                    "$ref": "#/definitions/docs.NullBool"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                },
+                "st_sug_f": {
+                    "$ref": "#/definitions/docs.NullBool"
+                }
+            }
+        },
+        "github_com_silasrm_api-obm_internal_interface_http_dto.VTMResponse": {
+            "type": "object",
+            "properties": {
+                "au_audit_change_datetime": {
+                    "$ref": "#/definitions/docs.NullTime"
+                },
+                "au_audit_change_username": {
+                    "type": "string"
+                },
+                "au_audit_create_datetime": {
+                    "$ref": "#/definitions/docs.NullTime"
+                },
+                "au_audit_create_username": {
+                    "type": "string"
+                },
+                "co_seq_id": {
+                    "type": "integer"
+                },
+                "no_abbrevnm": {
+                    "type": "string"
+                },
+                "no_nm": {
+                    "type": "string"
+                },
+                "nu_vtmid": {
+                    "type": "integer"
+                },
+                "st_change_approve": {
+                    "type": "string"
+                },
+                "st_registro_ativo": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Tipo: Bearer \u003ctoken\u003e. Insira o token JWT obtido via /auth/login",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

@@ -1,0 +1,1722 @@
+basePath: /
+definitions:
+  docs.NullBool:
+    properties:
+      bool:
+        type: boolean
+      valid:
+        type: boolean
+    type: object
+  docs.NullFloat64:
+    properties:
+      float64:
+        type: number
+      valid:
+        type: boolean
+    type: object
+  docs.NullInt64:
+    properties:
+      int64:
+        type: integer
+      valid:
+        type: boolean
+    type: object
+  docs.NullString:
+    properties:
+      string:
+        type: string
+      valid:
+        type: boolean
+    type: object
+  docs.NullTime:
+    properties:
+      time:
+        type: string
+      valid:
+        type: boolean
+    type: object
+  github_com_silasrm_api-obm_internal_domain_entity.AMP:
+    properties:
+      co_avail_restrictcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_enteraladminstatuscd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_flavourcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_lic_authcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_lic_authchangecd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_medclscd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_monitoringreasoncd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_seq_id:
+        type: integer
+      co_suppcd:
+        type: integer
+      co_validityunit:
+        $ref: '#/definitions/docs.NullString'
+      co_vpid:
+        type: integer
+      ds_descr:
+        $ref: '#/definitions/docs.NullString'
+      ds_enteraltubesadminobs:
+        $ref: '#/definitions/docs.NullString'
+      no_abbrevnm:
+        $ref: '#/definitions/docs.NullString'
+      no_nm:
+        type: string
+      nu_apid:
+        type: string
+      nu_nproc:
+        $ref: '#/definitions/docs.NullString'
+      nu_nreg:
+        $ref: '#/definitions/docs.NullInt64'
+      nu_validity:
+        $ref: '#/definitions/docs.NullInt64'
+      nu_vencreg:
+        $ref: '#/definitions/docs.NullString'
+      st_change_approve:
+        type: string
+      st_combprodcdd:
+        $ref: '#/definitions/docs.NullBool'
+      st_parallel_import:
+        $ref: '#/definitions/docs.NullBool'
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_domain_entity.AMPIngredient:
+    properties:
+      co_apid:
+        type: integer
+      co_isid:
+        type: integer
+      co_seq_id:
+        type: integer
+      co_uomcd:
+        $ref: '#/definitions/docs.NullInt64'
+      ingredient_substance:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.IngredientSubstance'
+      qt_strnth:
+        $ref: '#/definitions/docs.NullFloat64'
+    type: object
+  github_com_silasrm_api-obm_internal_domain_entity.Domain:
+    properties:
+      co_alpha_2:
+        $ref: '#/definitions/docs.NullString'
+      co_alpha_3:
+        $ref: '#/definitions/docs.NullString'
+      co_ffacd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_latitude:
+        $ref: '#/definitions/docs.NullFloat64'
+      co_longitude:
+        $ref: '#/definitions/docs.NullFloat64'
+      co_parent:
+        $ref: '#/definitions/docs.NullInt64'
+      co_seq_id:
+        type: integer
+      ds_catmat:
+        $ref: '#/definitions/docs.NullString'
+      ds_limitpresc:
+        $ref: '#/definitions/docs.NullString'
+      ds_qtypresc:
+        $ref: '#/definitions/docs.NullString'
+      ds_scope:
+        $ref: '#/definitions/docs.NullString'
+      ds_valpresc:
+        $ref: '#/definitions/docs.NullString'
+      dt_cddt:
+        $ref: '#/definitions/docs.NullInt64'
+      no_abbrevnm:
+        $ref: '#/definitions/docs.NullString'
+      no_descr:
+        type: string
+      no_descr_pt_br:
+        $ref: '#/definitions/docs.NullString'
+      no_horus:
+        $ref: '#/definitions/docs.NullString'
+      no_sigla:
+        $ref: '#/definitions/docs.NullString'
+      nu_catmat:
+        $ref: '#/definitions/docs.NullInt64'
+      nu_cd:
+        type: string
+      nu_version:
+        $ref: '#/definitions/docs.NullInt64'
+      pni_disponivel:
+        $ref: '#/definitions/docs.NullBool'
+      st_change_approve:
+        type: string
+      st_hierarchy_level:
+        $ref: '#/definitions/docs.NullInt64'
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_domain_entity.IngredientSubstance:
+    properties:
+      co_dcbcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_isrcid:
+        $ref: '#/definitions/docs.NullInt64'
+      co_ncas:
+        $ref: '#/definitions/docs.NullString'
+      co_seq_id:
+        type: integer
+      dt_isiddt:
+        $ref: '#/definitions/docs.NullInt64'
+      no_nm:
+        type: string
+      no_nm_pt_br:
+        $ref: '#/definitions/docs.NullString'
+      nu_isid:
+        type: string
+      st_change_approve:
+        type: string
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_domain_entity.SearchHit:
+    properties:
+      codigo:
+        type: string
+      descricao:
+        type: string
+      entity:
+        type: string
+      fabricante:
+        type: string
+      id:
+        type: integer
+      nome:
+        type: string
+      relevance_score:
+        type: number
+    type: object
+  github_com_silasrm_api-obm_internal_domain_entity.Supplier:
+    properties:
+      co_countrycd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_seq_id:
+        type: integer
+      dt_cddt:
+        $ref: '#/definitions/docs.NullInt64'
+      no_descr:
+        type: string
+      nu_cd:
+        type: string
+      nu_cnpj:
+        $ref: '#/definitions/docs.NullString'
+      nu_nauth:
+        $ref: '#/definitions/docs.NullInt64'
+      st_change_approve:
+        type: string
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_domain_entity.VMP:
+    properties:
+      co_anvsclscd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_basis_prevcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_basiscd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_brimunocd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_df_indcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_nmchangecd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_non_availcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_pres_statcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_seq_id:
+        type: integer
+      co_targetcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_udfs_uomcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_unit_dose_uomcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_vpidprev:
+        $ref: '#/definitions/docs.NullInt64'
+      co_vtmid:
+        type: integer
+      ds_notification:
+        $ref: '#/definitions/docs.NullString'
+      dt_nmdt:
+        $ref: '#/definitions/docs.NullInt64'
+      dt_non_availdt:
+        $ref: '#/definitions/docs.NullInt64'
+      dt_vpiddt:
+        type: integer
+      no_abbrevnm:
+        $ref: '#/definitions/docs.NullString'
+      no_nm:
+        type: string
+      no_nmprev:
+        $ref: '#/definitions/docs.NullString'
+      nu_snomed:
+        $ref: '#/definitions/docs.NullString'
+      nu_version:
+        $ref: '#/definitions/docs.NullInt64'
+      nu_vpid:
+        type: string
+      qt_udfs:
+        $ref: '#/definitions/docs.NullFloat64'
+      st_cfc_free:
+        $ref: '#/definitions/docs.NullBool'
+      st_change_approve:
+        type: string
+      st_combprodcdd:
+        $ref: '#/definitions/docs.NullBool'
+      st_ftn:
+        $ref: '#/definitions/docs.NullBool'
+      st_glu_f:
+        $ref: '#/definitions/docs.NullBool'
+      st_horus:
+        $ref: '#/definitions/docs.NullBool'
+      st_invalid:
+        $ref: '#/definitions/docs.NullBool'
+      st_pres_f:
+        $ref: '#/definitions/docs.NullBool'
+      st_registro_ativo:
+        type: string
+      st_sug_f:
+        $ref: '#/definitions/docs.NullBool'
+    type: object
+  github_com_silasrm_api-obm_internal_domain_entity.VMPIngredient:
+    properties:
+      co_basis_strntcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_bs_subid:
+        $ref: '#/definitions/docs.NullInt64'
+      co_iscd:
+        type: integer
+      co_seq_id:
+        type: integer
+      co_strnt_dnmtr_uomcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_strnt_nmrtr_uomcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_vmpid:
+        type: integer
+      ingredient_substance:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.IngredientSubstance'
+      qt_strnt_dnmtr_val:
+        $ref: '#/definitions/docs.NullFloat64'
+      qt_strnt_nmrtr_val:
+        $ref: '#/definitions/docs.NullFloat64'
+    type: object
+  github_com_silasrm_api-obm_internal_domain_entity.VTM:
+    properties:
+      au_audit_change_datetime:
+        $ref: '#/definitions/docs.NullTime'
+      au_audit_change_username:
+        type: string
+      au_audit_create_datetime:
+        $ref: '#/definitions/docs.NullTime'
+      au_audit_create_username:
+        type: string
+      co_seq_id:
+        type: integer
+      no_abbrevnm:
+        type: string
+      no_nm:
+        type: string
+      nu_vtmid:
+        type: integer
+      st_change_approve:
+        type: string
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.AMPDetailResponse:
+    properties:
+      amp:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.AMP'
+      avail_restriction:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+      flavour:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+      ingredients:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.AMPIngredient'
+        type: array
+      lic_auth:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+      med_class:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+      preserv_conds:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+        type: array
+      routes:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+        type: array
+      supplier:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Supplier'
+      vmp:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.VMP'
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.AMPPResponse:
+    properties:
+      co_apid:
+        type: integer
+      co_disccd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_indfarmpopcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_legal_catcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_primarypck:
+        $ref: '#/definitions/docs.NullInt64'
+      co_secondarypck:
+        $ref: '#/definitions/docs.NullInt64'
+      co_seq_id:
+        type: integer
+      co_vppid:
+        type: integer
+      ds_subp:
+        $ref: '#/definitions/docs.NullString'
+      dt_discdt:
+        $ref: '#/definitions/docs.NullInt64'
+      dt_regpublic:
+        $ref: '#/definitions/docs.NullInt64'
+      no_nm:
+        type: string
+      nu_appid:
+        type: string
+      nu_ean13a:
+        $ref: '#/definitions/docs.NullString'
+      nu_ean13b:
+        $ref: '#/definitions/docs.NullString'
+      nu_ean13c:
+        $ref: '#/definitions/docs.NullString'
+      nu_sanreg:
+        $ref: '#/definitions/docs.NullInt64'
+      st_change_approve:
+        type: string
+      st_combpackcd:
+        $ref: '#/definitions/docs.NullBool'
+      st_hosp:
+        $ref: '#/definitions/docs.NullBool'
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.AMPResponse:
+    properties:
+      co_avail_restrictcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_enteraladminstatuscd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_flavourcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_lic_authcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_lic_authchangecd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_medclscd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_monitoringreasoncd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_seq_id:
+        type: integer
+      co_suppcd:
+        type: integer
+      co_validityunit:
+        $ref: '#/definitions/docs.NullString'
+      co_vpid:
+        type: integer
+      ds_descr:
+        $ref: '#/definitions/docs.NullString'
+      ds_enteraltubesadminobs:
+        $ref: '#/definitions/docs.NullString'
+      no_abbrevnm:
+        $ref: '#/definitions/docs.NullString'
+      no_nm:
+        type: string
+      nu_apid:
+        type: string
+      nu_nproc:
+        $ref: '#/definitions/docs.NullString'
+      nu_nreg:
+        $ref: '#/definitions/docs.NullInt64'
+      nu_validity:
+        $ref: '#/definitions/docs.NullInt64'
+      nu_vencreg:
+        $ref: '#/definitions/docs.NullString'
+      st_change_approve:
+        type: string
+      st_combprodcdd:
+        $ref: '#/definitions/docs.NullBool'
+      st_parallel_import:
+        $ref: '#/definitions/docs.NullBool'
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.DCBResponse:
+    properties:
+      co_cas:
+        $ref: '#/definitions/docs.NullString'
+      co_seq_id:
+        type: integer
+      ds_classif:
+        $ref: '#/definitions/docs.NullString'
+      ds_dcb:
+        type: string
+      nu_dcb:
+        type: integer
+      st_change_approve:
+        type: string
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.DomainResponse:
+    properties:
+      co_alpha_2:
+        $ref: '#/definitions/docs.NullString'
+      co_alpha_3:
+        $ref: '#/definitions/docs.NullString'
+      co_ffacd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_latitude:
+        $ref: '#/definitions/docs.NullFloat64'
+      co_longitude:
+        $ref: '#/definitions/docs.NullFloat64'
+      co_parent:
+        $ref: '#/definitions/docs.NullInt64'
+      co_seq_id:
+        type: integer
+      ds_catmat:
+        $ref: '#/definitions/docs.NullString'
+      ds_limitpresc:
+        $ref: '#/definitions/docs.NullString'
+      ds_qtypresc:
+        $ref: '#/definitions/docs.NullString'
+      ds_scope:
+        $ref: '#/definitions/docs.NullString'
+      ds_valpresc:
+        $ref: '#/definitions/docs.NullString'
+      dt_cddt:
+        $ref: '#/definitions/docs.NullInt64'
+      no_abbrevnm:
+        $ref: '#/definitions/docs.NullString'
+      no_descr:
+        type: string
+      no_descr_pt_br:
+        $ref: '#/definitions/docs.NullString'
+      no_horus:
+        $ref: '#/definitions/docs.NullString'
+      no_sigla:
+        $ref: '#/definitions/docs.NullString'
+      nu_catmat:
+        $ref: '#/definitions/docs.NullInt64'
+      nu_cd:
+        type: string
+      nu_version:
+        $ref: '#/definitions/docs.NullInt64'
+      pni_disponivel:
+        $ref: '#/definitions/docs.NullBool'
+      st_change_approve:
+        type: string
+      st_hierarchy_level:
+        $ref: '#/definitions/docs.NullInt64'
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      error:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.HealthResponse:
+    properties:
+      meilisearch:
+        type: string
+      postgres:
+        type: string
+      status:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.IngredientResponse:
+    properties:
+      co_dcbcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_isrcid:
+        $ref: '#/definitions/docs.NullInt64'
+      co_ncas:
+        $ref: '#/definitions/docs.NullString'
+      co_seq_id:
+        type: integer
+      dt_isiddt:
+        $ref: '#/definitions/docs.NullInt64'
+      no_nm:
+        type: string
+      no_nm_pt_br:
+        $ref: '#/definitions/docs.NullString'
+      nu_isid:
+        type: string
+      st_change_approve:
+        type: string
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse:
+    properties:
+      cursor:
+        type: string
+      items: {}
+      limit:
+        type: integer
+      total:
+        type: integer
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.LoginResponse:
+    properties:
+      expires_in:
+        type: integer
+      token:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.ReindexResponse:
+    properties:
+      indexed:
+        additionalProperties:
+          format: int64
+          type: integer
+        type: object
+      status:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.SearchResponse:
+    properties:
+      cursor:
+        type: string
+      entities:
+        items:
+          type: string
+        type: array
+      hits:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.SearchHit'
+        type: array
+      limit:
+        type: integer
+      query:
+        type: string
+      total:
+        type: integer
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.SupplierResponse:
+    properties:
+      co_countrycd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_seq_id:
+        type: integer
+      dt_cddt:
+        $ref: '#/definitions/docs.NullInt64'
+      no_descr:
+        type: string
+      nu_cd:
+        type: string
+      nu_cnpj:
+        $ref: '#/definitions/docs.NullString'
+      nu_nauth:
+        $ref: '#/definitions/docs.NullInt64'
+      st_change_approve:
+        type: string
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.VMPDetailResponse:
+    properties:
+      anvs_class:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+      atc_classes:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+        type: array
+      basis_of_name:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+      br_imunologico:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+      catmats:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+        type: array
+      control_drug_infos:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+        type: array
+      df_indicator:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+      forms:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+        type: array
+      ingredients:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.VMPIngredient'
+        type: array
+      local_aplicacao:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+        type: array
+      pres_status:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+      renames_br:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+        type: array
+      routes:
+        items:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.Domain'
+        type: array
+      vmp:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.VMP'
+      vtm:
+        $ref: '#/definitions/github_com_silasrm_api-obm_internal_domain_entity.VTM'
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.VMPPResponse:
+    properties:
+      co_qty_uomcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_qty_uomcd_fornecimento:
+        $ref: '#/definitions/docs.NullInt64'
+      co_seq_id:
+        type: integer
+      co_vpid:
+        type: integer
+      no_nm:
+        type: string
+      nu_vppid:
+        type: string
+      qt_qtyval:
+        $ref: '#/definitions/docs.NullFloat64'
+      qt_qtyval_fornecimento:
+        $ref: '#/definitions/docs.NullFloat64'
+      st_change_approve:
+        type: string
+      st_combpackcd:
+        $ref: '#/definitions/docs.NullBool'
+      st_registro_ativo:
+        type: string
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.VMPResponse:
+    properties:
+      co_anvsclscd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_basis_prevcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_basiscd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_brimunocd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_df_indcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_nmchangecd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_non_availcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_pres_statcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_seq_id:
+        type: integer
+      co_targetcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_udfs_uomcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_unit_dose_uomcd:
+        $ref: '#/definitions/docs.NullInt64'
+      co_vpidprev:
+        $ref: '#/definitions/docs.NullInt64'
+      co_vtmid:
+        type: integer
+      ds_notification:
+        $ref: '#/definitions/docs.NullString'
+      dt_nmdt:
+        $ref: '#/definitions/docs.NullInt64'
+      dt_non_availdt:
+        $ref: '#/definitions/docs.NullInt64'
+      dt_vpiddt:
+        type: integer
+      no_abbrevnm:
+        $ref: '#/definitions/docs.NullString'
+      no_nm:
+        type: string
+      no_nmprev:
+        $ref: '#/definitions/docs.NullString'
+      nu_snomed:
+        $ref: '#/definitions/docs.NullString'
+      nu_version:
+        $ref: '#/definitions/docs.NullInt64'
+      nu_vpid:
+        type: string
+      qt_udfs:
+        $ref: '#/definitions/docs.NullFloat64'
+      st_cfc_free:
+        $ref: '#/definitions/docs.NullBool'
+      st_change_approve:
+        type: string
+      st_combprodcdd:
+        $ref: '#/definitions/docs.NullBool'
+      st_ftn:
+        $ref: '#/definitions/docs.NullBool'
+      st_glu_f:
+        $ref: '#/definitions/docs.NullBool'
+      st_horus:
+        $ref: '#/definitions/docs.NullBool'
+      st_invalid:
+        $ref: '#/definitions/docs.NullBool'
+      st_pres_f:
+        $ref: '#/definitions/docs.NullBool'
+      st_registro_ativo:
+        type: string
+      st_sug_f:
+        $ref: '#/definitions/docs.NullBool'
+    type: object
+  github_com_silasrm_api-obm_internal_interface_http_dto.VTMResponse:
+    properties:
+      au_audit_change_datetime:
+        $ref: '#/definitions/docs.NullTime'
+      au_audit_change_username:
+        type: string
+      au_audit_create_datetime:
+        $ref: '#/definitions/docs.NullTime'
+      au_audit_create_username:
+        type: string
+      co_seq_id:
+        type: integer
+      no_abbrevnm:
+        type: string
+      no_nm:
+        type: string
+      nu_vtmid:
+        type: integer
+      st_change_approve:
+        type: string
+      st_registro_ativo:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API do Observatorio de Medicamentos - Brasil (OBM). Gerencia dados
+    de medicamentos seguindo o padrao dm%d adaptado para o Brasil.
+  title: OBM API
+  version: "1.0"
+paths:
+  /api/v1/admin/reindex:
+    post:
+      description: Reindexa todos os dados (VMPs, AMPs, Fornecedores) no Meilisearch
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ReindexResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Reindexar Meilisearch
+      tags:
+      - Admin
+  /api/v1/amp:
+    get:
+      description: Lista Actual Medicinal Products com paginacao e filtros
+      parameters:
+      - default: 20
+        description: Limite por pagina
+        in: query
+        name: limit
+        type: integer
+      - description: Cursor de paginacao
+        in: query
+        name: cursor
+        type: string
+      - description: Filtro por nome (ILIKE)
+        in: query
+        name: nome
+        type: string
+      - description: Filtro por codigo NU_APID
+        in: query
+        name: codigo
+        type: string
+      - description: Filtro por nome do fabricante (ILIKE)
+        in: query
+        name: fabricante
+        type: string
+      - description: Filtro por status ativo
+        in: query
+        name: ativo
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar AMPs
+      tags:
+      - AMP
+  /api/v1/amp/{id}:
+    get:
+      description: Retorna um Actual Medicinal Product pelo seu ID
+      parameters:
+      - description: ID do AMP
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.AMPResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter AMP por ID
+      tags:
+      - AMP
+  /api/v1/amp/{id}/detail:
+    get:
+      description: Retorna um AMP com detalhes completos (VMP, fornecedor, dominios,
+        ingredientes, rotas, etc.)
+      parameters:
+      - description: ID do AMP
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.AMPDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter detalhes do AMP
+      tags:
+      - AMP
+  /api/v1/ampp:
+    get:
+      description: Lista Actual Medicinal Product Packs com paginacao e filtros
+      parameters:
+      - default: 20
+        description: Limite por pagina
+        in: query
+        name: limit
+        type: integer
+      - description: Cursor de paginacao
+        in: query
+        name: cursor
+        type: string
+      - description: Filtro por nome (ILIKE)
+        in: query
+        name: nome
+        type: string
+      - description: Filtro por status ativo
+        in: query
+        name: ativo
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar AMPPs
+      tags:
+      - AMPP
+  /api/v1/ampp/{id}:
+    get:
+      description: Retorna um Actual Medicinal Product Pack pelo seu ID
+      parameters:
+      - description: ID do AMPP
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.AMPPResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter AMPP por ID
+      tags:
+      - AMPP
+  /api/v1/dcb:
+    get:
+      description: Lista Denominacoes Comuns Brasileiras com paginacao e filtros
+      parameters:
+      - default: 20
+        description: Limite por pagina
+        in: query
+        name: limit
+        type: integer
+      - description: Cursor de paginacao
+        in: query
+        name: cursor
+        type: string
+      - description: Filtro por nome (ILIKE)
+        in: query
+        name: nome
+        type: string
+      - description: Filtro por status ativo
+        in: query
+        name: ativo
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar DCBs
+      tags:
+      - DCB
+  /api/v1/dcb/{id}:
+    get:
+      description: Retorna uma Denominacao Comum Brasileira pelo seu ID
+      parameters:
+      - description: ID do DCB
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.DCBResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter DCB por ID
+      tags:
+      - DCB
+  /api/v1/domains/{domain}:
+    get:
+      description: Lista dominios (tabelas td_*) por tipo com paginacao e filtros
+      parameters:
+      - description: Tipo de dominio (form, route, flavour, legal_category, licensing_authority,
+          etc.)
+        in: path
+        name: domain
+        required: true
+        type: string
+      - default: 20
+        description: Limite por pagina
+        in: query
+        name: limit
+        type: integer
+      - description: Cursor de paginacao
+        in: query
+        name: cursor
+        type: string
+      - description: Filtro por nome (ILIKE)
+        in: query
+        name: nome
+        type: string
+      - description: Filtro por status ativo
+        in: query
+        name: ativo
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar dominios por tipo
+      tags:
+      - Domain
+  /api/v1/domains/{domain}/{id}:
+    get:
+      description: Retorna um dominio especifico pelo tipo e ID
+      parameters:
+      - description: Tipo de dominio
+        in: path
+        name: domain
+        required: true
+        type: string
+      - description: ID do dominio
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.DomainResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter dominio por tipo e ID
+      tags:
+      - Domain
+  /api/v1/ingredients:
+    get:
+      description: Lista Ingredient Substances com paginacao e filtros
+      parameters:
+      - default: 20
+        description: Limite por pagina
+        in: query
+        name: limit
+        type: integer
+      - description: Cursor de paginacao
+        in: query
+        name: cursor
+        type: string
+      - description: Filtro por nome (ILIKE)
+        in: query
+        name: nome
+        type: string
+      - description: Filtro por status ativo
+        in: query
+        name: ativo
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar ingredientes
+      tags:
+      - Ingredient
+  /api/v1/ingredients/{id}:
+    get:
+      description: Retorna um Ingredient Substance pelo seu ID
+      parameters:
+      - description: ID do ingrediente
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.IngredientResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter ingrediente por ID
+      tags:
+      - Ingredient
+  /api/v1/search:
+    get:
+      description: Busca medicamentos e fornecedores via Meilisearch com filtros
+      parameters:
+      - description: Termo de busca
+        in: query
+        name: q
+        required: true
+        type: string
+      - description: Entidades para buscar (vmp,amp,supplier). Separadas por virgula
+        in: query
+        name: entity
+        type: string
+      - default: 20
+        description: Limite de resultados
+        in: query
+        name: limit
+        type: integer
+      - description: Cursor de paginacao
+        in: query
+        name: cursor
+        type: string
+      - description: Filtro por nome
+        in: query
+        name: filter[nome]
+        type: string
+      - description: Filtro por codigo
+        in: query
+        name: filter[codigo]
+        type: string
+      - description: Filtro por fabricante
+        in: query
+        name: filter[fabricante]
+        type: string
+      - description: Filtro por descricao
+        in: query
+        name: filter[descricao]
+        type: string
+      - description: Filtro por status ativo
+        in: query
+        name: filter[ativo]
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.SearchResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Busca global
+      tags:
+      - Search
+  /api/v1/suppliers:
+    get:
+      description: Lista fornecedores com paginacao e filtros
+      parameters:
+      - default: 20
+        description: Limite por pagina
+        in: query
+        name: limit
+        type: integer
+      - description: Cursor de paginacao
+        in: query
+        name: cursor
+        type: string
+      - description: Filtro por nome (ILIKE)
+        in: query
+        name: nome
+        type: string
+      - description: Filtro por codigo NU_CD
+        in: query
+        name: codigo
+        type: string
+      - description: Filtro por status ativo
+        in: query
+        name: ativo
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar fornecedores
+      tags:
+      - Supplier
+  /api/v1/suppliers/{id}:
+    get:
+      description: Retorna um fornecedor pelo seu ID
+      parameters:
+      - description: ID do fornecedor
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.SupplierResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter fornecedor por ID
+      tags:
+      - Supplier
+  /api/v1/vmp:
+    get:
+      description: Lista Virtual Medicinal Products com paginacao e filtros
+      parameters:
+      - default: 20
+        description: Limite por pagina
+        in: query
+        name: limit
+        type: integer
+      - description: Cursor de paginacao
+        in: query
+        name: cursor
+        type: string
+      - description: Filtro por nome (ILIKE)
+        in: query
+        name: nome
+        type: string
+      - description: Filtro por codigo NU_VPID
+        in: query
+        name: codigo
+        type: string
+      - description: Filtro por status ativo
+        in: query
+        name: ativo
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar VMPs
+      tags:
+      - VMP
+  /api/v1/vmp/{id}:
+    get:
+      description: Retorna um Virtual Medicinal Product pelo seu ID
+      parameters:
+      - description: ID do VMP
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.VMPResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter VMP por ID
+      tags:
+      - VMP
+  /api/v1/vmp/{id}/detail:
+    get:
+      description: Retorna um VMP com detalhes completos (VTM, dominios, ingredientes,
+        rotas, formas, etc.)
+      parameters:
+      - description: ID do VMP
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.VMPDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter detalhes do VMP
+      tags:
+      - VMP
+  /api/v1/vmpp:
+    get:
+      description: Lista Virtual Medicinal Product Packs com paginacao e filtros
+      parameters:
+      - default: 20
+        description: Limite por pagina
+        in: query
+        name: limit
+        type: integer
+      - description: Cursor de paginacao
+        in: query
+        name: cursor
+        type: string
+      - description: Filtro por nome (ILIKE)
+        in: query
+        name: nome
+        type: string
+      - description: Filtro por status ativo
+        in: query
+        name: ativo
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar VMPPs
+      tags:
+      - VMPP
+  /api/v1/vmpp/{id}:
+    get:
+      description: Retorna um Virtual Medicinal Product Pack pelo seu ID
+      parameters:
+      - description: ID do VMPP
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.VMPPResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter VMPP por ID
+      tags:
+      - VMPP
+  /api/v1/vtm:
+    get:
+      description: Lista Virtual Therapeutic Moieties com paginacao e filtros
+      parameters:
+      - default: 20
+        description: Limite por pagina
+        in: query
+        name: limit
+        type: integer
+      - description: Cursor de paginacao
+        in: query
+        name: cursor
+        type: string
+      - description: Filtro por nome (ILIKE)
+        in: query
+        name: nome
+        type: string
+      - description: Filtro por status ativo
+        in: query
+        name: ativo
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar VTMs
+      tags:
+      - VTM
+  /api/v1/vtm/{id}:
+    get:
+      description: Retorna um Virtual Therapeutic Moiety pelo seu ID
+      parameters:
+      - description: ID do VTM
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.VTMResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obter VTM por ID
+      tags:
+      - VTM
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Realiza login e retorna token JWT
+      parameters:
+      - description: Credenciais
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
+      summary: Autenticar usuario
+      tags:
+      - Auth
+  /health:
+    get:
+      description: Verifica o status do PostgreSQL e Meilisearch
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.HealthResponse'
+      summary: Health check
+      tags:
+      - Health
+securityDefinitions:
+  BearerAuth:
+    description: 'Tipo: Bearer <token>. Insira o token JWT obtido via /auth/login'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

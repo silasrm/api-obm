@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_USER: obm
+      PG_PASSWORD: obm123
+      PG_DATABASE: dbportalobm
+      PG_SSLMODE: disable
+      MEILI_URL: http://meilisearch:7700
+      MEILI_API_KEY: masterKey
+      MEILI_INDEX_PREFIX: obm_
+      JWT_SECRET: obm-secret-key-change-in-prod
+      JWT_EXPIRATION_HOURS: 24
+      SERVER_PORT: 8080
+      GIN_MODE: release
+      SYNC_ON_STARTUP: "true"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: dbportalobm
+      POSTGRES_USER: obm
+      POSTGRES_PASSWORD: obm123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./migrations/postgres:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U obm -d dbportalobm"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.8
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_MASTER_KEY: masterKey
+      MEILI_ENV: production
+    volumes:
+      - meilidata:/meili_data
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost:7700/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+  meilidata:

@@ -1,0 +1,21 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "db/queries"
+    schema: "migrations/postgres"
+    gen:
+      go:
+        package: "sqlcgen"
+        out: "internal/infrastructure/persistence/postgres/sqlcgen"
+        sql_package: "pgx/v5"
+        emit_json_tags: true
+        emit_empty_slices: true
+        overrides:
+          - db_type: "bigint"
+            go_type: "int64"
+          - db_type: "smallint"
+            go_type: "int16"
+          - db_type: "decimal"
+            go_type: "float64"
+          - db_type: "double_precision"
+            go_type: "float64"
