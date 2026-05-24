@@ -4,5 +4,6 @@ data/
 *.db
 /api-obm
 /api
+/import
 tmp/
 migrations/postgres/001_obm_schema.sql

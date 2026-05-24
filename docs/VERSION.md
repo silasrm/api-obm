@@ -1,15 +1,53 @@
-# Centralizador de Versão - API OBM
+# Centralizador de Versão — API OBM
 
 > **ATENÇÃO**: Este é o arquivo de referência e auditoria da versão atual da API. Todas as builds, tags no git ou release notes devem referenciar a versão travada aqui.
 
 ## Versão Atual
 
 ```
-Versão: 1.0.0
+Versão: 1.1.0
 Release Date: 2026-05-24
 Timezone: America/Sao_Paulo
 Status: Released
 ```
+
+### v1.1.0 (2026-05-24)
+
+**Status:** Released
+
+**Mudanças:**
+
+- feat: CLI de importação (`cmd/import/`) com pipeline completo — resolução de fonte (ZIP, SQL, gzip, MySQL), conversão MySQL→PostgreSQL, importação via streaming, validação pós-importação, rastreamento de metadados e reindexação do Meilisearch
+- feat: Conversor MySQL→PostgreSQL refatorado como pacote reutilizável (`internal/importer/converter.go`)
+- feat: Resolvedor de fonte com suporte a ZIP, SQL, SQL.GZ e URI `mysql://` (`internal/importer/source.go`)
+- feat: Importador PostgreSQL com streaming via `io.Pipe` e progresso em tempo real (`internal/importer/pgimporter.go`)
+- feat: Validador pós-importação com contagem de registros e verificação de integridade referencial (`internal/importer/validator.go`)
+- feat: Gerenciador de metadados da importação — tabela `obm_metadata` (`internal/importer/metadata.go`)
+- feat: Orquestrador de pipeline com suporte a `--convert-only`, `--reindex-only`, `--skip-index`, `--validate`, `--full` (`internal/importer/pipeline.go`)
+- feat: Documentação do projeto (.specs/project/ — PROJECT.md, ROADMAP.md, STATE.md)
+- fix: Revisão ortográfica completa em português brasileiro em todas as mensagens do importador e documentação
+- fix: Binário `import` adicionado ao `.gitignore`
+- refactor: `scripts/convert_sql.go` agora é um invólucro fino chamando `internal/importer/converter.go`
+
+**Arquivos novos:**
+
+- `cmd/import/main.go` — Entry point do CLI de importação
+- `internal/importer/converter.go` — Conversor MySQL→PostgreSQL (pacote reutilizável)
+- `internal/importer/source.go` — Resolvedor de fonte (ZIP/SQL/gzip/MySQL)
+- `internal/importer/pgimporter.go` — Importador PostgreSQL com streaming
+- `internal/importer/validator.go` — Validador pós-importação
+- `internal/importer/metadata.go` — Gerenciador de metadados (tabela `obm_metadata`)
+- `internal/importer/pipeline.go` — Orquestrador do pipeline de importação
+- `.specs/project/PROJECT.md` — Visão, objetivos, stack e arquitetura do projeto
+- `.specs/project/ROADMAP.md` — Roadmap de funcionalidades e milestones
+- `.specs/project/STATE.md` — Memória persistente (decisões, bloqueios, lições)
+- `docs/release-notes/v1.1.0.md` — Release notes desta versão
+
+**Arquivos modificados:**
+
+- `scripts/convert_sql.go` — Refatorado para invólucro fino do pacote `internal/importer`
+- `README.md` — Seção dedicada "CLI de Importação" + revisão ortográfica pt-BR
+- `.gitignore` — Adicionado binário `import`
 
 ### v1.0.0 (2026-05-24)
 
@@ -82,4 +120,5 @@ Status: Released
 
 | Versão | Data | Descrição |
 |--------|------|-----------|
+| `v1.1.0` | 24/05/2026 | **feat: CLI de importação** — Pipeline completo de importação (ZIP/SQL/MySQL → PostgreSQL + Meilisearch). Conversor refatorado como pacote reutilizável. Validação pós-importação. Metadados. Revisão ortográfica pt-BR. |
 | `v1.0.0` | 24/05/2026 | **feat: Release inicial da API OBM** — API REST completa com endpoints para VMP, AMP, VTM, VMPP, AMPP, DCB, Ingredientes, Fornecedores e Domínios. Busca global Meilisearch. Autenticação JWT. Swagger UI. Postman. Docker Compose. Testes. Documentação de usuário. |
