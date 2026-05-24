@@ -13,7 +13,7 @@
 docker-compose up postgres meilisearch -d
 ```
 
-Aguardar os healthchecks passarem (~30s). O schema SQL sera carregado automaticamente pelo volume `./migrations/postgres:/docker-entrypoint-initdb.d`.
+Aguardar os healthchecks passarem (~30s). O PostgreSQL estara disponivel na porta 5433 do host. O schema SQL sera carregado automaticamente pelo volume `./migrations/postgres:/docker-entrypoint-initdb.d`.
 
 > **Atencao**: o arquivo `001_obm_schema.sql` tem ~1.1 milhao de linhas. O carregamento inicial pode levar varios minutos. Monitore com:
 > ```bash
