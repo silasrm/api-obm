@@ -89,7 +89,7 @@ func main() {
 		Info: PostmanInfo{
 			Name:        "OBM API",
 			Schema:      "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-			Description: "API do Observatorio de Medicamentos - Brasil (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil.",
+			Description: "API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil.",
 		},
 		Variable: []PostmanVar{
 			{Key: "base_url", Value: "http://localhost:8094", Enabled: true},

@@ -2,7 +2,7 @@
   "info": {
     "name": "OBM API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "API do Observatorio de Medicamentos - Brasil (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil."
+    "description": "API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil."
   },
   "item": [
     {

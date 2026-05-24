@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "API do Observatorio de Medicamentos - Brasil (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil.",
+        "description": "API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil.",
         "title": "OBM API",
         "contact": {},
         "version": "1.0"

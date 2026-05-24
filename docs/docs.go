@@ -2658,7 +2658,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "OBM API",
-	Description:      "API do Observatorio de Medicamentos - Brasil (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil.",
+Description: "API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

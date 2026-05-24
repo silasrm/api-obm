@@ -1,6 +1,6 @@
 // @title OBM API
 // @version 1.0
-// @description API do Observatorio de Medicamentos - Brasil (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil.
+// @description API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil.
 // @host localhost:8094
 // @BasePath /
 // @securityDefinitions.apikey BearerAuth
