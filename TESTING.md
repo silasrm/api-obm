@@ -331,6 +331,31 @@ http://localhost:8094/swagger/index.html
 
 Permite testar todos os endpoints interativamente com autenticacao Bearer.
 
+## 10. Postman
+
+Uma collection Postman esta disponivel em `postman/OBM_API.postman_collection.json` com todos os endpoints organizados por categoria.
+
+### Importar no Postman
+
+1. Abra o Postman
+2. Clique em **Import**
+3. Selecione o arquivo `postman/OBM_API.postman_collection.json`
+4. Importe tambem o ambiente `postman/OBM_API_Local.postman_environment.json`
+5. Selecione o ambiente **OBM API - Local** no canto superior direito
+
+### Configurar token
+
+1. Faca login via o request **Auth > Login**
+2. Copie o token da resposta
+3. Clique no ambiente **OBM API - Local** e cole o token na variavel `token`
+4. Todos os requests protegidos usarao automaticamente o Bearer token
+
+### Regenerar a collection
+
+```bash
+go run scripts/gen_postman.go
+```
+
 ## 10. Testar via Docker (build completo)
 
 ```bash

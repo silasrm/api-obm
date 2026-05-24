@@ -3,5 +3,5 @@ data/
 *.exe
 *.db
 /api-obm
-tmp/
 /api
+tmp/
