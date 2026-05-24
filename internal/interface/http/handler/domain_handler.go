@@ -19,13 +19,13 @@ func NewDomainHandler(uc *usecase.DomainUsecase) *DomainHandler {
 
 // ListDomains godoc
 // @Summary Listar dominios por tipo
-// @Description Lista dominios (tabelas td_*) por tipo com paginacao e filtros
+// @Description Lista domínios (tabelas td_*) por tipo com paginação e filtros
 // @Tags Domain
 // @Produce json
 // @Security BearerAuth
-// @Param domain path string true "Tipo de dominio (form, route, flavour, legal_category, licensing_authority, etc.)"
-// @Param limit query int false "Limite por pagina" default(20)
-// @Param cursor query string false "Cursor de paginacao"
+// @Param domain path string true "Tipo de domínio (form, route, flavour, legal_category, licensing_authority, etc.)"
+// @Param limit query int false "Limite por página" default(20)
+// @Param cursor query string false "Cursor de paginação"
 // @Param nome query string false "Filtro por nome (ILIKE)"
 // @Param ativo query bool false "Filtro por status ativo"
 // @Success 200 {object} dto.ListResponse
@@ -53,13 +53,13 @@ func (h *DomainHandler) List(c *gin.Context) {
 }
 
 // GetDomain godoc
-// @Summary Obter dominio por tipo e ID
-// @Description Retorna um dominio especifico pelo tipo e ID
+// @Summary Obter domínio por tipo e ID
+// @Description Retorna um domínio específico pelo tipo e ID
 // @Tags Domain
 // @Produce json
 // @Security BearerAuth
-// @Param domain path string true "Tipo de dominio"
-// @Param id path int true "ID do dominio"
+// @Param domain path string true "Tipo de domínio"
+// @Param id path int true "ID do domínio"
 // @Success 200 {object} dto.DomainResponse
 // @Failure 400 {object} dto.ErrorResponse
 // @Failure 401 {object} dto.ErrorResponse

@@ -19,14 +19,14 @@ func NewSupplierHandler(uc *usecase.SupplierUsecase) *SupplierHandler {
 
 // ListSuppliers godoc
 // @Summary Listar fornecedores
-// @Description Lista fornecedores com paginacao e filtros
+// @Description Lista fornecedores com paginação e filtros
 // @Tags Supplier
 // @Produce json
 // @Security BearerAuth
-// @Param limit query int false "Limite por pagina" default(20)
-// @Param cursor query string false "Cursor de paginacao"
+// @Param limit query int false "Limite por página" default(20)
+// @Param cursor query string false "Cursor de paginação"
 // @Param nome query string false "Filtro por nome (ILIKE)"
-// @Param codigo query string false "Filtro por codigo NU_CD"
+// @Param codigo query string false "Filtro por código NU_CD"
 // @Param ativo query bool false "Filtro por status ativo"
 // @Success 200 {object} dto.ListResponse
 // @Failure 401 {object} dto.ErrorResponse

@@ -19,12 +19,12 @@ func NewGenericHandler(uc *usecase.GenericUsecase) *GenericHandler {
 
 // ListVTM godoc
 // @Summary Listar VTMs
-// @Description Lista Virtual Therapeutic Moieties com paginacao e filtros
+// @Description Lista Virtual Therapeutic Moieties com paginação e filtros
 // @Tags VTM
 // @Produce json
 // @Security BearerAuth
-// @Param limit query int false "Limite por pagina" default(20)
-// @Param cursor query string false "Cursor de paginacao"
+// @Param limit query int false "Limite por página" default(20)
+// @Param cursor query string false "Cursor de paginação"
 // @Param nome query string false "Filtro por nome (ILIKE)"
 // @Param ativo query bool false "Filtro por status ativo"
 // @Success 200 {object} dto.ListResponse
@@ -80,12 +80,12 @@ func (h *GenericHandler) GetVTM(c *gin.Context) {
 
 // ListVMPP godoc
 // @Summary Listar VMPPs
-// @Description Lista Virtual Medicinal Product Packs com paginacao e filtros
+// @Description Lista Virtual Medicinal Product Packs com paginação e filtros
 // @Tags VMPP
 // @Produce json
 // @Security BearerAuth
-// @Param limit query int false "Limite por pagina" default(20)
-// @Param cursor query string false "Cursor de paginacao"
+// @Param limit query int false "Limite por página" default(20)
+// @Param cursor query string false "Cursor de paginação"
 // @Param nome query string false "Filtro por nome (ILIKE)"
 // @Param ativo query bool false "Filtro por status ativo"
 // @Success 200 {object} dto.ListResponse
@@ -141,12 +141,12 @@ func (h *GenericHandler) GetVMPP(c *gin.Context) {
 
 // ListAMPP godoc
 // @Summary Listar AMPPs
-// @Description Lista Actual Medicinal Product Packs com paginacao e filtros
+// @Description Lista Actual Medicinal Product Packs com paginação e filtros
 // @Tags AMPP
 // @Produce json
 // @Security BearerAuth
-// @Param limit query int false "Limite por pagina" default(20)
-// @Param cursor query string false "Cursor de paginacao"
+// @Param limit query int false "Limite por página" default(20)
+// @Param cursor query string false "Cursor de paginação"
 // @Param nome query string false "Filtro por nome (ILIKE)"
 // @Param ativo query bool false "Filtro por status ativo"
 // @Success 200 {object} dto.ListResponse
@@ -202,12 +202,12 @@ func (h *GenericHandler) GetAMPP(c *gin.Context) {
 
 // ListDCB godoc
 // @Summary Listar DCBs
-// @Description Lista Denominacoes Comuns Brasileiras com paginacao e filtros
+// @Description Lista Denominações Comuns Brasileiras com paginação e filtros
 // @Tags DCB
 // @Produce json
 // @Security BearerAuth
-// @Param limit query int false "Limite por pagina" default(20)
-// @Param cursor query string false "Cursor de paginacao"
+// @Param limit query int false "Limite por página" default(20)
+// @Param cursor query string false "Cursor de paginação"
 // @Param nome query string false "Filtro por nome (ILIKE)"
 // @Param ativo query bool false "Filtro por status ativo"
 // @Success 200 {object} dto.ListResponse
@@ -235,7 +235,7 @@ func (h *GenericHandler) ListDCB(c *gin.Context) {
 
 // GetDCB godoc
 // @Summary Obter DCB por ID
-// @Description Retorna uma Denominacao Comum Brasileira pelo seu ID
+// @Description Retorna uma Denominação Comum Brasileira pelo seu ID
 // @Tags DCB
 // @Produce json
 // @Security BearerAuth
@@ -263,12 +263,12 @@ func (h *GenericHandler) GetDCB(c *gin.Context) {
 
 // ListIngredients godoc
 // @Summary Listar ingredientes
-// @Description Lista Ingredient Substances com paginacao e filtros
+// @Description Lista Ingredient Substances com paginação e filtros
 // @Tags Ingredient
 // @Produce json
 // @Security BearerAuth
-// @Param limit query int false "Limite por pagina" default(20)
-// @Param cursor query string false "Cursor de paginacao"
+// @Param limit query int false "Limite por página" default(20)
+// @Param cursor query string false "Cursor de paginação"
 // @Param nome query string false "Filtro por nome (ILIKE)"
 // @Param ativo query bool false "Filtro por status ativo"
 // @Success 200 {object} dto.ListResponse

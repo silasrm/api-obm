@@ -27,11 +27,11 @@ func NewSearchHandler(uc *usecase.SearchUsecase) *SearchHandler {
 // @Param q query string true "Termo de busca"
 // @Param entity query string false "Entidades para buscar (vmp,amp,supplier). Separadas por virgula"
 // @Param limit query int false "Limite de resultados" default(20)
-// @Param cursor query string false "Cursor de paginacao"
+// @Param cursor query string false "Cursor de paginação"
 // @Param filter[nome] query string false "Filtro por nome"
-// @Param filter[codigo] query string false "Filtro por codigo"
+// @Param filter[codigo] query string false "Filtro por código"
 // @Param filter[fabricante] query string false "Filtro por fabricante"
-// @Param filter[descricao] query string false "Filtro por descricao"
+// @Param filter[descricao] query string false "Filtro por descrição"
 // @Param filter[ativo] query string false "Filtro por status ativo"
 // @Success 200 {object} dto.SearchResponse
 // @Failure 400 {object} dto.ErrorResponse

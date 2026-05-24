@@ -1,11 +1,11 @@
-# Centralizador de Versao - API OBM
+# Centralizador de Versão - API OBM
 
-> **ATENCAO**: Este e o arquivo de referencia e auditoria da versao atual da API. Todas as builds, tags no git ou release notes devem referenciar a versao travada aqui.
+> **ATENÇÃO**: Este é o arquivo de referência e auditoria da versão atual da API. Todas as builds, tags no git ou release notes devem referenciar a versão travada aqui.
 
-## Versao Atual
+## Versão Atual
 
 ```
-Versao: 1.0.0
+Versão: 1.0.0
 Release Date: 2026-05-24
 Timezone: America/Sao_Paulo
 Status: Released
@@ -15,23 +15,23 @@ Status: Released
 
 **Status:** Released
 
-**Mudancas:**
+**Mudanças:**
 
 - feat: API REST da Ontologia Brasileira de Medicamentos (OBM) — modelo dm+d do NHS adaptado para o Brasil
-- feat: Endpoints de consulta para VMP, AMP, VTM, VMPP, AMPP, DCB, Ingredientes, Fornecedores e Dominios
-- feat: Busca global via Meilisearch com filtros por nome, codigo, fabricante, descricao e status ativo
-- feat: Endpoints de detalhe para VMP (com VTM, dominios, ingredientes, rotas, formas, classes ATC) e AMP (com VMP, fornecedor, ingredientes, rotas)
-- feat: 32 tipos de dominio (forma farmaceutica, via, classe ATC, categoria de controle, etc.)
-- feat: Autenticacao JWT (HS256) com login/geracao de token
-- feat: Paginacao cursor-based em todos os endpoints de listagem
-- feat: Health check publico (PostgreSQL + Meilisearch)
-- feat: Reindexacao administrativa do Meilisearch
+- feat: Endpoints de consulta para VMP, AMP, VTM, VMPP, AMPP, DCB, Ingredientes, Fornecedores e Domínios
+- feat: Busca global via Meilisearch com filtros por nome, código, fabricante, descrição e status ativo
+- feat: Endpoints de detalhe para VMP (com VTM, domínios, ingredientes, rotas, formas, classes ATC) e AMP (com VMP, fornecedor, ingredientes, rotas)
+- feat: 32 tipos de domínio (forma farmacêutica, via, classe ATC, categoria de controle, etc.)
+- feat: Autenticação JWT (HS256) com login/geração de token
+- feat: Paginação cursor-based em todos os endpoints de listagem
+- feat: Health check público (PostgreSQL + Meilisearch)
+- feat: Reindexação administrativa do Meilisearch
 - feat: Swagger UI integrado (`/swagger/index.html`)
 - feat: Collection Postman com ambiente local
 - feat: Infraestrutura Docker Compose (PostgreSQL 16, Meilisearch v1.8, API)
-- feat: Seed de usuarios iniciais (admin/admin123, viewer/viewer123)
-- feat: Suite de testes unitarios e de integracao
-- fix: Correcao da descricao de "Observatorio de Medicamentos" para "Ontologia Brasileira de Medicamentos" em todos os arquivos
+- feat: Seed de usuários iniciais (admin/admin123, viewer/viewer123)
+- feat: Suite de testes unitários e de integração
+- fix: Correção da descrição de "Observatório de Medicamentos" para "Ontologia Brasileira de Medicamentos" em todos os arquivos
 - fix: Auth middleware aceita token com ou sem prefixo Bearer (compatibilidade Swagger UI)
 - fix: Porta do servidor alterada de 8080 para 8094
 - fix: Porta do PostgreSQL no host alterada de 5432 para 5433 (evita conflito)
@@ -47,39 +47,39 @@ Status: Released
 **Arquivos novos:**
 
 - `cmd/api/main.go` — Entry point da API
-- `internal/domain/entity/entities.go` — Entidades de dominio
-- `internal/domain/repository/interfaces.go` — Contratos dos repositorios
-- `internal/infrastructure/persistence/postgres/` — Repositorios PostgreSQL
+- `internal/domain/entity/entities.go` — Entidades de domínio
+- `internal/domain/repository/interfaces.go` — Contratos dos repositórios
+- `internal/infrastructure/persistence/postgres/` — Repositórios PostgreSQL
 - `internal/infrastructure/persistence/meilisearch/` — Cliente e indexer Meilisearch
-- `internal/infrastructure/config/config.go` — Carregamento de configuracao
+- `internal/infrastructure/config/config.go` — Carregamento de configuração
 - `internal/interface/http/handler/` — Handlers HTTP
 - `internal/interface/http/dto/dto.go` — DTOs de request/response
 - `internal/interface/http/middleware/auth.go` — Middleware JWT
-- `internal/interface/http/router/router.go` — Definicao de rotas
+- `internal/interface/http/router/router.go` — Definição de rotas
 - `internal/usecase/` — Casos de uso
-- `docs/swagger.yaml`, `docs/swagger.json`, `docs/docs.go` — Documentacao Swagger
+- `docs/swagger.yaml`, `docs/swagger.json`, `docs/docs.go` — Documentação Swagger
 - `postman/OBM_API.postman_collection.json` — Collection Postman
 - `postman/OBM_API_Local.postman_environment.json` — Ambiente Postman
-- `scripts/seed_users.go` — Seed de usuarios
+- `scripts/seed_users.go` — Seed de usuários
 - `scripts/gen_postman.go` — Gerador de collection Postman
 - `scripts/convert_sql.go` — Conversor MySQL → PostgreSQL
 - `migrations/postgres/001_obm_schema.sql` — Schema completo do banco
-- `README.md` — Documentacao para usuarios
+- `README.md` — Documentação para usuários
 - `TESTING.md` — Guia de teste
 
-## Como Incrementar a Versao (SemVer)
+## Como Incrementar a Versão (SemVer)
 
-1. **Atualize este documento** aumentando a trilha conforme o padrao de versoes semanticas:
-   - **Patch** (ex: 1.0.0 → 1.0.1): Correcoes de bugs, refactorings, limpezas que nao entregam novos comportamentos
-   - **Minor** (ex: 1.0.0 → 1.1.0): Novos endpoints, filtros, funcionalidades retrocompativeis
-   - **Major** (ex: 1.0.0 → 2.0.0): Breaking changes na API (mudanca de formato de resposta, remocao de endpoints, etc.)
+1. **Atualize este documento** aumentando a trilha conforme o padrão de versões semânticas:
+- **Patch** (ex: 1.0.0 → 1.0.1): Correções de bugs, refactorings, limpezas que não entregam novos comportamentos
+- **Minor** (ex: 1.0.0 → 1.1.0): Novos endpoints, filtros, funcionalidades retrocompatíveis
+- **Major** (ex: 1.0.0 → 2.0.0): Breaking changes na API (mudança de formato de resposta, remoção de endpoints, etc.)
 
-2. **Crie a Release Note** em `docs/release-notes/vX.Y.Z.md` descrevendo as mudancas
+2. **Crie a Release Note** em `docs/release-notes/vX.Y.Z.md` descrevendo as mudanças
 
 3. **Crie a tag git** com `git tag -a vX.Y.Z -m "Release vX.Y.Z"`
 
-## Historico de Versoes
+## Histórico de Versões
 
-| Versao | Data | Descricao |
+| Versão | Data | Descrição |
 |--------|------|-----------|
-| `v1.0.0` | 24/05/2026 | **feat: Release inicial da API OBM** — API REST completa com endpoints para VMP, AMP, VTM, VMPP, AMPP, DCB, Ingredientes, Fornecedores e Dominios. Busca global Meilisearch. Autenticacao JWT. Swagger UI. Postman. Docker Compose. Testes. Documentacao de usuario. |
+| `v1.0.0` | 24/05/2026 | **feat: Release inicial da API OBM** — API REST completa com endpoints para VMP, AMP, VTM, VMPP, AMPP, DCB, Ingredientes, Fornecedores e Domínios. Busca global Meilisearch. Autenticação JWT. Swagger UI. Postman. Docker Compose. Testes. Documentação de usuário. |

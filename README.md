@@ -4,43 +4,43 @@ API REST para consulta de dados da [Ontologia Brasileira de Medicamentos (OBM)](
 
 ---
 
-## Sumario
+## Sumário
 
 - [Sobre a OBM](#sobre-a-obm)
 - [Conceitos da Ontologia](#conceitos-da-ontologia)
-- [Autenticacao](#autenticacao)
+- [Autenticação](#autenticação)
 - [Busca Global](#busca-global)
-- [Referencia de Endpoints](#referencia-de-endpoints)
-  - [VMP — Virtual Medicinal Product](#vmp--virtual-medicinal-product)
-  - [AMP — Actual Medicinal Product](#amp--actual-medicinal-product)
-  - [VTM — Virtual Therapeutic Moiety](#vtm--virtual-therapeutic-moiety)
-  - [VMPP — Virtual Medicinal Product Pack](#vmpp--virtual-medicinal-product-pack)
-  - [AMPP — Actual Medicinal Product Pack](#ampp--actual-medicinal-product-pack)
-  - [DCB — Denominacao Comum Brasileira](#dcb--denominacao-comum-brasileira)
-  - [Ingredientes](#ingredientes)
-  - [Fornecedores](#fornecedores)
-  - [Dominios](#dominios)
-  - [Admin](#admin)
-- [Paginacao](#paginacao)
-- [Codigos de Erro](#codigos-de-erro)
-- [Instalacao Local](#instalacao-local)
-- [Exemplos Praticos de Uso](#exemplos-praticos-de-uso)
+- [Referência de Endpoints](#referência-de-endpoints)
+- [VMP — Virtual Medicinal Product](#vmp--virtual-medicinal-product)
+- [AMP — Actual Medicinal Product](#amp--actual-medicinal-product)
+- [VTM — Virtual Therapeutic Moiety](#vtm--virtual-therapeutic-moiety)
+- [VMPP — Virtual Medicinal Product Pack](#vmpp--virtual-medicinal-product-pack)
+- [AMPP — Actual Medicinal Product Pack](#ampp--actual-medicinal-product-pack)
+- [DCB — Denominação Comum Brasileira](#dcb--denominação-comum-brasileira)
+- [Ingredientes](#ingredientes)
+- [Fornecedores](#fornecedores)
+- [Domínios](#domínios)
+- [Admin](#admin)
+- [Paginação](#paginação)
+- [Códigos de Erro](#códigos-de-erro)
+- [Instalação Local](#instalação-local)
+- [Exemplos Práticos de Uso](#exemplos-práticos-de-uso)
 
 ---
 
 ## Sobre a OBM
 
-A **Ontologia Brasileira de Medicamentos (OBM)** e um padrao nacional de base de medicamentos para utilizacao em sistemas de prescricao e dispensacao eletronicas, instituida pela [Portaria GM/MS No 6.093, de 16 de dezembro de 2024](https://www.in.gov.br/en/web/dou/-/portaria-gm/ms-n-6.093-de-16-de-dezembro-de-2024-602264704).
+A **Ontologia Brasileira de Medicamentos (OBM)** é um padrão nacional de base de medicamentos para utilização em sistemas de prescrição e dispensação eletrônicas, instituída pela [Portaria GM/MS No 6.093, de 16 de dezembro de 2024](https://www.in.gov.br/en/web/dou/-/portaria-gm/ms-n-6.093-de-16-de-dezembro-de-2024-602264704).
 
-Seus objetivos principais sao:
+Seus objetivos principais são:
 
-- **Integrar e padronizar** dados de diferentes sistemas de informacoes em saude
-- **Normalizar registros** de prescricoes e dispensacoes
-- **Promover a interoperabilidade** por meio da Rede Nacional de Dados em Saude (RNDS)
-- **Potencializar a seguranca do paciente** por meio de identificacao univoca e inequivoca de medicamentos
-- **Seguir praticas internacionais** para descricao e categorizacao de medicamentos
+- **Integrar e padronizar** dados de diferentes sistemas de informações em saúde
+- **Normalizar registros** de prescrições e dispensações
+- **Promover a interoperabilidade** por meio da Rede Nacional de Dados em Saúde (RNDS)
+- **Potencializar a segurança do paciente** por meio de identificação unívoca e inequívoca de medicamentos
+- **Seguir práticas internacionais** para descrição e categorização de medicamentos
 
-A estrutura da OBM esta baseada no modelo **dm+d** (Dictionary of Medicine and Devices) do **NHS** (National Health Service) do Reino Unido. Trata-se de dado publico, atualizado, acessivel, processavel por maquina, em formato nao proprietario, livre de licencas e com rastreabilidade das modificacoes via versionamento.
+A estrutura da OBM está baseada no modelo **dm+d** (Dictionary of Medicine and Devices) do **NHS** (National Health Service) do Reino Unido. Trata-se de dado público, atualizado, acessível, processável por máquina, em formato não proprietário, livre de licenças e com rastreabilidade das modificações via versionamento.
 
 **Portal oficial:** [https://portal-obm.saude.gov.br/](https://portal-obm.saude.gov.br/)
 
@@ -48,49 +48,49 @@ A estrutura da OBM esta baseada no modelo **dm+d** (Dictionary of Medicine and D
 
 ## Conceitos da Ontologia
 
-A OBM organiza os medicamentos em uma hierarquia inspirada no dm+d, com cinco niveis principais de abstracao:
+A OBM organiza os medicamentos em uma hierarquia inspirada no dm+d, com cinco níveis principais de abstração:
 
 ```
 VTM (Virtual Therapeutic Moiety)
- └── VMP (Virtual Medicinal Product)
-      ├── VMPP (Virtual Medicinal Product Pack)
-      └── AMP (Actual Medicinal Product)
-           └── AMPP (Actual Medicinal Product Pack)
+└── VMP (Virtual Medicinal Product)
+    ├── VMPP (Virtual Medicinal Product Pack)
+    └── AMP (Actual Medicinal Product)
+        └── AMPP (Actual Medicinal Product Pack)
 ```
 
 | Conceito | Sigla | O que representa | Exemplo |
 |----------|-------|------------------|---------|
-| **Virtual Therapeutic Moiety** | VTM | Principio ativo generico, sem forma farmaceutica | Paracetamol |
-| **Virtual Medicinal Product** | VMP | Principio ativo + forma farmaceutica + dose | Paracetamol 500mg comprimido |
-| **Virtual Medicinal Product Pack** | VMPP | Apresentacao virtual do VMP (quantidade) | Paracetamol 500mg comprimido — 20 comprimidos |
+| **Virtual Therapeutic Moiety** | VTM | Princípio ativo genérico, sem forma farmacêutica | Paracetamol |
+| **Virtual Medicinal Product** | VMP | Princípio ativo + forma farmacêutica + dose | Paracetamol 500mg comprimido |
+| **Virtual Medicinal Product Pack** | VMPP | Apresentação virtual do VMP (quantidade) | Paracetamol 500mg comprimido — 20 comprimidos |
 | **Actual Medicinal Product** | AMP | Produto comercial de um fabricante | Paracetamol 500mg comprimido — Medley |
-| **Actual Medicinal Product Pack** | AMPP | Embalagem comercial do AMP (com codigo EAN) | Paracetamol 500mg comprimido — Medley — caixa 20 |
+| **Actual Medicinal Product Pack** | AMPP | Embalagem comercial do AMP (com código EAN) | Paracetamol 500mg comprimido — Medley — caixa 20 |
 
 ### Entidades complementares
 
-| Entidade | Descricao |
+| Entidade | Descrição |
 |----------|-----------|
-| **DCB** (Denominacao Comum Brasileira) | Denominacao oficial de substancias ativas conforme ANVISA |
-| **Ingredient Substance** | Substancia ativa que compoe um medicamento (com codigo CAS e DCB) |
-| **Supplier** (Fornecedor) | Fabricante ou detentor do registro sanitario do AMP |
-| **Domain** | Tabelas de dominio/classificacao (forma farmaceutica, via, classe ATC, etc.) |
+| **DCB** (Denominação Comum Brasileira) | Denominação oficial de substâncias ativas conforme ANVISA |
+| **Ingredient Substance** | Substância ativa que compõe um medicamento (com código CAS e DCB) |
+| **Supplier** (Fornecedor) | Fabricante ou detentor do registro sanitário do AMP |
+| **Domain** | Tabelas de domínio/classificação (forma farmacêutica, via, classe ATC, etc.) |
 
 ### Relacionamentos principais
 
-- Um **VTM** possui varios **VMPs** (diferentes formas/doses do mesmo principio ativo)
+- Um **VTM** possui vários **VMPs** (diferentes formas/doses do mesmo princípio ativo)
 - Um **VMP** pertence a um **VTM**
-- Um **VMP** possui varios **AMPs** (produtos de diferentes fabricantes)
+- Um **VMP** possui vários **AMPs** (produtos de diferentes fabricantes)
 - Um **AMP** pertence a um **VMP** e a um **Supplier**
-- Um **VMP** possui varios **VMPPs** (apresentacoes)
-- Um **AMP** possui varios **AMPPs** (embalagens comerciais com EAN)
-- **VMPs** e **AMPs** possuem **Ingredientes** com concentracao
-- **VMPs** e **AMPs** estao ligados a **Dominios** (forma farmaceutica, via, classe ATC, etc.)
+- Um **VMP** possui vários **VMPPs** (apresentações)
+- Um **AMP** possui vários **AMPPs** (embalagens comerciais com EAN)
+- **VMPs** e **AMPs** possuem **Ingredientes** com concentração
+- **VMPs** e **AMPs** estão ligados a **Domínios** (forma farmacêutica, via, classe ATC, etc.)
 
 ---
 
-## Autenticacao
+## Autenticação
 
-Todos os endpoints de dados (sob `/api/v1/`) exigem autenticacao via **JWT Bearer Token**. Apenas `/auth/login` e `/health` sao publicos.
+Todos os endpoints de dados (sob `/api/v1/`) exigem autenticação via **JWT Bearer Token**. Apenas `/auth/login` e `/health` são públicos.
 
 ### 1. Obter o token
 
@@ -109,9 +109,9 @@ Resposta:
 }
 ```
 
-### 2. Usar o token nas requisicoes
+### 2. Usar o token nas requisições
 
-Inclua o header `Authorization: Bearer <token>` em toda requisicao protegida:
+Inclua o header `Authorization: Bearer <token>` em toda requisição protegida:
 
 ```bash
 TOKEN="eyJhbGciOiJIUzI1NiIs..."
@@ -120,9 +120,9 @@ curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/vmp?limit=5"
 ```
 
-### 3. Expiracao
+### 3. Expiração
 
-O token e valido por **24 horas** (configuravel via `JWT_EXPIRATION_HOURS`). Apos expirar, faca login novamente.
+O token é válido por **24 horas** (configurável via `JWT_EXPIRATION_HOURS`). Após expirar, faça login novamente.
 
 ---
 
@@ -134,17 +134,17 @@ O endpoint de busca utiliza o [Meilisearch](https://www.meilisearch.com/) para b
 GET /api/v1/search
 ```
 
-| Parametro | Tipo | Obrigatorio | Descricao |
+| Parâmetro | Tipo | Obrigatório | Descrição |
 |-----------|------|-------------|-----------|
 | `q` | string | Sim | Termo de busca |
-| `entity` | string | Nao | Entidades: `vmp`, `amp`, `supplier`. Separadas por virgula. Padrao: todas |
-| `limit` | int | Nao | Limite de resultados (padrao: 20, max: 100) |
-| `cursor` | string | Nao | Cursor de paginacao |
-| `filter[nome]` | string | Nao | Filtro por nome |
-| `filter[codigo]` | string | Nao | Filtro por codigo |
-| `filter[fabricante]` | string | Nao | Filtro por fabricante |
-| `filter[descricao]` | string | Nao | Filtro por descricao |
-| `filter[ativo]` | string | Nao | Filtro por status ativo |
+| `entity` | string | Não | Entidades: `vmp`, `amp`, `supplier`. Separadas por vírgula. Padrão: todas |
+| `limit` | int | Não | Limite de resultados (padrão: 20, máx: 100) |
+| `cursor` | string | Não | Cursor de paginação |
+| `filter[nome]` | string | Não | Filtro por nome |
+| `filter[codigo]` | string | Não | Filtro por código |
+| `filter[fabricante]` | string | Não | Filtro por fabricante |
+| `filter[descricao]` | string | Não | Filtro por descrição |
+| `filter[ativo]` | string | Não | Filtro por status ativo |
 
 ### Exemplos
 
@@ -203,25 +203,25 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ---
 
-## Referencia de Endpoints
+## Referência de Endpoints
 
 ### VMP — Virtual Medicinal Product
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/v1/vmp` | Listar VMPs com filtros e paginacao |
+| `GET` | `/api/v1/vmp` | Listar VMPs com filtros e paginação |
 | `GET` | `/api/v1/vmp/:id` | Obter VMP por ID |
 | `GET` | `/api/v1/vmp/:id/detail` | Obter VMP com detalhes completos |
 
-**Parametros de listagem (`GET /api/v1/vmp`):**
+**Parâmetros de listagem (`GET /api/v1/vmp`):**
 
-| Parametro | Tipo | Descricao |
+| Parâmetro | Tipo | Descrição |
 |-----------|------|-----------|
-| `limit` | int | Limite por pagina (padrao: 20, max: 100) |
-| `cursor` | string | Cursor de paginacao |
+| `limit` | int | Limite por página (padrão: 20, máx: 100) |
+| `cursor` | string | Cursor de paginação |
 | `nome` | string | Filtro por nome (busca parcial, case-insensitive) |
-| `codigo` | string | Filtro por codigo NU_VPID (busca exata) |
-| `ativo` | boolean | Filtro por status ativo (padrao: `true`) |
+| `codigo` | string | Filtro por código NU_VPID (busca exata) |
+| `ativo` | boolean | Filtro por status ativo (padrão: `true`) |
 
 **Exemplos:**
 
@@ -234,7 +234,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/vmp?nome=paracetamol&limit=5"
 
-# Buscar por codigo
+# Buscar por código
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/vmp?codigo=3456789"
 
@@ -266,7 +266,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
   },
   "basis_of_name": { "no_descr": "Substance" },
   "pres_status": { "no_descr": "Valid as a prescribable product" },
-  "anvs_class": { "no_descr": "Isento de prescricao" },
+  "anvs_class": { "no_descr": "Isento de prescrição" },
   "forms": [
     { "no_descr": "Tablet" }
   ],
@@ -299,22 +299,22 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ### AMP — Actual Medicinal Product
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/v1/amp` | Listar AMPs com filtros e paginacao |
+| `GET` | `/api/v1/amp` | Listar AMPs com filtros e paginação |
 | `GET` | `/api/v1/amp/:id` | Obter AMP por ID |
 | `GET` | `/api/v1/amp/:id/detail` | Obter AMP com detalhes completos |
 
-**Parametros de listagem (`GET /api/v1/amp`):**
+**Parâmetros de listagem (`GET /api/v1/amp`):**
 
-| Parametro | Tipo | Descricao |
+| Parâmetro | Tipo | Descrição |
 |-----------|------|-----------|
-| `limit` | int | Limite por pagina (padrao: 20, max: 100) |
-| `cursor` | string | Cursor de paginacao |
+| `limit` | int | Limite por página (padrão: 20, máx: 100) |
+| `cursor` | string | Cursor de paginação |
 | `nome` | string | Filtro por nome (busca parcial) |
-| `codigo` | string | Filtro por codigo NU_APID (busca exata) |
+| `codigo` | string | Filtro por código NU_APID (busca exata) |
 | `fabricante` | string | Filtro por nome do fabricante (busca parcial) |
-| `ativo` | boolean | Filtro por status ativo (padrao: `true`) |
+| `ativo` | boolean | Filtro por status ativo (padrão: `true`) |
 
 **Exemplos:**
 
@@ -364,7 +364,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
     "nu_cnpj": "12.345.678/0001-90"
   },
   "lic_auth": { "no_descr": "ANVISA" },
-  "med_class": { "no_descr": "Isento de prescricao" },
+  "med_class": { "no_descr": "Isento de prescrição" },
   "avail_restriction": { "no_descr": "None" },
   "routes": [
     { "no_descr": "Oral" }
@@ -388,19 +388,19 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ### VTM — Virtual Therapeutic Moiety
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/v1/vtm` | Listar VTMs com filtros e paginacao |
+| `GET` | `/api/v1/vtm` | Listar VTMs com filtros e paginação |
 | `GET` | `/api/v1/vtm/:id` | Obter VTM por ID |
 
-**Parametros de listagem:**
+**Parâmetros de listagem:**
 
-| Parametro | Tipo | Descricao |
+| Parâmetro | Tipo | Descrição |
 |-----------|------|-----------|
-| `limit` | int | Limite por pagina (padrao: 20, max: 100) |
-| `cursor` | string | Cursor de paginacao |
+| `limit` | int | Limite por página (padrão: 20, máx: 100) |
+| `cursor` | string | Cursor de paginação |
 | `nome` | string | Filtro por nome (busca parcial) |
-| `ativo` | boolean | Filtro por status ativo (padrao: `true`) |
+| `ativo` | boolean | Filtro por status ativo (padrão: `true`) |
 
 **Exemplos:**
 
@@ -422,12 +422,12 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ### VMPP — Virtual Medicinal Product Pack
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/v1/vmpp` | Listar VMPPs com filtros e paginacao |
+| `GET` | `/api/v1/vmpp` | Listar VMPPs com filtros e paginação |
 | `GET` | `/api/v1/vmpp/:id` | Obter VMPP por ID |
 
-**Parametros de listagem:** `limit`, `cursor`, `nome` (busca parcial), `ativo`
+**Parâmetros de listagem:** `limit`, `cursor`, `nome` (busca parcial), `ativo`
 
 ```bash
 # Listar VMPPs
@@ -443,12 +443,12 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ### AMPP — Actual Medicinal Product Pack
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/v1/ampp` | Listar AMPPs com filtros e paginacao |
+| `GET` | `/api/v1/ampp` | Listar AMPPs com filtros e paginação |
 | `GET` | `/api/v1/ampp/:id` | Obter AMPP por ID |
 
-**Parametros de listagem:** `limit`, `cursor`, `nome` (busca parcial), `ativo`
+**Parâmetros de listagem:** `limit`, `cursor`, `nome` (busca parcial), `ativo`
 
 ```bash
 # Listar AMPPs
@@ -460,7 +460,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/ampp/1"
 ```
 
-**Resposta AMPP (inclui codigos EAN):**
+**Resposta AMPP (inclui códigos EAN):**
 
 ```json
 {
@@ -476,14 +476,14 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ---
 
-### DCB — Denominacao Comum Brasileira
+### DCB — Denominação Comum Brasileira
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/v1/dcb` | Listar DCBs com filtros e paginacao |
+| `GET` | `/api/v1/dcb` | Listar DCBs com filtros e paginação |
 | `GET` | `/api/v1/dcb/:id` | Obter DCB por ID |
 
-**Parametros de listagem:** `limit`, `cursor`, `nome` (busca parcial em DS_DCB), `ativo`
+**Parâmetros de listagem:** `limit`, `cursor`, `nome` (busca parcial em DS_DCB), `ativo`
 
 ```bash
 # Listar DCBs
@@ -503,12 +503,12 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ### Ingredientes
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/v1/ingredients` | Listar Ingredient Substances com filtros e paginacao |
+| `GET` | `/api/v1/ingredients` | Listar Ingredient Substances com filtros e paginação |
 | `GET` | `/api/v1/ingredients/:id` | Obter ingrediente por ID |
 
-**Parametros de listagem:** `limit`, `cursor`, `nome` (busca parcial), `ativo`
+**Parâmetros de listagem:** `limit`, `cursor`, `nome` (busca parcial), `ativo`
 
 ```bash
 # Listar ingredientes
@@ -528,20 +528,20 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ### Fornecedores
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/v1/suppliers` | Listar fornecedores com filtros e paginacao |
+| `GET` | `/api/v1/suppliers` | Listar fornecedores com filtros e paginação |
 | `GET` | `/api/v1/suppliers/:id` | Obter fornecedor por ID |
 
-**Parametros de listagem:**
+**Parâmetros de listagem:**
 
-| Parametro | Tipo | Descricao |
+| Parâmetro | Tipo | Descrição |
 |-----------|------|-----------|
-| `limit` | int | Limite por pagina (padrao: 20, max: 100) |
-| `cursor` | string | Cursor de paginacao |
+| `limit` | int | Limite por página (padrão: 20, máx: 100) |
+| `cursor` | string | Cursor de paginação |
 | `nome` | string | Filtro por nome (busca parcial) |
-| `codigo` | string | Filtro por codigo NU_CD (busca exata) |
-| `ativo` | boolean | Filtro por status ativo (padrao: `true`) |
+| `codigo` | string | Filtro por código NU_CD (busca exata) |
+| `ativo` | boolean | Filtro por status ativo (padrão: `true`) |
 
 ```bash
 # Listar fornecedores
@@ -559,60 +559,60 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ---
 
-### Dominios
+### Domínios
 
-Dominios sao tabelas de classificacao e referencia que categorizam os medicamentos (forma farmaceutica, via de administracao, classe ATC, categoria de controle, etc.).
+Domínios são tabelas de classificação e referência que categorizam os medicamentos (forma farmacêutica, via de administração, classe ATC, categoria de controle, etc.).
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/api/v1/domains/:domain` | Listar dominios por tipo |
-| `GET` | `/api/v1/domains/:domain/:id` | Obter dominio por tipo e ID |
+| `GET` | `/api/v1/domains/:domain` | Listar domínios por tipo |
+| `GET` | `/api/v1/domains/:domain/:id` | Obter domínio por tipo e ID |
 
-**Parametros de listagem:** `limit`, `cursor`, `nome` (busca parcial em NO_DESCR e NO_DESCR_PT_BR), `ativo`
+**Parâmetros de listagem:** `limit`, `cursor`, `nome` (busca parcial em NO_DESCR e NO_DESCR_PT_BR), `ativo`
 
-**Tipos de dominio disponiveis:**
+**Tipos de domínio disponíveis:**
 
-| Slug | Tabela | Descricao |
+| Slug | Tabela | Descrição |
 |------|--------|-----------|
-| `form` | `td_form` | Forma farmaceutica |
-| `route` | `td_route` | Via de administracao |
+| `form` | `td_form` | Forma farmacêutica |
+| `route` | `td_route` | Via de administração |
 | `flavour` | `td_flavour` | Sabor |
 | `legal-category` | `td_legal_category` | Categoria legal |
 | `licensing-authority` | `td_licensing_authority` | Autoridade de licenciamento |
-| `avail-restriction` | `td_availability_restriction` | Restricao de disponibilidade |
+| `avail-restriction` | `td_availability_restriction` | Restrição de disponibilidade |
 | `med-class` | `td_med_class_br` | Classe medicamentosa BR |
 | `anvs-class` | `td_anvs_class_br` | Classe ANVISA |
 | `atc-class` | `td_atc_class_br` | Classe ATC BR |
 | `control-drug` | `td_control_drug_category` | Categoria de controle de drogas |
 | `df-indicator` | `td_df_indicator` | Indicador DF |
-| `discontinued-ind` | `td_discontinued_ind` | Indicador de descontinuacao |
-| `pres-status` | `td_virtual_product_pres_status` | Status de prescricao |
+| `discontinued-ind` | `td_discontinued_ind` | Indicador de descontinuação |
+| `pres-status` | `td_virtual_product_pres_status` | Status de prescrição |
 | `non-avail` | `td_virtual_product_non_avail` | Motivo de indisponibilidade |
 | `basis-of-name` | `td_basis_of_name` | Base do nome |
-| `basis-of-strnth` | `td_basis_of_strnth` | Base de concentracao |
-| `brimunologico` | `td_brimunologico` | Imunologico BR |
+| `basis-of-strnth` | `td_basis_of_strnth` | Base de concentração |
+| `brimunologico` | `td_brimunologico` | Imunológico BR |
 | `catmat` | `td_catmat_br` | CATMAT BR |
-| `country` | `td_country` | Pais |
+| `country` | `td_country` | País |
 | `unit-of-measure` | `td_unit_of_measure` | Unidade de medida |
 | `package` | `td_package` | Tipo de embalagem |
 | `ont-form-route` | `td_ont_form_route` | Forma/Rota OBM |
-| `preserv-cond` | `td_preserv_cond_br` | Condicao de preservacao BR |
+| `preserv-cond` | `td_preserv_cond_br` | Condição de preservação BR |
 | `rename-comp` | `td_rename_comp_br` | RENAME Complementar BR |
 | `ingredient-source` | `td_ingredient_source_br` | Fonte do ingrediente BR |
-| `healthcare-prof` | `td_healthcare_prof_br` | Profissional de saude BR |
-| `indicacao-farmpop` | `td_indicacao_farmpop_br` | Indicacao Farmacia Popular BR |
+| `healthcare-prof` | `td_healthcare_prof_br` | Profissional de saúde BR |
+| `indicacao-farmpop` | `td_indicacao_farmpop_br` | Indicação Farmácia Popular BR |
 | `monitoring-reason` | `td_monitoring_reason_br` | Motivo de monitoramento BR |
-| `name-change-reason` | `td_name_change_reason` | Motivo de mudanca de nome |
-| `lic-auth-change-reason` | `td_lic_auth_change_reason` | Motivo de mudanca de licenca |
+| `name-change-reason` | `td_name_change_reason` | Motivo de mudança de nome |
+| `lic-auth-change-reason` | `td_lic_auth_change_reason` | Motivo de mudança de licença |
 | `phpid` | `td_phpid` | PHPID |
-| `local-aplicacao` | `td_local_aplicacao` | Local de aplicacao |
+| `local-aplicacao` | `td_local_aplicacao` | Local de aplicação |
 
 ```bash
-# Listar formas farmaceuticas
+# Listar formas farmacêuticas
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/domains/form?limit=5"
 
-# Listar vias de administracao
+# Listar vias de administração
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/domains/route?limit=5"
 
@@ -620,7 +620,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/domains/atc-class?limit=5"
 
-# Dominio especifico por ID
+# Domínio específico por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/domains/form/1"
 ```
@@ -629,12 +629,12 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ### Admin
 
-| Metodo | Rota | Descricao |
+| Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/health` | Health check (sem autenticacao) |
+| `GET` | `/health` | Health check (sem autenticação) |
 | `POST` | `/api/v1/admin/reindex` | Reindexar Meilisearch |
 
-**Health check (publico):**
+**Health check (público):**
 
 ```bash
 curl -s http://localhost:8094/health
@@ -648,7 +648,7 @@ curl -s http://localhost:8094/health
 }
 ```
 
-> Status `"degraded"` indica que PostgreSQL ou Meilisearch esta indisponivel.
+> Status `"degraded"` indica que PostgreSQL ou Meilisearch está indisponível.
 
 **Reindexar Meilisearch:**
 
@@ -670,28 +670,28 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" \
 
 ---
 
-## Paginacao
+## Paginação
 
-Todos os endpoints de listagem utilizam **paginacao baseada em cursor**. Nao ha numeracao de paginas — o cursor codifica o offset da proxima pagina.
+Todos os endpoints de listagem utilizam **paginação baseada em cursor**. Não há numeração de páginas — o cursor codifica o offset da próxima página.
 
 ### Como funciona
 
-1. Faca a primeira requisicao sem cursor
-2. A resposta contem o campo `cursor` com o valor para a proxima pagina
-3. Use esse valor no parametro `cursor` da proxima requisicao
-4. Quando `cursor` for vazio (`""`), nao ha mais paginas
+1. Faça a primeira requisição sem cursor
+2. A resposta contém o campo `cursor` com o valor para a próxima página
+3. Use esse valor no parâmetro `cursor` da próxima requisição
+4. Quando `cursor` for vazio (`""`), não há mais páginas
 
-### Parametros
+### Parâmetros
 
-| Parametro | Descricao | Padrao | Maximo |
+| Parâmetro | Descrição | Padrão | Máximo |
 |-----------|-----------|--------|--------|
-| `limit` | Registros por pagina | 20 | 100 |
-| `cursor` | Cursor da proxima pagina | — | — |
+| `limit` | Registros por página | 20 | 100 |
+| `cursor` | Cursor da próxima página | — | — |
 
 ### Exemplo
 
 ```bash
-# Primeira pagina
+# Primeira página
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/vmp?limit=3"
 ```
@@ -706,7 +706,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ```
 
 ```bash
-# Proxima pagina (usar o cursor retornado)
+# Próxima página (usar o cursor retornado)
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/vmp?limit=3&cursor=Mw=="
 ```
@@ -722,34 +722,34 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ---
 
-## Codigos de Erro
+## Códigos de Erro
 
-| HTTP | Mensagem | Condicao |
+| HTTP | Mensagem | Condição |
 |------|----------|----------|
 | `400` | `invalid request body` | JSON malformado no login |
-| `400` | `invalid query parameters` | Parametros de busca invalidos |
-| `400` | `invalid id` | Parametro `:id` nao numerico |
+| `400` | `invalid query parameters` | Parâmetros de busca inválidos |
+| `400` | `invalid id` | Parâmetro `:id` não numérico |
 | `401` | `missing authorization header` | Header `Authorization` ausente |
-| `401` | `invalid token` | Token JWT invalido ou expirado |
-| `401` | `invalid token claims` | Claims do JWT nao extraiveis |
-| `401` | `invalid credentials` | Usuario/senha incorretos ou usuario inativo |
-| `404` | `not found` | Registro nao encontrado |
-| `500` | (mensagem variavel) | Erro interno (banco, Meilisearch, etc.) |
+| `401` | `invalid token` | Token JWT inválido ou expirado |
+| `401` | `invalid token claims` | Claims do JWT não extraíveis |
+| `401` | `invalid credentials` | Usuário/senha incorretos ou usuário inativo |
+| `404` | `not found` | Registro não encontrado |
+| `500` | (mensagem variável) | Erro interno (banco, Meilisearch, etc.) |
 
 ### Formato da resposta de erro
 
 ```json
 {
-  "error": "descricao do erro",
+  "error": "descrição do erro",
   "code": 401
 }
 ```
 
 ---
 
-## Instalacao Local
+## Instalação Local
 
-### Pre-requisitos
+### Pré-requisitos
 
 - [Docker](https://www.docker.com/) e Docker Compose
 - [Go 1.25+](https://go.dev/dl/)
@@ -758,21 +758,21 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ### 1. Obter o dump do banco de dados
 
-O arquivo SQL de inicializacao do banco (~137 MB) nao esta versionado no git por exceder o limite do GitHub. Voce precisa obte-lo separadamente:
+O arquivo SQL de inicialização do banco (~137 MB) não está versionado no git por exceder o limite do GitHub. Você precisa obtê-lo separadamente:
 
 ```bash
-# Opcao A: Baixar do portal OBM (se disponivel)
+# Opção A: Baixar do portal OBM (se disponível)
 # Coloque o arquivo em:
-#   migrations/postgres/001_obm_schema.sql
+# migrations/postgres/001_obm_schema.sql
 
-# Opcao B: Converter de um dump MySQL usando o script incluido
+# Opção B: Converter de um dump MySQL usando o script incluído
 go run scripts/convert_sql.go -input <caminho_do_dump_mysql> -output migrations/postgres/001_obm_schema.sql
 
-# Opcao C: Gerar a partir do portal oficial
+# Opção C: Gerar a partir do portal oficial
 # Acesse https://portal-obm.saude.gov.br/ e exporte os dados
 ```
 
-O PostgreSQL do Docker Compose carrega automaticamente qualquer arquivo `.sql` colocado em `migrations/postgres/` na primeira inicializacao (via `docker-entrypoint-initdb.d`).
+O PostgreSQL do Docker Compose carrega automaticamente qualquer arquivo `.sql` colocado em `migrations/postgres/` na primeira inicialização (via `docker-entrypoint-initdb.d`).
 
 ### 2. Subir infraestrutura
 
@@ -780,14 +780,14 @@ O PostgreSQL do Docker Compose carrega automaticamente qualquer arquivo `.sql` c
 docker compose up postgres meilisearch -d
 ```
 
-Aguarde os healthchecks passarem (~30s). O PostgreSQL estara na porta **5433** e o Meilisearch na porta **7701**.
+Aguarde os healthchecks passarem (~30s). O PostgreSQL estará na porta **5433** e o Meilisearch na porta **7701**.
 
-> **Atencao:** o arquivo `migrations/postgres/001_obm_schema.sql` tem ~1.1 milhao de linhas. O carregamento inicial pode levar varios minutos. Monitore com:
+> **Atenção:** o arquivo `migrations/postgres/001_obm_schema.sql` tem ~1.1 milhão de linhas. O carregamento inicial pode levar vários minutos. Monitore com:
 > ```bash
 > docker compose logs -f postgres
 > ```
 
-Verifique se os servicos estao saudaveis:
+Verifique se os serviços estão saudáveis:
 
 ```bash
 docker compose ps
@@ -801,34 +801,34 @@ Ambos devem mostrar `(healthy)` na coluna STATUS.
 cp .env.example .env
 ```
 
-O `.env` ja vem com as portas corretas. Variaveis disponiveis:
+O `.env` já vem com as portas corretas. Variáveis disponíveis:
 
-| Variavel | Padrao | Descricao |
+| Variável | Padrão | Descrição |
 |----------|--------|-----------|
 | `PG_HOST` | `localhost` | Host do PostgreSQL |
 | `PG_PORT` | `5433` | Porta do PostgreSQL (5432 dentro do Docker) |
-| `PG_USER` | `obm` | Usuario do PostgreSQL |
+| `PG_USER` | `obm` | Usuário do PostgreSQL |
 | `PG_PASSWORD` | `obm123` | Senha do PostgreSQL |
 | `PG_DATABASE` | `dbportalobm` | Nome do banco |
 | `PG_SSLMODE` | `disable` | SSL mode do PostgreSQL |
 | `MEILI_URL` | `http://localhost:7701` | URL do Meilisearch (7700 dentro do Docker) |
 | `MEILI_API_KEY` | `obm-meili-master-key` | Chave API do Meilisearch |
-| `MEILI_INDEX_PREFIX` | `obm_` | Prefixo dos indices (produz `obm_vmp`, `obm_amp`, `obm_supplier`) |
-| `JWT_SECRET` | `obm-secret-key-change-in-prod` | Chave de assinatura JWT (altere em producao!) |
-| `JWT_EXPIRATION_HOURS` | `24` | Expiracao do token em horas |
+| `MEILI_INDEX_PREFIX` | `obm_` | Prefixo dos índices (produz `obm_vmp`, `obm_amp`, `obm_supplier`) |
+| `JWT_SECRET` | `obm-secret-key-change-in-prod` | Chave de assinatura JWT (altere em produção!) |
+| `JWT_EXPIRATION_HOURS` | `24` | Expiração do token em horas |
 | `SERVER_PORT` | `8094` | Porta do servidor API |
 | `GIN_MODE` | `release` | Modo do Gin (`debug` ou `release`) |
 | `SYNC_ON_STARTUP` | `true` | Reindexar Meilisearch ao iniciar |
 
-### 4. Criar usuarios iniciais
+### 4. Criar usuários iniciais
 
 ```bash
 go run scripts/seed_users.go
 ```
 
-Cria os usuarios padrao:
+Cria os usuários padrão:
 
-| Usuario | Senha | Ativo |
+| Usuário | Senha | Ativo |
 |---------|-------|-------|
 | `admin` | `admin123` | sim |
 | `viewer` | `viewer123` | sim |
@@ -845,9 +845,9 @@ Ou em modo debug:
 GIN_MODE=debug go run ./cmd/api/
 ```
 
-O servidor iniciara na porta **8094**. Se `SYNC_ON_STARTUP=true`, a reindexacao do Meilisearch ocorrera automaticamente.
+O servidor iniciará na porta **8094**. Se `SYNC_ON_STARTUP=true`, a reindexação do Meilisearch ocorrerá automaticamente.
 
-### 6. Verificar se esta funcionando
+### 6. Verificar se está funcionando
 
 ```bash
 curl -s http://localhost:8094/health | jq
@@ -871,18 +871,18 @@ Acesse no navegador:
 http://localhost:8094/swagger/index.html
 ```
 
-Permite testar todos os endpoints interativamente com autenticacao Bearer.
+Permite testar todos os endpoints interativamente com autenticação Bearer.
 
 ### 8. Postman
 
-Uma collection Postman esta disponivel em `postman/OBM_API.postman_collection.json`.
+Uma collection Postman está disponível em `postman/OBM_API.postman_collection.json`.
 
 1. Abra o Postman
 2. Clique em **Import**
 3. Selecione o arquivo `postman/OBM_API.postman_collection.json`
-4. Importe tambem o ambiente `postman/OBM_API_Local.postman_environment.json`
+4. Importe também o ambiente `postman/OBM_API_Local.postman_environment.json`
 5. Selecione o ambiente **OBM API - Local** no canto superior direito
-6. Faca login via o request **Auth > Login**, copie o token e cole na variavel `token` do ambiente
+6. Faça login via o request **Auth > Login**, copie o token e cole na variável `token` do ambiente
 
 ### 9. Rodar via Docker (build completo)
 
@@ -891,7 +891,7 @@ docker compose up --build -d
 docker compose logs -f api
 ```
 
-### 10. Parar os servicos
+### 10. Parar os serviços
 
 ```bash
 docker compose down
@@ -905,7 +905,7 @@ docker compose down -v
 
 ---
 
-## Exemplos Praticos de Uso
+## Exemplos Práticos de Uso
 
 ### Exemplo 1: Buscar medicamento e obter detalhes completos
 
@@ -936,26 +936,26 @@ curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/search?q=&entity=amp&filter[fabricante]=medley&limit=10" | jq
 ```
 
-### Exemplo 3: Buscar por codigo de registro
+### Exemplo 3: Buscar por código de registro
 
 ```bash
-# Buscar AMP por codigo NU_APID
+# Buscar AMP por código NU_APID
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/amp?codigo=9876543" | jq
 
-# Buscar VMP por codigo NU_VPID
+# Buscar VMP por código NU_VPID
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/vmp?codigo=3456789" | jq
 ```
 
-### Exemplo 4: Consultar formas farmaceuticas e vias de administracao
+### Exemplo 4: Consultar formas farmacêuticas e vias de administração
 
 ```bash
-# Listar formas farmaceuticas disponiveis
+# Listar formas farmacêuticas disponíveis
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/domains/form?limit=20" | jq
 
-# Listar vias de administracao
+# Listar vias de administração
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/domains/route?limit=20" | jq
 
@@ -963,12 +963,12 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/domains/atc-class?limit=20" | jq
 
-# Buscar dominio por nome
+# Buscar domínio por nome
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/domains/form?nome=comprimido&limit=5" | jq
 ```
 
-### Exemplo 5: Percorrer todas as paginas de resultados
+### Exemplo 5: Percorrer todas as páginas de resultados
 
 ```bash
 # Script para paginar por todos os VMPs
@@ -985,7 +985,7 @@ while true; do
   # Processar os itens
   echo "$response" | jq '.items[] | {id: .co_seq_id, nome: .no_nm}'
 
-  # Obter proximo cursor
+  # Obter próximo cursor
   cursor=$(echo "$response" | jq -r '.cursor')
 
   # Se cursor vazio, chegamos ao fim
@@ -999,7 +999,7 @@ done
 ### Exemplo 6: Obter ingredientes de um VMP
 
 ```bash
-# VMP detalhado mostra ingredientes com concentracao
+# VMP detalhado mostra ingredientes com concentração
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/vmp/1234/detail" | jq '.ingredients'
 ```
@@ -1016,11 +1016,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ## Tabela Completa de Rotas
 
-| Metodo | Rota | Auth | Descricao |
+| Método | Rota | Auth | Descrição |
 |--------|------|------|-----------|
-| `POST` | `/auth/login` | Nao | Login, retorna JWT |
-| `GET` | `/health` | Nao | Health check (PostgreSQL + Meilisearch) |
-| `GET` | `/swagger/*` | Nao | Swagger UI |
+| `POST` | `/auth/login` | Não | Login, retorna JWT |
+| `GET` | `/health` | Não | Health check (PostgreSQL + Meilisearch) |
+| `GET` | `/swagger/*` | Não | Swagger UI |
 | `GET` | `/api/v1/search` | Sim | Busca global Meilisearch |
 | `GET` | `/api/v1/vmp` | Sim | Listar VMPs |
 | `GET` | `/api/v1/vmp/:id` | Sim | VMP por ID |
@@ -1040,6 +1040,6 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 | `GET` | `/api/v1/dcb/:id` | Sim | DCB por ID |
 | `GET` | `/api/v1/ingredients` | Sim | Listar Ingredientes |
 | `GET` | `/api/v1/ingredients/:id` | Sim | Ingrediente por ID |
-| `GET` | `/api/v1/domains/:domain` | Sim | Listar dominios por tipo |
-| `GET` | `/api/v1/domains/:domain/:id` | Sim | Dominio por tipo e ID |
+| `GET` | `/api/v1/domains/:domain` | Sim | Listar domínios por tipo |
+| `GET` | `/api/v1/domains/:domain/:id` | Sim | Domínio por tipo e ID |
 | `POST` | `/api/v1/admin/reindex` | Sim | Reindexar Meilisearch |

@@ -89,7 +89,7 @@ func main() {
 		Info: PostmanInfo{
 			Name:        "OBM API",
 			Schema:      "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-			Description: "API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil.",
+			Description: "API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de medicamentos seguindo o padrão dm%d adaptado para o Brasil.",
 		},
 		Variable: []PostmanVar{
 			{Key: "base_url", Value: "http://localhost:8094", Enabled: true},
@@ -193,7 +193,7 @@ func makeSearchFolder(baseURL string, h []PostmanHeader) PostmanItem {
 				{Key: "q", Value: "paracetamol", Disabled: false, Description: "Termo de busca"},
 				{Key: "entity", Value: "vmp,amp", Disabled: true, Description: "Entidades (vmp,amp,supplier)"},
 				{Key: "limit", Value: "20", Disabled: true},
-				{Key: "cursor", Value: "", Disabled: true, Description: "Cursor de paginacao"},
+				{Key: "cursor", Value: "", Disabled: true, Description: "Cursor de paginação"},
 				{Key: "filter[nome]", Value: "", Disabled: true},
 				{Key: "filter[codigo]", Value: "", Disabled: true},
 				{Key: "filter[fabricante]", Value: "", Disabled: true},
@@ -333,33 +333,33 @@ func makeDomainFolder(baseURL string, h []PostmanHeader) PostmanItem {
 		name string
 		key  string
 	}{
-		{"Formas Farmaceuticas", "form"},
-		{"Vias de Administracao", "route"},
+		{"Formas Farmacêuticas", "form"},
+		{"Vias de Administração", "route"},
 		{"Sabores", "flavour"},
 		{"Categorias Legais", "legal_category"},
 		{"Autoridades Licenciadas", "licensing_authority"},
-		{"Restricoes de Disponibilidade", "availability_restriction"},
-		{"Classificacao ANVS", "med_class_br"},
-		{"Classificacao ATC", "atc_class_br"},
+		{"Restrições de Disponibilidade", "availability_restriction"},
+		{"Classificação ANVS", "med_class_br"},
+		{"Classificação ATC", "atc_class_br"},
 		{"Categorias Controladas", "control_drug_category"},
 		{"Indicadores DF", "df_indicator"},
-		{"Paises", "country"},
+		{"Países", "country"},
 		{"Unidades de Medida", "unit_of_measure"},
-		{"Preservacao", "preserv_cond_br"},
+		{"Preservação", "preserv_cond_br"},
 		{"Rename", "rename_comp_br"},
 		{"Brimunologico", "brimunologico"},
 		{"Catmat", "catmat_br"},
 		{"Monitoramento", "monitoring_reason_br"},
-		{"Local Aplicacao", "local_aplicacao"},
+		{"Local Aplicação", "local_aplicacao"},
 	}
 
 	items := []PostmanItem{
-		req("GET", "Listar Dominios", baseURL+"/api/v1/domains/form", h, []PostmanQuery{
+		req("GET", "Listar Domínios", baseURL+"/api/v1/domains/form", h, []PostmanQuery{
 			{Key: "limit", Value: "20", Disabled: true},
 			{Key: "cursor", Value: "", Disabled: true},
 			{Key: "nome", Value: "", Disabled: true},
 		}, nil),
-		req("GET", "Dominio por ID", baseURL+"/api/v1/domains/form/1", h, nil, nil),
+		req("GET", "Domínio por ID", baseURL+"/api/v1/domains/form/1", h, nil, nil),
 	}
 
 	for _, d := range domainTypes {

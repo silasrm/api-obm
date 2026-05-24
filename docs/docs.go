@@ -59,7 +59,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Lista Actual Medicinal Products com paginacao e filtros",
+                "description": "Lista Actual Medicinal Products com paginação e filtros",
                 "produces": [
                     "application/json"
                 ],
@@ -71,13 +71,13 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 20,
-                        "description": "Limite por pagina",
+                        "description": "Limite por página",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Cursor de paginacao",
+                        "description": "Cursor de paginação",
                         "name": "cursor",
                         "in": "query"
                     },
@@ -89,7 +89,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Filtro por codigo NU_APID",
+                        "description": "Filtro por código NU_APID",
                         "name": "codigo",
                         "in": "query"
                     },
@@ -187,7 +187,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retorna um AMP com detalhes completos (VMP, fornecedor, dominios, ingredientes, rotas, etc.)",
+                "description": "Retorna um AMP com detalhes completos (VMP, fornecedor, domínios, ingredientes, rotas, etc.)",
                 "produces": [
                     "application/json"
                 ],
@@ -239,7 +239,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Lista Actual Medicinal Product Packs com paginacao e filtros",
+                "description": "Lista Actual Medicinal Product Packs com paginação e filtros",
                 "produces": [
                     "application/json"
                 ],
@@ -251,13 +251,13 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 20,
-                        "description": "Limite por pagina",
+                        "description": "Limite por página",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Cursor de paginacao",
+                        "description": "Cursor de paginação",
                         "name": "cursor",
                         "in": "query"
                     },
@@ -355,7 +355,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Lista Denominacoes Comuns Brasileiras com paginacao e filtros",
+                "description": "Lista Denominações Comuns Brasileiras com paginação e filtros",
                 "produces": [
                     "application/json"
                 ],
@@ -367,13 +367,13 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 20,
-                        "description": "Limite por pagina",
+                        "description": "Limite por página",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Cursor de paginacao",
+                        "description": "Cursor de paginação",
                         "name": "cursor",
                         "in": "query"
                     },
@@ -419,7 +419,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retorna uma Denominacao Comum Brasileira pelo seu ID",
+                "description": "Retorna uma Denominação Comum Brasileira pelo seu ID",
                 "produces": [
                     "application/json"
                 ],
@@ -471,7 +471,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Lista dominios (tabelas td_*) por tipo com paginacao e filtros",
+                "description": "Lista domínios (tabelas td_*) por tipo com paginação e filtros",
                 "produces": [
                     "application/json"
                 ],
@@ -482,7 +482,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Tipo de dominio (form, route, flavour, legal_category, licensing_authority, etc.)",
+                        "description": "Tipo de domínio (form, route, flavour, legal_category, licensing_authority, etc.)",
                         "name": "domain",
                         "in": "path",
                         "required": true
@@ -490,13 +490,13 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 20,
-                        "description": "Limite por pagina",
+                        "description": "Limite por página",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Cursor de paginacao",
+                        "description": "Cursor de paginação",
                         "name": "cursor",
                         "in": "query"
                     },
@@ -542,25 +542,25 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retorna um dominio especifico pelo tipo e ID",
+                "description": "Retorna um domínio específico pelo tipo e ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Domain"
                 ],
-                "summary": "Obter dominio por tipo e ID",
+                "summary": "Obter domínio por tipo e ID",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Tipo de dominio",
+                        "description": "Tipo de domínio",
                         "name": "domain",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "integer",
-                        "description": "ID do dominio",
+                        "description": "ID do domínio",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -601,7 +601,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Lista Ingredient Substances com paginacao e filtros",
+                "description": "Lista Ingredient Substances com paginação e filtros",
                 "produces": [
                     "application/json"
                 ],
@@ -613,13 +613,13 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 20,
-                        "description": "Limite por pagina",
+                        "description": "Limite por página",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Cursor de paginacao",
+                        "description": "Cursor de paginação",
                         "name": "cursor",
                         "in": "query"
                     },
@@ -748,7 +748,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Cursor de paginacao",
+                        "description": "Cursor de paginação",
                         "name": "cursor",
                         "in": "query"
                     },
@@ -760,7 +760,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Filtro por codigo",
+                        "description": "Filtro por código",
                         "name": "filter[codigo]",
                         "in": "query"
                     },
@@ -772,7 +772,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Filtro por descricao",
+                        "description": "Filtro por descrição",
                         "name": "filter[descricao]",
                         "in": "query"
                     },
@@ -818,7 +818,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Lista fornecedores com paginacao e filtros",
+                "description": "Lista fornecedores com paginação e filtros",
                 "produces": [
                     "application/json"
                 ],
@@ -830,13 +830,13 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 20,
-                        "description": "Limite por pagina",
+                        "description": "Limite por página",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Cursor de paginacao",
+                        "description": "Cursor de paginação",
                         "name": "cursor",
                         "in": "query"
                     },
@@ -848,7 +848,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Filtro por codigo NU_CD",
+                        "description": "Filtro por código NU_CD",
                         "name": "codigo",
                         "in": "query"
                     },
@@ -940,7 +940,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Lista Virtual Medicinal Products com paginacao e filtros",
+                "description": "Lista Virtual Medicinal Products com paginação e filtros",
                 "produces": [
                     "application/json"
                 ],
@@ -952,13 +952,13 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 20,
-                        "description": "Limite por pagina",
+                        "description": "Limite por página",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Cursor de paginacao",
+                        "description": "Cursor de paginação",
                         "name": "cursor",
                         "in": "query"
                     },
@@ -970,7 +970,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Filtro por codigo NU_VPID",
+                        "description": "Filtro por código NU_VPID",
                         "name": "codigo",
                         "in": "query"
                     },
@@ -1062,7 +1062,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retorna um VMP com detalhes completos (VTM, dominios, ingredientes, rotas, formas, etc.)",
+                "description": "Retorna um VMP com detalhes completos (VTM, domínios, ingredientes, rotas, formas, etc.)",
                 "produces": [
                     "application/json"
                 ],
@@ -1114,7 +1114,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Lista Virtual Medicinal Product Packs com paginacao e filtros",
+                "description": "Lista Virtual Medicinal Product Packs com paginação e filtros",
                 "produces": [
                     "application/json"
                 ],
@@ -1126,13 +1126,13 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 20,
-                        "description": "Limite por pagina",
+                        "description": "Limite por página",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Cursor de paginacao",
+                        "description": "Cursor de paginação",
                         "name": "cursor",
                         "in": "query"
                     },
@@ -1230,7 +1230,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Lista Virtual Therapeutic Moieties com paginacao e filtros",
+                "description": "Lista Virtual Therapeutic Moieties com paginação e filtros",
                 "produces": [
                     "application/json"
                 ],
@@ -1242,13 +1242,13 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 20,
-                        "description": "Limite por pagina",
+                        "description": "Limite por página",
                         "name": "limit",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Cursor de paginacao",
+                        "description": "Cursor de paginação",
                         "name": "cursor",
                         "in": "query"
                     },
@@ -1351,7 +1351,7 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Autenticar usuario",
+                "summary": "Autenticar usuário",
                 "parameters": [
                     {
                         "description": "Credenciais",
@@ -2658,7 +2658,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "OBM API",
-Description: "API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil.",
+	Description:      "API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de medicamentos seguindo o padrão dm%d adaptado para o Brasil.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

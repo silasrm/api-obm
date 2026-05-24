@@ -19,14 +19,14 @@ func NewAMPHandler(uc *usecase.AMPUsecase) *AMPHandler {
 
 // ListAMP godoc
 // @Summary Listar AMPs
-// @Description Lista Actual Medicinal Products com paginacao e filtros
+// @Description Lista Actual Medicinal Products com paginação e filtros
 // @Tags AMP
 // @Produce json
 // @Security BearerAuth
-// @Param limit query int false "Limite por pagina" default(20)
-// @Param cursor query string false "Cursor de paginacao"
+// @Param limit query int false "Limite por página" default(20)
+// @Param cursor query string false "Cursor de paginação"
 // @Param nome query string false "Filtro por nome (ILIKE)"
-// @Param codigo query string false "Filtro por codigo NU_APID"
+// @Param codigo query string false "Filtro por código NU_APID"
 // @Param fabricante query string false "Filtro por nome do fabricante (ILIKE)"
 // @Param ativo query bool false "Filtro por status ativo"
 // @Success 200 {object} dto.ListResponse
@@ -84,7 +84,7 @@ func (h *AMPHandler) GetByID(c *gin.Context) {
 
 // GetAMPDetail godoc
 // @Summary Obter detalhes do AMP
-// @Description Retorna um AMP com detalhes completos (VMP, fornecedor, dominios, ingredientes, rotas, etc.)
+// @Description Retorna um AMP com detalhes completos (VMP, fornecedor, domínios, ingredientes, rotas, etc.)
 // @Tags AMP
 // @Produce json
 // @Security BearerAuth

@@ -815,8 +815,8 @@ definitions:
 host: localhost:8094
 info:
   contact: {}
-description: API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados
-  de medicamentos seguindo o padrao dm%d adaptado para o Brasil.
+  description: API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de
+    medicamentos seguindo o padrão dm%d adaptado para o Brasil.
   title: OBM API
   version: "1.0"
 paths:
@@ -845,14 +845,14 @@ paths:
       - Admin
   /api/v1/amp:
     get:
-      description: Lista Actual Medicinal Products com paginacao e filtros
+      description: Lista Actual Medicinal Products com paginação e filtros
       parameters:
       - default: 20
-        description: Limite por pagina
+        description: Limite por página
         in: query
         name: limit
         type: integer
-      - description: Cursor de paginacao
+      - description: Cursor de paginação
         in: query
         name: cursor
         type: string
@@ -860,7 +860,7 @@ paths:
         in: query
         name: nome
         type: string
-      - description: Filtro por codigo NU_APID
+      - description: Filtro por código NU_APID
         in: query
         name: codigo
         type: string
@@ -927,7 +927,7 @@ paths:
       - AMP
   /api/v1/amp/{id}/detail:
     get:
-      description: Retorna um AMP com detalhes completos (VMP, fornecedor, dominios,
+      description: Retorna um AMP com detalhes completos (VMP, fornecedor, domínios,
         ingredientes, rotas, etc.)
       parameters:
       - description: ID do AMP
@@ -961,14 +961,14 @@ paths:
       - AMP
   /api/v1/ampp:
     get:
-      description: Lista Actual Medicinal Product Packs com paginacao e filtros
+      description: Lista Actual Medicinal Product Packs com paginação e filtros
       parameters:
       - default: 20
-        description: Limite por pagina
+        description: Limite por página
         in: query
         name: limit
         type: integer
-      - description: Cursor de paginacao
+      - description: Cursor de paginação
         in: query
         name: cursor
         type: string
@@ -1035,14 +1035,14 @@ paths:
       - AMPP
   /api/v1/dcb:
     get:
-      description: Lista Denominacoes Comuns Brasileiras com paginacao e filtros
+      description: Lista Denominações Comuns Brasileiras com paginação e filtros
       parameters:
       - default: 20
-        description: Limite por pagina
+        description: Limite por página
         in: query
         name: limit
         type: integer
-      - description: Cursor de paginacao
+      - description: Cursor de paginação
         in: query
         name: cursor
         type: string
@@ -1076,7 +1076,7 @@ paths:
       - DCB
   /api/v1/dcb/{id}:
     get:
-      description: Retorna uma Denominacao Comum Brasileira pelo seu ID
+      description: Retorna uma Denominação Comum Brasileira pelo seu ID
       parameters:
       - description: ID do DCB
         in: path
@@ -1109,20 +1109,20 @@ paths:
       - DCB
   /api/v1/domains/{domain}:
     get:
-      description: Lista dominios (tabelas td_*) por tipo com paginacao e filtros
+      description: Lista domínios (tabelas td_*) por tipo com paginação e filtros
       parameters:
-      - description: Tipo de dominio (form, route, flavour, legal_category, licensing_authority,
+      - description: Tipo de domínio (form, route, flavour, legal_category, licensing_authority,
           etc.)
         in: path
         name: domain
         required: true
         type: string
       - default: 20
-        description: Limite por pagina
+        description: Limite por página
         in: query
         name: limit
         type: integer
-      - description: Cursor de paginacao
+      - description: Cursor de paginação
         in: query
         name: cursor
         type: string
@@ -1156,14 +1156,14 @@ paths:
       - Domain
   /api/v1/domains/{domain}/{id}:
     get:
-      description: Retorna um dominio especifico pelo tipo e ID
+      description: Retorna um domínio específico pelo tipo e ID
       parameters:
-      - description: Tipo de dominio
+      - description: Tipo de domínio
         in: path
         name: domain
         required: true
         type: string
-      - description: ID do dominio
+      - description: ID do domínio
         in: path
         name: id
         required: true
@@ -1189,19 +1189,19 @@ paths:
             $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: Obter dominio por tipo e ID
+      summary: Obter domínio por tipo e ID
       tags:
       - Domain
   /api/v1/ingredients:
     get:
-      description: Lista Ingredient Substances com paginacao e filtros
+      description: Lista Ingredient Substances com paginação e filtros
       parameters:
       - default: 20
-        description: Limite por pagina
+        description: Limite por página
         in: query
         name: limit
         type: integer
-      - description: Cursor de paginacao
+      - description: Cursor de paginação
         in: query
         name: cursor
         type: string
@@ -1284,7 +1284,7 @@ paths:
         in: query
         name: limit
         type: integer
-      - description: Cursor de paginacao
+      - description: Cursor de paginação
         in: query
         name: cursor
         type: string
@@ -1292,7 +1292,7 @@ paths:
         in: query
         name: filter[nome]
         type: string
-      - description: Filtro por codigo
+      - description: Filtro por código
         in: query
         name: filter[codigo]
         type: string
@@ -1300,7 +1300,7 @@ paths:
         in: query
         name: filter[fabricante]
         type: string
-      - description: Filtro por descricao
+      - description: Filtro por descrição
         in: query
         name: filter[descricao]
         type: string
@@ -1334,14 +1334,14 @@ paths:
       - Search
   /api/v1/suppliers:
     get:
-      description: Lista fornecedores com paginacao e filtros
+      description: Lista fornecedores com paginação e filtros
       parameters:
       - default: 20
-        description: Limite por pagina
+        description: Limite por página
         in: query
         name: limit
         type: integer
-      - description: Cursor de paginacao
+      - description: Cursor de paginação
         in: query
         name: cursor
         type: string
@@ -1349,7 +1349,7 @@ paths:
         in: query
         name: nome
         type: string
-      - description: Filtro por codigo NU_CD
+      - description: Filtro por código NU_CD
         in: query
         name: codigo
         type: string
@@ -1412,14 +1412,14 @@ paths:
       - Supplier
   /api/v1/vmp:
     get:
-      description: Lista Virtual Medicinal Products com paginacao e filtros
+      description: Lista Virtual Medicinal Products com paginação e filtros
       parameters:
       - default: 20
-        description: Limite por pagina
+        description: Limite por página
         in: query
         name: limit
         type: integer
-      - description: Cursor de paginacao
+      - description: Cursor de paginação
         in: query
         name: cursor
         type: string
@@ -1427,7 +1427,7 @@ paths:
         in: query
         name: nome
         type: string
-      - description: Filtro por codigo NU_VPID
+      - description: Filtro por código NU_VPID
         in: query
         name: codigo
         type: string
@@ -1490,7 +1490,7 @@ paths:
       - VMP
   /api/v1/vmp/{id}/detail:
     get:
-      description: Retorna um VMP com detalhes completos (VTM, dominios, ingredientes,
+      description: Retorna um VMP com detalhes completos (VTM, domínios, ingredientes,
         rotas, formas, etc.)
       parameters:
       - description: ID do VMP
@@ -1524,14 +1524,14 @@ paths:
       - VMP
   /api/v1/vmpp:
     get:
-      description: Lista Virtual Medicinal Product Packs com paginacao e filtros
+      description: Lista Virtual Medicinal Product Packs com paginação e filtros
       parameters:
       - default: 20
-        description: Limite por pagina
+        description: Limite por página
         in: query
         name: limit
         type: integer
-      - description: Cursor de paginacao
+      - description: Cursor de paginação
         in: query
         name: cursor
         type: string
@@ -1598,14 +1598,14 @@ paths:
       - VMPP
   /api/v1/vtm:
     get:
-      description: Lista Virtual Therapeutic Moieties com paginacao e filtros
+      description: Lista Virtual Therapeutic Moieties com paginação e filtros
       parameters:
       - default: 20
-        description: Limite por pagina
+        description: Limite por página
         in: query
         name: limit
         type: integer
-      - description: Cursor de paginacao
+      - description: Cursor de paginação
         in: query
         name: cursor
         type: string
@@ -1697,7 +1697,7 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/github_com_silasrm_api-obm_internal_interface_http_dto.ErrorResponse'
-      summary: Autenticar usuario
+      summary: Autenticar usuário
       tags:
       - Auth
   /health:

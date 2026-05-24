@@ -17,7 +17,7 @@ func NewAuthHandler(uc *usecase.AuthUsecase) *AuthHandler {
 }
 
 // Login godoc
-// @Summary Autenticar usuario
+// @Summary Autenticar usuário
 // @Description Realiza login e retorna token JWT
 // @Tags Auth
 // @Accept json

@@ -19,14 +19,14 @@ func NewVMPHandler(uc *usecase.VMPUsecase) *VMPHandler {
 
 // ListVMP godoc
 // @Summary Listar VMPs
-// @Description Lista Virtual Medicinal Products com paginacao e filtros
+// @Description Lista Virtual Medicinal Products com paginação e filtros
 // @Tags VMP
 // @Produce json
 // @Security BearerAuth
-// @Param limit query int false "Limite por pagina" default(20)
-// @Param cursor query string false "Cursor de paginacao"
+// @Param limit query int false "Limite por página" default(20)
+// @Param cursor query string false "Cursor de paginação"
 // @Param nome query string false "Filtro por nome (ILIKE)"
-// @Param codigo query string false "Filtro por codigo NU_VPID"
+// @Param codigo query string false "Filtro por código NU_VPID"
 // @Param ativo query bool false "Filtro por status ativo"
 // @Success 200 {object} dto.ListResponse
 // @Failure 401 {object} dto.ErrorResponse
@@ -82,7 +82,7 @@ func (h *VMPHandler) GetByID(c *gin.Context) {
 
 // GetVMPDetail godoc
 // @Summary Obter detalhes do VMP
-// @Description Retorna um VMP com detalhes completos (VTM, dominios, ingredientes, rotas, formas, etc.)
+// @Description Retorna um VMP com detalhes completos (VTM, domínios, ingredientes, rotas, formas, etc.)
 // @Tags VMP
 // @Produce json
 // @Security BearerAuth

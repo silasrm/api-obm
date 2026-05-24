@@ -2,7 +2,7 @@
   "info": {
     "name": "OBM API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de medicamentos seguindo o padrao dm%d adaptado para o Brasil."
+    "description": "API da Ontologia Brasileira de Medicamentos (OBM). Gerencia dados de medicamentos seguindo o padrão dm%d adaptado para o Brasil."
   },
   "item": [
     {
@@ -118,7 +118,7 @@
                   "key": "cursor",
                   "value": "",
                   "disabled": true,
-                  "description": "Cursor de paginacao"
+                  "description": "Cursor de paginação"
                 },
                 {
                   "key": "filter[nome]",
@@ -943,7 +943,7 @@
       "name": "Domains",
       "item": [
         {
-          "name": "Listar Dominios",
+          "name": "Listar Domínios",
           "request": {
             "method": "GET",
             "header": [
@@ -991,7 +991,7 @@
           "response": []
         },
         {
-          "name": "Dominio por ID",
+          "name": "Domínio por ID",
           "request": {
             "method": "GET",
             "header": [
@@ -1023,7 +1023,7 @@
           "response": []
         },
         {
-          "name": "Formas Farmaceuticas",
+          "name": "Formas Farmacêuticas",
           "request": {
             "method": "GET",
             "header": [
@@ -1066,7 +1066,7 @@
           "response": []
         },
         {
-          "name": "Vias de Administracao",
+          "name": "Vias de Administração",
           "request": {
             "method": "GET",
             "header": [
@@ -1238,7 +1238,7 @@
           "response": []
         },
         {
-          "name": "Restricoes de Disponibilidade",
+          "name": "Restrições de Disponibilidade",
           "request": {
             "method": "GET",
             "header": [
@@ -1281,7 +1281,7 @@
           "response": []
         },
         {
-          "name": "Classificacao ANVS",
+          "name": "Classificação ANVS",
           "request": {
             "method": "GET",
             "header": [
@@ -1324,7 +1324,7 @@
           "response": []
         },
         {
-          "name": "Classificacao ATC",
+          "name": "Classificação ATC",
           "request": {
             "method": "GET",
             "header": [
@@ -1453,7 +1453,7 @@
           "response": []
         },
         {
-          "name": "Paises",
+          "name": "Países",
           "request": {
             "method": "GET",
             "header": [
@@ -1539,7 +1539,7 @@
           "response": []
         },
         {
-          "name": "Preservacao",
+          "name": "Preservação",
           "request": {
             "method": "GET",
             "header": [
@@ -1754,7 +1754,7 @@
           "response": []
         },
         {
-          "name": "Local Aplicacao",
+          "name": "Local Aplicação",
           "request": {
             "method": "GET",
             "header": [
