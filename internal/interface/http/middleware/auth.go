@@ -16,13 +16,15 @@ func AuthMiddleware(jwtSecret string) gin.HandlerFunc {
 			return
 		}
 
+		var tokenStr string
 		parts := strings.SplitN(authHeader, " ", 2)
-		if len(parts) != 2 || !strings.EqualFold(parts[0], "Bearer") {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid authorization header format", "code": http.StatusUnauthorized})
-			return
+		if len(parts) == 2 && strings.EqualFold(parts[0], "Bearer") {
+			tokenStr = parts[1]
+		} else {
+			tokenStr = authHeader
 		}
 
-		token, err := jwt.Parse(parts[1], func(t *jwt.Token) (interface{}, error) {
+		token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (interface{}, error) {
 			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, jwt.ErrSignatureInvalid
 			}
