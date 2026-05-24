@@ -61,7 +61,7 @@ go run ./cmd/api/
 ## 5. Obter token JWT
 
 ```bash
-curl -s -X POST http://localhost:8080/auth/login \
+curl -s -X POST http://localhost:8094/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 ```
@@ -86,7 +86,7 @@ TOKEN="<cole_o_token_aqui>"
 ### Health Check (sem auth)
 
 ```bash
-curl -s http://localhost:8080/health | jq
+curl -s http://localhost:8094/health | jq
 ```
 
 Esperado:
@@ -103,14 +103,14 @@ Esperado:
 
 ```bash
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/search?q=paracetamol&limit=5" | jq
+  "http://localhost:8094/api/v1/search?q=paracetamol&limit=5" | jq
 ```
 
 Filtros disponiveis: `filter[nome]`, `filter[codigo]`, `filter[fabricante]`, `filter[descricao]`, `filter[ativo]`
 
 ```bash
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/search?q=dipirona&entity=vmp,amp&limit=5" | jq
+  "http://localhost:8094/api/v1/search?q=dipirona&entity=vmp,amp&limit=5" | jq
 ```
 
 ### VMP - Virtual Medicinal Product
@@ -118,19 +118,19 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ```bash
 # Listar VMPs
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vmp?limit=5" | jq
+  "http://localhost:8094/api/v1/vmp?limit=5" | jq
 
 # Filtrar por nome
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vmp?nome=paracetamol&limit=5" | jq
+  "http://localhost:8094/api/v1/vmp?nome=paracetamol&limit=5" | jq
 
 # VMP por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vmp/1" | jq
+  "http://localhost:8094/api/v1/vmp/1" | jq
 
 # VMP detalhado (com VTM, dominios, ingredientes, rotas, etc.)
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vmp/1/detail" | jq
+  "http://localhost:8094/api/v1/vmp/1/detail" | jq
 ```
 
 ### AMP - Actual Medicinal Product
@@ -138,19 +138,19 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ```bash
 # Listar AMPs
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/amp?limit=5" | jq
+  "http://localhost:8094/api/v1/amp?limit=5" | jq
 
 # Filtrar por fabricante
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/amp?fabricante=medley&limit=5" | jq
+  "http://localhost:8094/api/v1/amp?fabricante=medley&limit=5" | jq
 
 # AMP por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/amp/1" | jq
+  "http://localhost:8094/api/v1/amp/1" | jq
 
 # AMP detalhado (com VMP, fornecedor, dominios, ingredientes, etc.)
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/amp/1/detail" | jq
+  "http://localhost:8094/api/v1/amp/1/detail" | jq
 ```
 
 ### VTM - Virtual Therapeutic Moiety
@@ -158,11 +158,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ```bash
 # Listar VTMs
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vtm?limit=5" | jq
+  "http://localhost:8094/api/v1/vtm?limit=5" | jq
 
 # VTM por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vtm/1" | jq
+  "http://localhost:8094/api/v1/vtm/1" | jq
 ```
 
 ### VMPP - Virtual Medicinal Product Pack
@@ -170,11 +170,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ```bash
 # Listar VMPPs
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vmpp?limit=5" | jq
+  "http://localhost:8094/api/v1/vmpp?limit=5" | jq
 
 # VMPP por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vmpp/1" | jq
+  "http://localhost:8094/api/v1/vmpp/1" | jq
 ```
 
 ### AMPP - Actual Medicinal Product Pack
@@ -182,11 +182,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ```bash
 # Listar AMPPs
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/ampp?limit=5" | jq
+  "http://localhost:8094/api/v1/ampp?limit=5" | jq
 
 # AMPP por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/ampp/1" | jq
+  "http://localhost:8094/api/v1/ampp/1" | jq
 ```
 
 ### Fornecedores (Suppliers)
@@ -194,11 +194,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ```bash
 # Listar fornecedores
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/suppliers?limit=5" | jq
+  "http://localhost:8094/api/v1/suppliers?limit=5" | jq
 
 # Fornecedor por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/suppliers/1" | jq
+  "http://localhost:8094/api/v1/suppliers/1" | jq
 ```
 
 ### DCB - Denominacao Comum Brasileira
@@ -206,11 +206,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ```bash
 # Listar DCBs
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/dcb?limit=5" | jq
+  "http://localhost:8094/api/v1/dcb?limit=5" | jq
 
 # DCB por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/dcb/1" | jq
+  "http://localhost:8094/api/v1/dcb/1" | jq
 ```
 
 ### Ingredientes (Ingredient Substances)
@@ -218,11 +218,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ```bash
 # Listar ingredientes
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/ingredients?limit=5" | jq
+  "http://localhost:8094/api/v1/ingredients?limit=5" | jq
 
 # Ingrediente por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/ingredients/1" | jq
+  "http://localhost:8094/api/v1/ingredients/1" | jq
 ```
 
 ### Dominios
@@ -232,21 +232,21 @@ Tipos disponiveis: `form`, `route`, `flavour`, `legal_category`, `licensing_auth
 ```bash
 # Listar dominios por tipo
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/domains/form?limit=5" | jq
+  "http://localhost:8094/api/v1/domains/form?limit=5" | jq
 
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/domains/route?limit=5" | jq
+  "http://localhost:8094/api/v1/domains/route?limit=5" | jq
 
 # Dominio por tipo e ID
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/domains/form/1" | jq
+  "http://localhost:8094/api/v1/domains/form/1" | jq
 ```
 
 ### Admin - Reindexar Meilisearch
 
 ```bash
 curl -s -X POST -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/admin/reindex" | jq
+  "http://localhost:8094/api/v1/admin/reindex" | jq
 ```
 
 Esperado:
@@ -269,11 +269,11 @@ Todas as rotas de listagem suportam paginacao baseada em cursor:
 ```bash
 # Primeira pagina
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vmp?limit=3" | jq
+  "http://localhost:8094/api/v1/vmp?limit=3" | jq
 
 # Use o valor de "cursor" da resposta anterior para a proxima pagina
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vmp?limit=3&cursor=<cursor_value>" | jq
+  "http://localhost:8094/api/v1/vmp?limit=3&cursor=<cursor_value>" | jq
 ```
 
 ## 8. Testes de erro
@@ -282,7 +282,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ```bash
 curl -s -H "Authorization: Bearer invalid_token" \
-  "http://localhost:8080/api/v1/vmp" | jq
+  "http://localhost:8094/api/v1/vmp" | jq
 ```
 
 Esperado: `{"error":"invalid token","code":401}`
@@ -290,7 +290,7 @@ Esperado: `{"error":"invalid token","code":401}`
 ### Sem Authorization header (401)
 
 ```bash
-curl -s "http://localhost:8080/api/v1/vmp" | jq
+curl -s "http://localhost:8094/api/v1/vmp" | jq
 ```
 
 Esperado: `{"error":"missing authorization header","code":401}`
@@ -299,7 +299,7 @@ Esperado: `{"error":"missing authorization header","code":401}`
 
 ```bash
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vmp/abc" | jq
+  "http://localhost:8094/api/v1/vmp/abc" | jq
 ```
 
 Esperado: `{"error":"invalid id","code":400}`
@@ -308,13 +308,13 @@ Esperado: `{"error":"invalid id","code":400}`
 
 ```bash
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/vmp/999999999" | jq
+  "http://localhost:8094/api/v1/vmp/999999999" | jq
 ```
 
 ### Login invalido (401)
 
 ```bash
-curl -s -X POST http://localhost:8080/auth/login \
+curl -s -X POST http://localhost:8094/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"wrong"}' | jq
 ```
@@ -326,7 +326,7 @@ Esperado: `{"error":"invalid credentials","code":401}`
 Acesse no navegador:
 
 ```
-http://localhost:8080/swagger/index.html
+http://localhost:8094/swagger/index.html
 ```
 
 Permite testar todos os endpoints interativamente com autenticacao Bearer.

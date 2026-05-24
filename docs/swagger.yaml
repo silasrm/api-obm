@@ -812,7 +812,7 @@ definitions:
       st_registro_ativo:
         type: string
     type: object
-host: localhost:8080
+host: localhost:8094
 info:
   contact: {}
   description: API do Observatorio de Medicamentos - Brasil (OBM). Gerencia dados

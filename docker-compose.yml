@@ -2,7 +2,7 @@ services:
   api:
     build: .
     ports:
-      - "8080:8080"
+      - "8094:8094"
     depends_on:
       postgres:
         condition: service_healthy
@@ -22,7 +22,7 @@ services:
       MEILI_INDEX_PREFIX: "obm_"
       JWT_SECRET: "obm-secret-key-change-in-prod"
       JWT_EXPIRATION_HOURS: 24
-      SERVER_PORT: 8080
+      SERVER_PORT: 8094
       GIN_MODE: "release"
       SYNC_ON_STARTUP: "true"
     restart: unless-stopped
