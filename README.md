@@ -23,6 +23,7 @@ API REST para consulta de dados da [Ontologia Brasileira de Medicamentos (OBM)](
 - [Admin](#admin)
 - [Paginação](#paginação)
 - [Códigos de Erro](#códigos-de-erro)
+- [CLI de Importação](#cli-de-importação)
 - [Instalação Local](#instalação-local)
 - [Exemplos Práticos de Uso](#exemplos-práticos-de-uso)
 
@@ -747,6 +748,78 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ---
 
+## CLI de Importação
+
+O CLI de importação (`cmd/import/`) permite carregar dados da OBM no banco PostgreSQL e reindexar o Meilisearch em um único comando. Ele converte automaticamente dumps MySQL para o formato PostgreSQL, importa os dados e atualiza os índices de busca.
+
+O dump OBM (~137 MB descomprimido) não está versionado no git por exceder o limite de arquivo do GitHub (100 MB). Por isso, a importação é feita sob demanda a partir de uma fonte local.
+
+### Fontes aceitas
+
+| Formato | Exemplo | Descrição |
+|---------|---------|-----------|
+| ZIP | `portal-obm-20250530.zip` | Extrai o arquivo `.sql` interno automaticamente |
+| SQL | `portal-obm-20250530.sql` | Dump MySQL utilizado diretamente |
+| SQL.GZ | `dump.sql.gz` | Dump compactado com gzip |
+| MySQL | `mysql://user:pass@host:3306/db` | Executa `mysqldump` automaticamente (necessário ter o binário no PATH) |
+
+### Flags
+
+| Flag | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `--source` | string | (obrigatório) | Caminho para `.zip`/`.sql`/`.sql.gz` ou URI `mysql://` |
+| `--output` | string | `migrations/postgres/001_obm_schema.sql` | Caminho de saída para `--convert-only` |
+| `--convert-only` | bool | `false` | Somente converter MySQL→PostgreSQL, sem importar |
+| `--reindex-only` | bool | `false` | Somente reindexar o Meilisearch |
+| `--skip-index` | bool | `false` | Pular a reindexação do Meilisearch após a importação |
+| `--validate` | bool | `false` | Executar validação pós-importação (contagem de registros e integridade referencial) |
+| `--full` | bool | `true` | Remover e recriar o schema antes de importar (modo padrão) |
+
+### Fluxo da importação
+
+1. **Resolução da fonte** — o CLI identifica o tipo de entrada (ZIP, SQL, gzip ou MySQL) e prepara um leitor de dados
+2. **Conversão** — o dump MySQL é convertido para PostgreSQL linha a linha (streaming via `io.Pipe`, sem arquivo temporário em disco)
+3. **Importação** — os comandos SQL convertidos são executados diretamente no PostgreSQL
+4. **Validação** (opcional, `--validate`) — contagem de registros por tabela e verificação de integridade referencial (VMP→VTM, AMP→VMP, AMP→Fornecedor)
+5. **Metadados** — a tabela `obm_metadata` registra a versão dos dados, data da importação, arquivo de origem e contagem de registros
+6. **Reindexação** — o Meilisearch é reindexado automaticamente com os dados de VMP, AMP e Fornecedores
+
+### Exemplos
+
+```bash
+# Importação completa (ZIP → PostgreSQL + Meilisearch)
+go run cmd/import/main.go --source=portal-obm-20250530.zip
+
+# Importação com validação pós-importação
+go run cmd/import/main.go --source=portal-obm-20250530.zip --validate
+
+# Apenas converter MySQL→PostgreSQL (sem importar)
+go run cmd/import/main.go --source=dump.sql --convert-only --output=migrations/postgres/001_obm_schema.sql
+
+# Apenas reindexar o Meilisearch
+go run cmd/import/main.go --reindex-only
+
+# Importar a partir de uma conexão MySQL direta (necessário ter mysqldump no PATH)
+go run cmd/import/main.go --source=mysql://user:pass@host:3306/dbportalobm
+
+# Importar sem reindexar o Meilisearch
+go run cmd/import/main.go --source=dump.sql --skip-index
+```
+
+### Método alternativo: SQL no diretório de migrations
+
+Se preferir que o Docker Compose carregue o banco na primeira inicialização, converta o dump separadamente:
+
+```bash
+go run scripts/convert_sql.go -input <caminho_do_dump_mysql> -output migrations/postgres/001_obm_schema.sql
+```
+
+O PostgreSQL do Docker Compose carrega automaticamente qualquer arquivo `.sql` colocado em `migrations/postgres/` na primeira inicialização (via `docker-entrypoint-initdb.d`).
+
+> **Atenção:** o arquivo `migrations/postgres/001_obm_schema.sql` possui ~1,1 milhão de linhas. O carregamento inicial pode levar vários minutos.
+
+---
+
 ## Instalação Local
 
 ### Pré-requisitos
@@ -756,36 +829,13 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 - `curl` ou Postman/Insomnia
 - `jq` (opcional, para formatar JSON)
 
-### 1. Obter o dump do banco de dados
-
-O arquivo SQL de inicialização do banco (~137 MB) não está versionado no git por exceder o limite do GitHub. Você precisa obtê-lo separadamente:
-
-```bash
-# Opção A: Baixar do portal OBM (se disponível)
-# Coloque o arquivo em:
-# migrations/postgres/001_obm_schema.sql
-
-# Opção B: Converter de um dump MySQL usando o script incluído
-go run scripts/convert_sql.go -input <caminho_do_dump_mysql> -output migrations/postgres/001_obm_schema.sql
-
-# Opção C: Gerar a partir do portal oficial
-# Acesse https://portal-obm.saude.gov.br/ e exporte os dados
-```
-
-O PostgreSQL do Docker Compose carrega automaticamente qualquer arquivo `.sql` colocado em `migrations/postgres/` na primeira inicialização (via `docker-entrypoint-initdb.d`).
-
-### 2. Subir infraestrutura
+### 1. Subir infraestrutura
 
 ```bash
 docker compose up postgres meilisearch -d
 ```
 
-Aguarde os healthchecks passarem (~30s). O PostgreSQL estará na porta **5433** e o Meilisearch na porta **7701**.
-
-> **Atenção:** o arquivo `migrations/postgres/001_obm_schema.sql` tem ~1.1 milhão de linhas. O carregamento inicial pode levar vários minutos. Monitore com:
-> ```bash
-> docker compose logs -f postgres
-> ```
+Aguarde os healthchecks passarem (~30 s). O PostgreSQL estará na porta **5433** e o Meilisearch na porta **7701**.
 
 Verifique se os serviços estão saudáveis:
 
@@ -795,7 +845,7 @@ docker compose ps
 
 Ambos devem mostrar `(healthy)` na coluna STATUS.
 
-### 3. Configurar o .env
+### 2. Configurar o .env
 
 ```bash
 cp .env.example .env
@@ -820,6 +870,16 @@ O `.env` já vem com as portas corretas. Variáveis disponíveis:
 | `GIN_MODE` | `release` | Modo do Gin (`debug` ou `release`) |
 | `SYNC_ON_STARTUP` | `true` | Reindexar Meilisearch ao iniciar |
 
+### 3. Importar dados
+
+Com a infraestrutura rodando, importe o dump OBM com o CLI de importação (veja a seção [CLI de Importação](#cli-de-importação) para detalhes completos):
+
+```bash
+go run cmd/import/main.go --source=portal-obm-20250530.zip
+```
+
+Ou, se preferir carregar via Docker Compose, coloque o SQL convertido em `migrations/postgres/` e reinicie o container do PostgreSQL.
+
 ### 4. Criar usuários iniciais
 
 ```bash
@@ -833,7 +893,7 @@ Cria os usuários padrão:
 | `admin` | `admin123` | sim |
 | `viewer` | `viewer123` | sim |
 
-### 5. Rodar a API
+### 5. Executar a API
 
 ```bash
 go run ./cmd/api/
@@ -847,7 +907,7 @@ GIN_MODE=debug go run ./cmd/api/
 
 O servidor iniciará na porta **8094**. Se `SYNC_ON_STARTUP=true`, a reindexação do Meilisearch ocorrerá automaticamente.
 
-### 6. Verificar se está funcionando
+### 6. Verificar o funcionamento
 
 ```bash
 curl -s http://localhost:8094/health | jq
@@ -884,7 +944,7 @@ Uma collection Postman está disponível em `postman/OBM_API.postman_collection.
 5. Selecione o ambiente **OBM API - Local** no canto superior direito
 6. Faça login via o request **Auth > Login**, copie o token e cole na variável `token` do ambiente
 
-### 9. Rodar via Docker (build completo)
+### 9. Executar via Docker (build completo)
 
 ```bash
 docker compose up --build -d
