@@ -7,12 +7,15 @@ import (
 	"strconv"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
+	godotenv.Load()
+
 	host := getEnv("PG_HOST", "localhost")
-	port := getEnvInt("PG_PORT", 5432)
+	port := getEnvInt("PG_PORT", 5433)
 	user := getEnv("PG_USER", "obm")
 	password := getEnv("PG_PASSWORD", "obm123")
 	database := getEnv("PG_DATABASE", "dbportalobm")
