@@ -1,6 +1,6 @@
 # Guia de Teste - API OBM
 
-## Pré-requisitos
+## Pre-requisitos
 
 - Docker e Docker Compose
 - Go 1.25+
@@ -10,17 +10,35 @@
 ## 1. Subir infraestrutura
 
 ```bash
-docker-compose up postgres meilisearch -d
+docker compose up postgres meilisearch -d
 ```
 
-Aguardar os healthchecks passarem (~30s). O PostgreSQL estara disponivel na porta 5433 e o Meilisearch na porta 7701 do host. O schema SQL sera carregado automaticamente pelo volume `./migrations/postgres:/docker-entrypoint-initdb.d`.
+Aguardar os healthchecks passarem (~30s). O PostgreSQL estara disponivel na porta **5433** e o Meilisearch na porta **7701** do host. O schema SQL sera carregado automaticamente pelo volume `./migrations/postgres:/docker-entrypoint-initdb.d`.
 
 > **Atencao**: o arquivo `001_obm_schema.sql` tem ~1.1 milhao de linhas. O carregamento inicial pode levar varios minutos. Monitore com:
 > ```bash
-> docker-compose logs -f postgres
+> docker compose logs -f postgres
 > ```
 
-## 2. Criar usuarios iniciais
+Verificar se os servicos estao saudaveis:
+
+```bash
+docker compose ps
+```
+
+Ambos devem mostrar `(healthy)` na coluna STATUS.
+
+## 2. Configurar o .env
+
+Copie o exemplo e ajuste se necessario:
+
+```bash
+cp .env.example .env
+```
+
+O `.env` ja vem com as portas corretas (`PG_PORT=5433`, `MEILI_URL=http://localhost:7701`).
+
+## 3. Criar usuarios iniciais
 
 ```bash
 go run scripts/seed_users.go
@@ -28,7 +46,7 @@ go run scripts/seed_users.go
 
 Cria `admin/admin123` e `viewer/viewer123`.
 
-## 3. Rodar a API
+## 4. Rodar a API
 
 ```bash
 GIN_MODE=debug go run ./cmd/api/
@@ -40,7 +58,7 @@ Ou em modo release (padrao):
 go run ./cmd/api/
 ```
 
-## 4. Obter token JWT
+## 5. Obter token JWT
 
 ```bash
 curl -s -X POST http://localhost:8080/auth/login \
@@ -63,7 +81,7 @@ Salve o token:
 TOKEN="<cole_o_token_aqui>"
 ```
 
-## 5. Testar endpoints
+## 6. Testar endpoints
 
 ### Health Check (sem auth)
 
@@ -138,9 +156,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ### VTM - Virtual Therapeutic Moiety
 
 ```bash
+# Listar VTMs
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/vtm?limit=5" | jq
 
+# VTM por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/vtm/1" | jq
 ```
@@ -148,9 +168,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ### VMPP - Virtual Medicinal Product Pack
 
 ```bash
+# Listar VMPPs
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/vmpp?limit=5" | jq
 
+# VMPP por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/vmpp/1" | jq
 ```
@@ -158,9 +180,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ### AMPP - Actual Medicinal Product Pack
 
 ```bash
+# Listar AMPPs
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/ampp?limit=5" | jq
 
+# AMPP por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/ampp/1" | jq
 ```
@@ -168,9 +192,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ### Fornecedores (Suppliers)
 
 ```bash
+# Listar fornecedores
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/suppliers?limit=5" | jq
 
+# Fornecedor por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/suppliers/1" | jq
 ```
@@ -178,9 +204,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ### DCB - Denominacao Comum Brasileira
 
 ```bash
+# Listar DCBs
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/dcb?limit=5" | jq
 
+# DCB por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/dcb/1" | jq
 ```
@@ -188,9 +216,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ### Ingredientes (Ingredient Substances)
 
 ```bash
+# Listar ingredientes
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/ingredients?limit=5" | jq
 
+# Ingrediente por ID
 curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/ingredients/1" | jq
 ```
@@ -232,7 +262,7 @@ Esperado:
 }
 ```
 
-## 6. Paginacao com cursor
+## 7. Paginacao com cursor
 
 Todas as rotas de listagem suportam paginacao baseada em cursor:
 
@@ -246,7 +276,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8080/api/v1/vmp?limit=3&cursor=<cursor_value>" | jq
 ```
 
-## 7. Testes de erro
+## 8. Testes de erro
 
 ### Auth invalida (401)
 
@@ -274,7 +304,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 Esperado: `{"error":"invalid id","code":400}`
 
-### Registro nao encontrado (200 com null/empty)
+### Registro nao encontrado (200 com null)
 
 ```bash
 curl -s -H "Authorization: Bearer $TOKEN" \
@@ -291,7 +321,7 @@ curl -s -X POST http://localhost:8080/auth/login \
 
 Esperado: `{"error":"invalid credentials","code":401}`
 
-## 8. Swagger UI
+## 9. Swagger UI
 
 Acesse no navegador:
 
@@ -299,23 +329,25 @@ Acesse no navegador:
 http://localhost:8080/swagger/index.html
 ```
 
-## 9. Testar via Docker (build completo)
+Permite testar todos os endpoints interativamente com autenticacao Bearer.
+
+## 10. Testar via Docker (build completo)
 
 ```bash
-docker-compose up --build -d
-docker-compose logs -f api
+docker compose up --build -d
+docker compose logs -f api
 ```
 
-## 10. Parar os servicos
+## 11. Parar os servicos
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 Para remover os dados (volumes):
 
 ```bash
-docker-compose down -v
+docker compose down -v
 ```
 
 ## Tabela de Rotas
