@@ -756,7 +756,25 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 - `curl` ou Postman/Insomnia
 - `jq` (opcional, para formatar JSON)
 
-### 1. Subir infraestrutura
+### 1. Obter o dump do banco de dados
+
+O arquivo SQL de inicializacao do banco (~137 MB) nao esta versionado no git por exceder o limite do GitHub. Voce precisa obte-lo separadamente:
+
+```bash
+# Opcao A: Baixar do portal OBM (se disponivel)
+# Coloque o arquivo em:
+#   migrations/postgres/001_obm_schema.sql
+
+# Opcao B: Converter de um dump MySQL usando o script incluido
+go run scripts/convert_sql.go -input <caminho_do_dump_mysql> -output migrations/postgres/001_obm_schema.sql
+
+# Opcao C: Gerar a partir do portal oficial
+# Acesse https://portal-obm.saude.gov.br/ e exporte os dados
+```
+
+O PostgreSQL do Docker Compose carrega automaticamente qualquer arquivo `.sql` colocado em `migrations/postgres/` na primeira inicializacao (via `docker-entrypoint-initdb.d`).
+
+### 2. Subir infraestrutura
 
 ```bash
 docker compose up postgres meilisearch -d
@@ -777,7 +795,7 @@ docker compose ps
 
 Ambos devem mostrar `(healthy)` na coluna STATUS.
 
-### 2. Configurar o .env
+### 3. Configurar o .env
 
 ```bash
 cp .env.example .env
@@ -802,7 +820,7 @@ O `.env` ja vem com as portas corretas. Variaveis disponiveis:
 | `GIN_MODE` | `release` | Modo do Gin (`debug` ou `release`) |
 | `SYNC_ON_STARTUP` | `true` | Reindexar Meilisearch ao iniciar |
 
-### 3. Criar usuarios iniciais
+### 4. Criar usuarios iniciais
 
 ```bash
 go run scripts/seed_users.go
@@ -815,7 +833,7 @@ Cria os usuarios padrao:
 | `admin` | `admin123` | sim |
 | `viewer` | `viewer123` | sim |
 
-### 4. Rodar a API
+### 5. Rodar a API
 
 ```bash
 go run ./cmd/api/
@@ -829,7 +847,7 @@ GIN_MODE=debug go run ./cmd/api/
 
 O servidor iniciara na porta **8094**. Se `SYNC_ON_STARTUP=true`, a reindexacao do Meilisearch ocorrera automaticamente.
 
-### 5. Verificar se esta funcionando
+### 6. Verificar se esta funcionando
 
 ```bash
 curl -s http://localhost:8094/health | jq
@@ -845,7 +863,7 @@ Esperado:
 }
 ```
 
-### 6. Swagger UI
+### 7. Swagger UI
 
 Acesse no navegador:
 
@@ -855,7 +873,7 @@ http://localhost:8094/swagger/index.html
 
 Permite testar todos os endpoints interativamente com autenticacao Bearer.
 
-### 7. Postman
+### 8. Postman
 
 Uma collection Postman esta disponivel em `postman/OBM_API.postman_collection.json`.
 
@@ -866,14 +884,14 @@ Uma collection Postman esta disponivel em `postman/OBM_API.postman_collection.js
 5. Selecione o ambiente **OBM API - Local** no canto superior direito
 6. Faca login via o request **Auth > Login**, copie o token e cole na variavel `token` do ambiente
 
-### 8. Rodar via Docker (build completo)
+### 9. Rodar via Docker (build completo)
 
 ```bash
 docker compose up --build -d
 docker compose logs -f api
 ```
 
-### 9. Parar os servicos
+### 10. Parar os servicos
 
 ```bash
 docker compose down

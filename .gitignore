@@ -5,3 +5,4 @@ data/
 /api-obm
 /api
 tmp/
+migrations/postgres/001_obm_schema.sql
