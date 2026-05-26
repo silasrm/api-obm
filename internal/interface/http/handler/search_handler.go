@@ -25,7 +25,7 @@ func NewSearchHandler(uc *usecase.SearchUsecase) *SearchHandler {
 // @Produce json
 // @Security BearerAuth
 // @Param q query string true "Termo de busca"
-// @Param entity query string false "Entidades para buscar (vmp,amp,supplier). Separadas por virgula"
+// @Param entity query string false "Entidades para buscar (vmp,amp,supplier,cmed). Separadas por virgula"
 // @Param limit query int false "Limite de resultados" default(20)
 // @Param cursor query string false "Cursor de paginação"
 // @Param filter[nome] query string false "Filtro por nome"
@@ -33,6 +33,8 @@ func NewSearchHandler(uc *usecase.SearchUsecase) *SearchHandler {
 // @Param filter[fabricante] query string false "Filtro por fabricante"
 // @Param filter[descricao] query string false "Filtro por descrição"
 // @Param filter[ativo] query string false "Filtro por status ativo"
+// @Param filter[tarja] query string false "Filtro por tarja (CMED)"
+// @Param filter[registro] query string false "Filtro por registro sanitário (CMED)"
 // @Success 200 {object} dto.SearchResponse
 // @Failure 400 {object} dto.ErrorResponse
 // @Failure 401 {object} dto.ErrorResponse
@@ -60,6 +62,12 @@ func (h *SearchHandler) Search(c *gin.Context) {
 	}
 	if req.FilterAtivo != "" {
 		filters["st_registro_ativo"] = req.FilterAtivo
+	}
+	if req.FilterTarja != "" {
+		filters["ds_tarja"] = req.FilterTarja
+	}
+	if req.FilterRegistro != "" {
+		filters["nu_sanreg"] = req.FilterRegistro
 	}
 
 	var entities []string

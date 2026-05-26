@@ -38,6 +38,10 @@ func (m *mockSyncRepo) GetAllSuppliers(ctx context.Context) ([]map[string]interf
 	return m.suppliers, nil
 }
 
+func (m *mockSyncRepo) GetAllCMED(ctx context.Context) ([]map[string]interface{}, error) {
+	return nil, nil
+}
+
 type mockMeiliRepo struct {
 	configureErr error
 	indexErr     error

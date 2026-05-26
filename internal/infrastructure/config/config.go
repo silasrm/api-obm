@@ -8,11 +8,20 @@ import (
 )
 
 type Config struct {
-	PostgreSQL  PostgresConfig
+	PostgreSQL PostgresConfig
 	Meilisearch MeilisearchConfig
-	JWT         JWTConfig
-	Server      ServerConfig
-	Sync        SyncConfig
+	JWT JWTConfig
+	Server ServerConfig
+	Sync SyncConfig
+	Redis RedisConfig
+}
+
+type RedisConfig struct {
+	Host     string
+	Port     int
+	Password string
+	DB       int
+	CacheTTL int
 }
 
 type PostgresConfig struct {
@@ -71,6 +80,13 @@ func Load() *Config {
 		},
 		Sync: SyncConfig{
 			OnStartup: getEnvBool("SYNC_ON_STARTUP", true),
+		},
+		Redis: RedisConfig{
+			Host:     getEnv("REDIS_HOST", "localhost"),
+			Port:     getEnvInt("REDIS_PORT", 6380),
+			Password: getEnv("REDIS_PASSWORD", ""),
+			DB:       getEnvInt("REDIS_DB", 0),
+			CacheTTL: getEnvInt("REDIS_CACHE_TTL", 24),
 		},
 	}
 }

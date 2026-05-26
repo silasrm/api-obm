@@ -67,10 +67,33 @@ type SearchRepository interface {
 	Search(ctx context.Context, query string, entities []string, filters map[string]string, limit int, cursor string) ([]entity.SearchHit, int64, string, error)
 }
 
+type CMEDFilterParams struct {
+	Nome          string `json:"nome"`
+	Registro      string `json:"registro"`
+	EAN           string `json:"ean"`
+	Tarja         string `json:"tarja"`
+	TipoProduto   string `json:"tipo_produto"`
+	RegimePreco   string `json:"regime_preco"`
+	DTReferencia  string `json:"dt_referencia"`
+	Ativo         *bool  `json:"ativo"`
+	Limit         int    `json:"limit"`
+	Cursor        string `json:"cursor"`
+}
+
+type CMEDRepository interface {
+	GetByID(ctx context.Context, id int64) (*entity.CMEDConformidade, error)
+	GetByNuSanReg(ctx context.Context, nuSanReg int64, dtReferencia string) (*entity.CMEDConformidade, error)
+	GetByEAN(ctx context.Context, ean string, dtReferencia string) (*entity.CMEDConformidade, error)
+	List(ctx context.Context, filter CMEDFilterParams) (*entity.CursorPage[entity.CMEDConformidade], error)
+	GetHistorico(ctx context.Context, nuSanReg int64) ([]entity.CMEDConformidade, error)
+	UpsertBatch(ctx context.Context, records []entity.CMEDConformidade) (int64, error)
+}
+
 type SyncRepository interface {
 	GetAllVMPs(ctx context.Context) ([]map[string]interface{}, error)
 	GetAllAMPs(ctx context.Context) ([]map[string]interface{}, error)
 	GetAllSuppliers(ctx context.Context) ([]map[string]interface{}, error)
+	GetAllCMED(ctx context.Context) ([]map[string]interface{}, error)
 }
 
 type UserRepository interface {

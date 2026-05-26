@@ -1,0 +1,47 @@
+CREATE TABLE IF NOT EXISTS tb_cmed_conformidade (
+  co_seq_id BIGSERIAL PRIMARY KEY,
+  nu_sanreg BIGINT,
+  nu_ggrem VARCHAR(18),
+  ds_substancia TEXT,
+  nu_cnpj VARCHAR(18),
+  no_laboratorio VARCHAR(255),
+  no_produto VARCHAR(500),
+  ds_apresentacao VARCHAR(774),
+  ds_classe_terapeutica VARCHAR(255),
+  tp_produto VARCHAR(50),
+  tp_regime_preco VARCHAR(50),
+  nu_ean1 VARCHAR(50),
+  nu_ean2 VARCHAR(50),
+  nu_ean3 VARCHAR(50),
+  vr_pf_sem_impostos NUMERIC(15,2),
+  vr_pf_0 NUMERIC(15,2),
+  vr_pf_12 NUMERIC(15,2),
+  vr_pf_17 NUMERIC(15,2),
+  vr_pf_18 NUMERIC(15,2),
+  vr_pf_20 NUMERIC(15,2),
+  vr_pmc_sem_impostos NUMERIC(15,2),
+  vr_pmc_0 NUMERIC(15,2),
+  vr_pmc_12 NUMERIC(15,2),
+  vr_pmc_17 NUMERIC(15,2),
+  vr_pmc_18 NUMERIC(15,2),
+  vr_pmc_20 NUMERIC(15,2),
+  js_precos_pf JSONB,
+  js_precos_pmc JSONB,
+  st_restricao_hospitalar VARCHAR(5),
+  st_cap VARCHAR(5),
+  st_confaz_87 VARCHAR(5),
+  st_icms_0 VARCHAR(5),
+  ds_analise_recural VARCHAR(50),
+  ds_lista_pis_cofins VARCHAR(50),
+  st_comercializacao VARCHAR(50),
+  ds_tarja VARCHAR(50),
+  ds_destinacao_comercial VARCHAR(50),
+  dt_referencia DATE NOT NULL,
+  st_registro_ativo VARCHAR(20) DEFAULT 'ACTIVE',
+  UNIQUE (nu_sanreg, dt_referencia)
+);
+
+CREATE INDEX IF NOT EXISTS idx_cmed_ean1 ON tb_cmed_conformidade (nu_ean1) WHERE nu_ean1 IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_cmed_referencia ON tb_cmed_conformidade (dt_referencia);
+CREATE INDEX IF NOT EXISTS idx_cmed_sanreg_ativo ON tb_cmed_conformidade (nu_sanreg, st_registro_ativo) WHERE nu_sanreg IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_cmed_produto ON tb_cmed_conformidade USING gin (to_tsvector('simple', coalesce(no_produto,'')));

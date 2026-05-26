@@ -25,6 +25,7 @@ import (
 	"github.com/silasrm/api-obm/internal/infrastructure/config"
 	meilisearchrepo "github.com/silasrm/api-obm/internal/infrastructure/persistence/meilisearch"
 	"github.com/silasrm/api-obm/internal/infrastructure/persistence/postgres"
+	redisrepo "github.com/silasrm/api-obm/internal/infrastructure/persistence/redis"
 	"github.com/silasrm/api-obm/internal/interface/http/handler"
 	"github.com/silasrm/api-obm/internal/interface/http/router"
 	"github.com/silasrm/api-obm/internal/usecase"
@@ -59,6 +60,9 @@ func main() {
 	var dcbRepo repository.DCBRepository = postgres.NewDCBRepo(pool)
 	var ingredientRepo repository.IngredientSubstanceRepository = postgres.NewIngredientRepo(pool)
 	var syncRepo repository.SyncRepository = postgres.NewSyncRepo(pool)
+	var cmedRepo repository.CMEDRepository = postgres.NewCMEDRepo(pool)
+
+	cacheRepo := redisrepo.NewCacheRepo(cfg.Redis)
 
 	authUseCase := usecase.NewAuthUsecase(userRepo, cfg.JWT)
 	searchUseCase := usecase.NewSearchUsecase(meiliRepo)
@@ -68,6 +72,8 @@ func main() {
 	domainUseCase := usecase.NewDomainUsecase(domainRepo)
 	genericUseCase := usecase.NewGenericUsecase(vtmRepo, vmppRepo, amppRepo, dcbRepo, ingredientRepo)
 	reindexUseCase := usecase.NewReindexUsecase(syncRepo, meiliRepo)
+	cmedUseCase := usecase.NewCMEDUsecase(cmedRepo, cacheRepo)
+	amppCmedUseCase := usecase.NewAMPPCMEDUsecase(amppRepo, vmpRepo, ampRepo, cmedRepo, cacheRepo)
 
 	authHandler := handler.NewAuthHandler(authUseCase)
 	searchHandler := handler.NewSearchHandler(searchUseCase)
@@ -77,6 +83,7 @@ func main() {
 	domainHandler := handler.NewDomainHandler(domainUseCase)
 	genericHandler := handler.NewGenericHandler(genericUseCase)
 	adminHandler := handler.NewAdminHandler(reindexUseCase, pgPool, meiliClient)
+	cmedHandler := handler.NewCMEDHandler(cmedUseCase, amppCmedUseCase)
 
 	if cfg.Sync.OnStartup {
 		log.Println("Sync on startup enabled, running reindex...")
@@ -94,6 +101,7 @@ func main() {
 		domainHandler,
 		genericHandler,
 		adminHandler,
+		cmedHandler,
 		cfg.JWT.Secret,
 	)
 

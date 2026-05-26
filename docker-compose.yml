@@ -8,6 +8,8 @@ services:
         condition: service_healthy
       meilisearch:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -25,6 +27,9 @@ services:
       SERVER_PORT: 8094
       GIN_MODE: "release"
       SYNC_ON_STARTUP: "true"
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
+      REDIS_CACHE_TTL: 24
     restart: unless-stopped
 
   postgres:
@@ -59,6 +64,19 @@ services:
       timeout: 10s
       retries: 10
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 volumes:
   pgdata:
   meilidata:
+  redisdata:

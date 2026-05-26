@@ -19,11 +19,13 @@ API REST para consulta de dados da [Ontologia Brasileira de Medicamentos (OBM)](
 - [DCB — Denominação Comum Brasileira](#dcb--denominação-comum-brasileira)
 - [Ingredientes](#ingredientes)
 - [Fornecedores](#fornecedores)
+- [CMED Conformidade de Preços](#cmed-conformidade-de-preços)
 - [Domínios](#domínios)
 - [Admin](#admin)
 - [Paginação](#paginação)
 - [Códigos de Erro](#códigos-de-erro)
 - [CLI de Importação](#cli-de-importação)
+- [CLI de Importação CMED](#cli-de-importação-cmed)
 - [Instalação Local](#instalação-local)
 - [Exemplos Práticos de Uso](#exemplos-práticos-de-uso)
 
@@ -129,7 +131,7 @@ O token é válido por **24 horas** (configurável via `JWT_EXPIRATION_HOURS`). 
 
 ## Busca Global
 
-O endpoint de busca utiliza o [Meilisearch](https://www.meilisearch.com/) para busca full-text em VMPs, AMPs e Fornecedores.
+O endpoint de busca utiliza o [Meilisearch](https://www.meilisearch.com/) para busca full-text em VMPs, AMPs, Fornecedores e CMED.
 
 ```
 GET /api/v1/search
@@ -138,7 +140,7 @@ GET /api/v1/search
 | Parâmetro | Tipo | Obrigatório | Descrição |
 |-----------|------|-------------|-----------|
 | `q` | string | Sim | Termo de busca |
-| `entity` | string | Não | Entidades: `vmp`, `amp`, `supplier`. Separadas por vírgula. Padrão: todas |
+| `entity` | string | Não | Entidades: `vmp`, `amp`, `supplier`, `cmed`. Separadas por vírgula. Padrão: todas |
 | `limit` | int | Não | Limite de resultados (padrão: 20, máx: 100) |
 | `cursor` | string | Não | Cursor de paginação |
 | `filter[nome]` | string | Não | Filtro por nome |
@@ -146,6 +148,8 @@ GET /api/v1/search
 | `filter[fabricante]` | string | Não | Filtro por fabricante |
 | `filter[descricao]` | string | Não | Filtro por descrição |
 | `filter[ativo]` | string | Não | Filtro por status ativo |
+| `filter[tarja]` | string | Não | Filtro por tarja (CMED) |
+| `filter[registro]` | string | Não | Filtro por registro sanitário (CMED) |
 
 ### Exemplos
 
@@ -560,6 +564,171 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ---
 
+### CMED Conformidade de Preços
+
+Dados de preços regulados pela **CMED** (Câmara de Regulação do Mercado de Medicamentos), importados da planilha oficial de conformidade. A tabela `tb_cmed_conformidade` é independente das tabelas OBM — o relacionamento com AMPPs é feito via campo `nu_sanreg` (Registro Sanitário).
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `GET` | `/api/v1/cmed` | Listar medicamentos CMED com filtros e paginação |
+| `GET` | `/api/v1/cmed/:id` | Obter medicamento CMED por ID |
+| `GET` | `/api/v1/cmed/registro/:registro` | Buscar por Registro Sanitário (nu_sanreg) |
+| `GET` | `/api/v1/cmed/ean/:ean` | Buscar por código EAN |
+| `GET` | `/api/v1/cmed/:id/historico` | Histórico de preços por versão |
+| `GET` | `/api/v1/ampp/:id/cmed` | JOIN AMPP + dados CMED (com cache Redis) |
+
+**Parâmetros de listagem (`GET /api/v1/cmed`):**
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-----------|
+| `limit` | int | Limite por página (padrão: 20, máx: 100) |
+| `cursor` | string | Cursor de paginação |
+| `nome` | string | Filtro por nome do produto ou substância (busca parcial) |
+| `registro` | string | Filtro por Registro Sanitário (busca exata) |
+| `ean` | string | Filtro por código EAN (busca em EAN 1/2/3) |
+| `tarja` | string | Filtro por tarja (busca parcial, ex: `Vermelha`) |
+| `tipo_produto` | string | Filtro por tipo de produto (ex: `Novo`, `Biológico`, `Genérico`) |
+| `regime_preco` | string | Filtro por regime de preço (ex: `Regulado`) |
+| `dt_referencia` | string | Filtro por data de referência (formato `YYYY-MM-DD`) |
+| `ativo` | boolean | Filtro por status ativo (padrão: `true`) |
+
+**Exemplos:**
+
+```bash
+# Listar medicamentos CMED
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed?limit=5"
+
+# Filtrar por nome de produto
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed?nome=ORENCIA"
+
+# Filtrar por tarja
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed?tarja=Vermelha&limit=5"
+
+# Buscar por Registro Sanitário
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed/registro/1018003900019"
+
+# Buscar por Registro Sanitário com data de referência específica
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed/registro/1018003900019?dt_referencia=2025-05-08"
+
+# Buscar por código EAN
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed/ean/7896016806469"
+
+# CMED por ID interno
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed/2"
+
+# Histórico de preços (todas as versões por data de referência)
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed/2/historico"
+
+# JOIN AMPP + CMED (dados ontológicos + preço)
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/ampp/812561/cmed"
+```
+
+**Resposta do list CMED:**
+
+```json
+{
+  "items": [
+    {
+      "co_seq_id": 2,
+      "nu_sanreg": 1018003900019,
+      "no_produto": "ORENCIA",
+      "ds_substancia": "ABATACEPTE",
+      "no_laboratorio": "BRISTOL-MYERS SQUIBB FARMACÊUTICA LTDA",
+      "ds_apresentacao": "250 MG PO LIOF SOL INJ CT 1 FA + SER DESCARTÁVEL",
+      "ds_classe_terapeutica": "M1C - AGENTES ANTI-REUMÁTICOS ESPECÍFICOS",
+      "tp_produto": "Biológico",
+      "tp_regime_preco": "Regulado",
+      "nu_ean1": "7896016806469",
+      "ds_tarja": "Tarja Vermelha",
+      "vr_pf_sem_impostos": 2098.20,
+      "vr_pmc_sem_impostos": null,
+      "js_precos_pf": {
+        "PF 0%": 2123.68,
+        "PF 12%": 2413.27,
+        "PF 17%": 2558.65,
+        "PF 18%": 2589.85,
+        "PF 20%": 2654.60
+      },
+      "js_precos_pmc": {},
+      "dt_referencia": "2025-05-08",
+      "st_registro_ativo": "ACTIVE"
+    }
+  ],
+  "cursor": "",
+  "limit": 20,
+  "total": 1
+}
+```
+
+**Resposta do JOIN AMPP + CMED (`GET /api/v1/ampp/:id/cmed`):**
+
+```json
+{
+  "ampp": {
+    "co_seq_id": 812561,
+    "nu_appid": "@brasil51023514150021",
+    "no_nm": "Tepev FF 500mg cápsula (EMS S.A.) x 150 cápsulas",
+    "nu_sanreg": 1023514150021,
+    "nu_ean13a": "7896132500474",
+    "st_registro_ativo": "ACTIVE"
+  },
+  "amp": {
+    "co_seq_id": 801135,
+    "no_nm": "Tepev FF 500mg cápsula",
+    "nu_apid": "..."
+  },
+  "vmp": {
+    "co_seq_id": 1234,
+    "no_nm": "Ezetimiba + Sinvastatina 10mg + 20mg comprimido revestido",
+    "nu_vpid": "..."
+  },
+  "cmed": {
+    "co_seq_id": 81256,
+    "nu_sanreg": 1023514150021,
+    "no_produto": "TEPEV FF",
+    "vr_pf_sem_impostos": 42.50,
+    "vr_pmc_sem_impostos": 56.80,
+    "ds_tarja": "Tarja Vermelha",
+    "dt_referencia": "2025-05-08"
+  }
+}
+```
+
+> **Cache:** O endpoint `/ampp/:id/cmed` utiliza cache Redis com TTL de 24h. Se o Redis estiver indisponível, a API funciona normalmente (sem cache, com query direta no PostgreSQL).
+
+**Busca global com CMED:**
+
+O CMED está incluído na busca global do Meilisearch. Use `entity=cmed` ou omita o parâmetro para buscar em todas as entidades:
+
+```bash
+# Buscar apenas em CMED
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/search?q=ORENCIA&entity=cmed"
+
+# Buscar em todas as entidades (inclui CMED)
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/search?q=Dipirona&limit=5"
+
+# Buscar com filtro por tarja no CMED
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/search?q=&entity=cmed&filter[tarja]=Vermelha&limit=5"
+
+# Buscar com filtro por registro sanitário no CMED
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/search?q=&entity=cmed&filter[registro]=1018003900019"
+```
+
+---
+
 ### Domínios
 
 Domínios são tabelas de classificação e referência que categorizam os medicamentos (forma farmacêutica, via de administração, classe ATC, categoria de controle, etc.).
@@ -820,6 +989,92 @@ O PostgreSQL do Docker Compose carrega automaticamente qualquer arquivo `.sql` c
 
 ---
 
+## CLI de Importação CMED
+
+O CLI de importação CMED (`cmd/cmed_import/`) permite importar a planilha de Conformidade de Preços da CMED para o banco PostgreSQL, invalidar o cache Redis e reindexar o Meilisearch. Os dados ficam na tabela `tb_cmed_conformidade`, separada das tabelas OBM — o relacionamento com AMPPs é feito via campo `nu_sanreg` (Registro Sanitário).
+
+### Pré-requisitos
+
+Antes de importar, a tabela `tb_cmed_conformidade` deve existir no banco. Se for a primeira importação, execute a migration:
+
+```bash
+docker compose exec postgres psql -U obm -d dbportalobm \
+  -f /docker-entrypoint-initdb.d/002_cmed_conformidade.sql
+```
+
+Ou, se estiver rodando localmente:
+
+```bash
+psql -h localhost -p 5433 -U obm -d dbportalobm \
+  -f migrations/postgres/002_cmed_conformidade.sql
+```
+
+### Flags
+
+| Flag | Tipo | Padrão | Descrição |
+|------|------|--------|-----------|
+| `--source` | string | (obrigatório) | Caminho para o arquivo XLSX da planilha CMED |
+| `--date` | string | (obrigatório) | Data de referência dos dados no formato `YYYY-MM-DD` |
+| `--header-row` | int | `42` | Linha do cabeçalho na planilha (1-based). Use se a planilha mudar de formato |
+| `--skip-index` | bool | `false` | Pular a reindexação do Meilisearch após a importação |
+
+### Fluxo da importação
+
+1. **Abertura** — o CLI abre o arquivo XLSX com excelize
+2. **Mapeamento do cabeçalho** — lê a linha indicada por `--header-row` e mapeia colunas por nome (case-insensitive). Valida colunas obrigatórias: `REGISTRO`, `PRODUTO`, `SUBSTÂNCIA`
+3. **Parse** — lê os dados a partir de `header-row + 1`, limpa valores (`"-"` → NULL, vírgulas decimais → ponto), e constrói JSONB com todas as alíquotas de PF/PMC
+4. **Upsert** — insere ou atualiza registros em batches de 500, usando `ON CONFLICT (nu_sanreg, dt_referencia) DO UPDATE`. Registros com mesmo Registro Sanitário e data de referência são atualizados
+5. **Invalidação de cache** — remove todas as chaves `cmed:*` e `ampp_cmed:*` do Redis
+6. **Reindexação** — reindexa o Meilisearch `obm_cmed` (a menos que `--skip-index`)
+
+### Versionamento
+
+Cada importação usa `--date` para registrar a versão dos dados. Isso permite manter histórico de preços:
+
+- Importar versão de maio: `--date 2025-05-08`
+- Importar versão de junho: `--date 2025-06-10`
+- O endpoint `GET /api/v1/cmed/:id/historico` retorna todas as versões
+
+### Exemplos
+
+```bash
+# Importação completa (XLSX → PostgreSQL + Redis cache clear + Meilisearch reindex)
+go run cmd/cmed_import/main.go \
+  --source=../arquivos/xls_conformidade_site_20260508_234642408.xlsx \
+  --date=2025-05-08
+
+# Importação com cabeçalho em linha diferente
+go run cmd/cmed_import/main.go \
+  --source=planilha_cmed.xlsx \
+  --date=2025-05-08 \
+  --header-row=5
+
+# Importar sem reindexar o Meilisearch
+go run cmd/cmed_import/main.go \
+  --source=planilha_cmed.xlsx \
+  --date=2025-05-08 \
+  --skip-index
+
+# Importar segunda versão (histórico de preços)
+go run cmd/cmed_import/main.go \
+  --source=planilha_cmed_junho.xlsx \
+  --date=2025-06-10
+```
+
+### Saída esperada
+
+```
+2026/05/25 15:30:32 Abrindo planilha: ../arquivos/xls_conformidade_site_20260508_234642408.xlsx
+2026/05/25 15:30:37 Registros parseados: 25276, ignorados: 0
+2026/05/25 15:30:38 Registros importados/atualizados: 25276
+2026/05/25 15:30:38 Invalidando cache Redis...
+2026/05/25 15:30:38 Reindexando Meilisearch...
+2026/05/25 15:30:40 Indexados 25276 documentos CMED no Meilisearch
+2026/05/25 15:30:40 Importação concluída com sucesso!
+```
+
+---
+
 ## Instalação Local
 
 ### Pré-requisitos
@@ -832,10 +1087,10 @@ O PostgreSQL do Docker Compose carrega automaticamente qualquer arquivo `.sql` c
 ### 1. Subir infraestrutura
 
 ```bash
-docker compose up postgres meilisearch -d
+docker compose up postgres meilisearch redis -d
 ```
 
-Aguarde os healthchecks passarem (~30 s). O PostgreSQL estará na porta **5433** e o Meilisearch na porta **7701**.
+Aguarde os healthchecks passarem (~30 s). O PostgreSQL estará na porta **5433**, o Meilisearch na porta **7701** e o Redis na porta **6380**.
 
 Verifique se os serviços estão saudáveis:
 
@@ -863,12 +1118,17 @@ O `.env` já vem com as portas corretas. Variáveis disponíveis:
 | `PG_SSLMODE` | `disable` | SSL mode do PostgreSQL |
 | `MEILI_URL` | `http://localhost:7701` | URL do Meilisearch (7700 dentro do Docker) |
 | `MEILI_API_KEY` | `obm-meili-master-key` | Chave API do Meilisearch |
-| `MEILI_INDEX_PREFIX` | `obm_` | Prefixo dos índices (produz `obm_vmp`, `obm_amp`, `obm_supplier`) |
+| `MEILI_INDEX_PREFIX` | `obm_` | Prefixo dos índices (produz `obm_vmp`, `obm_amp`, `obm_supplier`, `obm_cmed`) |
 | `JWT_SECRET` | `obm-secret-key-change-in-prod` | Chave de assinatura JWT (altere em produção!) |
 | `JWT_EXPIRATION_HOURS` | `24` | Expiração do token em horas |
 | `SERVER_PORT` | `8094` | Porta do servidor API |
 | `GIN_MODE` | `release` | Modo do Gin (`debug` ou `release`) |
 | `SYNC_ON_STARTUP` | `true` | Reindexar Meilisearch ao iniciar |
+| `REDIS_HOST` | `localhost` | Host do Redis |
+| `REDIS_PORT` | `6380` | Porta do Redis (6379 dentro do Docker) |
+| `REDIS_PASSWORD` | (vazio) | Senha do Redis |
+| `REDIS_DB` | `0` | Número do banco Redis |
+| `REDIS_CACHE_TTL` | `24` | TTL do cache em horas |
 
 ### 3. Importar dados
 
@@ -893,7 +1153,22 @@ Cria os usuários padrão:
 | `admin` | `admin123` | sim |
 | `viewer` | `viewer123` | sim |
 
-### 5. Executar a API
+### 5. Importar dados CMED (opcional)
+
+Para carregar os preços regulados pela CMED, importe a planilha de conformidade (veja a seção [CLI de Importação CMED](#cli-de-importação-cmed) para detalhes completos):
+
+```bash
+# Primeiro, criar a tabela (apenas na primeira vez)
+docker compose exec postgres psql -U obm -d dbportalobm \
+  -f /docker-entrypoint-initdb.d/002_cmed_conformidade.sql
+
+# Depois, importar os dados
+go run cmd/cmed_import/main.go \
+  --source=caminho/para/planilha_cmed.xlsx \
+  --date=2025-05-08
+```
+
+### 6. Executar a API
 
 ```bash
 go run ./cmd/api/
@@ -907,7 +1182,7 @@ GIN_MODE=debug go run ./cmd/api/
 
 O servidor iniciará na porta **8094**. Se `SYNC_ON_STARTUP=true`, a reindexação do Meilisearch ocorrerá automaticamente.
 
-### 6. Verificar o funcionamento
+### 7. Verificar o funcionamento
 
 ```bash
 curl -s http://localhost:8094/health | jq
@@ -923,7 +1198,7 @@ Esperado:
 }
 ```
 
-### 7. Swagger UI
+### 8. Swagger UI
 
 Acesse no navegador:
 
@@ -933,7 +1208,7 @@ http://localhost:8094/swagger/index.html
 
 Permite testar todos os endpoints interativamente com autenticação Bearer.
 
-### 8. Postman
+### 9. Postman
 
 Uma collection Postman está disponível em `postman/OBM_API.postman_collection.json`.
 
@@ -944,14 +1219,14 @@ Uma collection Postman está disponível em `postman/OBM_API.postman_collection.
 5. Selecione o ambiente **OBM API - Local** no canto superior direito
 6. Faça login via o request **Auth > Login**, copie o token e cole na variável `token` do ambiente
 
-### 9. Executar via Docker (build completo)
+### 10. Executar via Docker (build completo)
 
 ```bash
 docker compose up --build -d
 docker compose logs -f api
 ```
 
-### 10. Parar os serviços
+### 11. Parar os serviços
 
 ```bash
 docker compose down
@@ -1072,6 +1347,75 @@ curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/amp/5678/detail" | jq '.supplier'
 ```
 
+### Exemplo 8: Buscar preço regulado de um medicamento
+
+```bash
+# Buscar medicamento CMED pelo nome
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed?nome=ORENCIA" | jq '.items[0] | {no_produto, vr_pf_sem_impostos, vr_pmc_sem_impostos, ds_tarja}'
+
+# Buscar pelo Registro Sanitário (vínculo com AMPP)
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed/registro/1018003900019" | jq '{no_produto, vr_pf_sem_impostos, ds_tarja, dt_referencia}'
+
+# Buscar pelo código de barras EAN
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed/ean/7896016806469" | jq '{no_produto, ds_apresentacao, vr_pf_sem_impostos}'
+```
+
+### Exemplo 9: Consultar AMPP com dados de preço CMED
+
+```bash
+# Dados completos: ontologia (AMPP + AMP + VMP) + preço regulado (CMED)
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/ampp/812561/cmed" | jq
+
+# Apenas o preço do AMPP
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/ampp/812561/cmed" | jq '.cmed | {no_produto, vr_pf_sem_impostos, vr_pmc_sem_impostos, ds_tarja}'
+```
+
+### Exemplo 10: Busca global incluindo preços CMED
+
+```bash
+# Buscar "Dipirona" em todas as entidades (VMP, AMP, Supplier, CMED)
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/search?q=Dipirona&limit=5" | jq
+
+# Buscar apenas em CMED
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/search?q=ORENCIA&entity=cmed" | jq
+
+# Buscar medicamentos com tarja vermelha no CMED
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/search?q=&entity=cmed&filter[tarja]=Vermelha&limit=5" | jq
+```
+
+### Exemplo 11: Filtrar medicamentos CMED por tipo e regime
+
+```bash
+# Listar medicamentos biológicos
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed?tipo_produto=Biológico&limit=5" | jq '.total'
+
+# Listar medicamentos com preço regulado
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed?regime_preco=Regulado&limit=5" | jq '.total'
+
+# Combinar filtros: tarja + tipo de produto
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed?tarja=Vermelha&tipo_produto=Novo&limit=5" | jq
+```
+
+### Exemplo 12: Histórico de preços de um medicamento
+
+```bash
+# Após importar múltiplas versões da planilha (ex: maio e junho),
+# consulte a evolução de preços:
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/cmed/2/historico" | jq '.[] | {dt_referencia, no_produto, vr_pf_sem_impostos, vr_pmc_sem_impostos}'
+```
+
 ---
 
 ## Tabela Completa de Rotas
@@ -1081,7 +1425,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 | `POST` | `/auth/login` | Não | Login, retorna JWT |
 | `GET` | `/health` | Não | Health check (PostgreSQL + Meilisearch) |
 | `GET` | `/swagger/*` | Não | Swagger UI |
-| `GET` | `/api/v1/search` | Sim | Busca global Meilisearch |
+| `GET` | `/api/v1/search` | Sim | Busca global Meilisearch (VMP, AMP, Supplier, CMED) |
 | `GET` | `/api/v1/vmp` | Sim | Listar VMPs |
 | `GET` | `/api/v1/vmp/:id` | Sim | VMP por ID |
 | `GET` | `/api/v1/vmp/:id/detail` | Sim | VMP detalhado |
@@ -1094,6 +1438,12 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 | `GET` | `/api/v1/vmpp/:id` | Sim | VMPP por ID |
 | `GET` | `/api/v1/ampp` | Sim | Listar AMPPs |
 | `GET` | `/api/v1/ampp/:id` | Sim | AMPP por ID |
+| `GET` | `/api/v1/ampp/:id/cmed` | Sim | AMPP + dados CMED (JOIN com cache Redis) |
+| `GET` | `/api/v1/cmed` | Sim | Listar CMED Conformidade |
+| `GET` | `/api/v1/cmed/:id` | Sim | CMED por ID |
+| `GET` | `/api/v1/cmed/registro/:registro` | Sim | CMED por Registro Sanitário |
+| `GET` | `/api/v1/cmed/ean/:ean` | Sim | CMED por código EAN |
+| `GET` | `/api/v1/cmed/:id/historico` | Sim | Histórico de preços CMED |
 | `GET` | `/api/v1/suppliers` | Sim | Listar Fornecedores |
 | `GET` | `/api/v1/suppliers/:id` | Sim | Fornecedor por ID |
 | `GET` | `/api/v1/dcb` | Sim | Listar DCBs |

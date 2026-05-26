@@ -19,6 +19,7 @@ func SetupRouter(
 	domainHandler *handler.DomainHandler,
 	genericHandler *handler.GenericHandler,
 	adminHandler *handler.AdminHandler,
+	cmedHandler *handler.CMEDHandler,
 	jwtSecret string,
 ) *gin.Engine {
 	r := gin.New()
@@ -50,6 +51,7 @@ func SetupRouter(
 
 		api.GET("/ampp", genericHandler.ListAMPP)
 		api.GET("/ampp/:id", genericHandler.GetAMPP)
+		api.GET("/ampp/:id/cmed", cmedHandler.GetAMPPWithCMED)
 
 		api.GET("/suppliers", supplierHandler.List)
 		api.GET("/suppliers/:id", supplierHandler.GetByID)
@@ -64,6 +66,15 @@ func SetupRouter(
 		api.GET("/domains/:domain/:id", domainHandler.GetByID)
 
 		api.POST("/admin/reindex", adminHandler.Reindex)
+
+		cmed := api.Group("/cmed")
+		{
+			cmed.GET("", cmedHandler.List)
+			cmed.GET("/registro/:registro", cmedHandler.GetByRegistro)
+			cmed.GET("/ean/:ean", cmedHandler.GetByEAN)
+			cmed.GET("/:id/historico", cmedHandler.GetHistorico)
+			cmed.GET("/:id", cmedHandler.GetByID)
+		}
 	}
 
 	return r

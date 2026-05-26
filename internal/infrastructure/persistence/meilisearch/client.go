@@ -27,7 +27,7 @@ func NewMeilisearchRepo(cfg config.MeilisearchConfig) *MeilisearchRepo {
 
 func (r *MeilisearchRepo) Search(ctx context.Context, query string, entities []string, filters map[string]string, limit int, cursor string) ([]entity.SearchHit, int64, string, error) {
 	if len(entities) == 0 {
-		entities = []string{"vmp", "amp", "supplier"}
+		entities = []string{"vmp", "amp", "supplier", "cmed"}
 	}
 
 	offset := 0
@@ -94,6 +94,20 @@ func (r *MeilisearchRepo) Search(ctx context.Context, query string, entities []s
 			}
 			if descRaw, ok := hit["ds_descr"]; ok {
 				sh.Descricao = jsonStr(descRaw)
+			}
+			if ent == "cmed" {
+				if codRaw, ok := hit["nu_sanreg"]; ok {
+					sh.Codigo = jsonStr(codRaw)
+				}
+				if nomeRaw, ok := hit["no_produto"]; ok {
+					sh.Nome = jsonStr(nomeRaw)
+				}
+				if fabRaw, ok := hit["no_laboratorio"]; ok {
+					sh.Fabricante = jsonStr(fabRaw)
+				}
+				if descRaw, ok := hit["ds_apresentacao"]; ok {
+					sh.Descricao = jsonStr(descRaw)
+				}
 			}
 
 			allHits = append(allHits, sh)

@@ -30,3 +30,15 @@
 - [ ] Import scheduling (cron or API trigger)
 - [ ] API endpoint for import triggering
 - [ ] Monitoring / observability (structured logging, metrics)
+
+## v1.3.0 — CMED Conformidade
+
+- [x] CMED import CLI (`cmd/cmed_import/main.go`) with --source, --date, --header-row, --skip-index flags
+- [x] tb_cmed_conformidade table with versioning (nu_sanreg + dt_referencia unique)
+- [x] CMED REST endpoints: list, get by ID, get by registro, get by EAN, historico
+- [x] AMPP+CMED JOIN endpoint with Redis cache (`GET /api/v1/ampp/:id/cmed`)
+- [x] Meilisearch index obm_cmed with CMED data searchable
+- [x] Global search updated with cmed entity
+- [x] Redis cache with graceful degradation
+- [x] Redis service in docker-compose
+- [ ] Integration test for CMED import pipeline

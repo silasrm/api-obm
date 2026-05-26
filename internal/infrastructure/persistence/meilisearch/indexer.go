@@ -31,6 +31,12 @@ func (r *MeilisearchRepo) ConfigureIndexes(ctx context.Context) error {
 			Sortable:   []string{"no_descr"},
 			Ranking:    []string{"words", "typo", "proximity", "attribute", "sort", "exactness"},
 		},
+		"cmed": {
+			Searchable: []string{"no_produto", "ds_substancia", "no_laboratorio", "nu_sanreg", "nu_ean1", "ds_classe_terapeutica", "ds_apresentacao"},
+			Filterable: []interface{}{"nu_sanreg", "nu_ean1", "nu_ean2", "nu_ean3", "tp_produto", "tp_regime_preco", "st_restricao_hospitalar", "ds_tarja", "dt_referencia", "st_registro_ativo", "nu_cnpj"},
+			Sortable:   []string{"no_produto", "vr_pf_sem_impostos", "vr_pmc_sem_impostos", "dt_referencia"},
+			Ranking:    []string{"words", "typo", "proximity", "attribute", "sort", "exactness"},
+		},
 	}
 
 	for suffix, cfg := range indexes {
@@ -58,6 +64,10 @@ func (r *MeilisearchRepo) IndexAMPs(ctx context.Context, docs []map[string]inter
 
 func (r *MeilisearchRepo) IndexSuppliers(ctx context.Context, docs []map[string]interface{}) error {
 	return r.batchIndex("supplier", docs)
+}
+
+func (r *MeilisearchRepo) IndexCMEDs(ctx context.Context, docs []map[string]interface{}) error {
+	return r.batchIndex("cmed", docs)
 }
 
 func (r *MeilisearchRepo) batchIndex(suffix string, docs []map[string]interface{}) error {

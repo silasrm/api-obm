@@ -21,7 +21,9 @@ type SearchRequest struct {
 	FilterCodigo     string `form:"filter[codigo]"`
 	FilterFabricante string `form:"filter[fabricante]"`
 	FilterDescricao  string `form:"filter[descricao]"`
-	FilterAtivo      string `form:"filter[ativo]"`
+	FilterAtivo     string `form:"filter[ativo]"`
+	FilterTarja     string `form:"filter[tarja]"`
+	FilterRegistro  string `form:"filter[registro]"`
 }
 
 type SearchResponse struct {
@@ -67,3 +69,22 @@ type DCBResponse entity.DCB
 type SupplierResponse entity.Supplier
 type IngredientResponse entity.IngredientSubstance
 type DomainResponse entity.Domain
+
+type CMEDListRequest struct {
+	Nome         string `form:"nome"`
+	Registro     string `form:"registro"`
+	EAN          string `form:"ean"`
+	Tarja        string `form:"tarja"`
+	TipoProduto  string `form:"tipo_produto"`
+	RegimePreco  string `form:"regime_preco"`
+	DTReferencia string `form:"dt_referencia"`
+	Limit        int    `form:"limit"`
+	Cursor       string `form:"cursor"`
+}
+
+type CMEDListResponse struct {
+	Items interface{} `json:"items"`
+	Cursor string     `json:"cursor,omitempty"`
+	Limit  int        `json:"limit"`
+	Total  int64      `json:"total"`
+}

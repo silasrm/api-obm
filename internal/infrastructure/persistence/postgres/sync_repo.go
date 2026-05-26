@@ -3,6 +3,7 @@ package postgres
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -121,6 +122,94 @@ func (r *SyncRepo) GetAllSuppliers(ctx context.Context) ([]map[string]interface{
 			"co_seq_id": coSeqID,
 			"nu_cd":     nuCd,
 			"no_descr":  noDescr,
+		}
+	if nuCnpj != nil {
+		doc["nu_cnpj"] = *nuCnpj
+	}
+	result = append(result, doc)
+	}
+	return result, rows.Err()
+}
+
+func (r *SyncRepo) GetAllCMED(ctx context.Context) ([]map[string]interface{}, error) {
+	const query = `
+		SELECT c.CO_SEQ_ID, c.NU_SANREG, c.NO_PRODUTO, c.DS_SUBSTANCIA,
+		       c.NO_LABORATORIO, c.NU_EAN1, c.NU_EAN2, c.NU_EAN3,
+		       c.DS_CLASSE_TERAPEUTICA, c.DS_APRESENTACAO,
+		       c.TP_PRODUTO, c.TP_REGIME_PRECO, c.DS_TARJA,
+		       c.DT_REFERENCIA, c.VR_PF_SEM_IMPOSTOS, c.VR_PMC_SEM_IMPOSTOS,
+		       c.NU_CNPJ
+		FROM tb_cmed_conformidade c
+		WHERE c.ST_REGISTRO_ATIVO = 'ACTIVE'
+		ORDER BY c.CO_SEQ_ID`
+	rows, err := r.pool.Query(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("query all cmed: %w", err)
+	}
+	defer rows.Close()
+	var result []map[string]interface{}
+	for rows.Next() {
+		var coSeqID int64
+		var nuSanreg *int64
+		var noProduto, dsSubstancia, noLaboratorio *string
+		var nuEan1, nuEan2, nuEan3, dsClasseTerapeutica, dsApresentacao *string
+		var tpProduto, tpRegimePreco, dsTarja *string
+		var dtReferencia *time.Time
+		var vrPFSemImpostos, vrPMCSemImpostos *float64
+		var nuCnpj *string
+		if err := rows.Scan(&coSeqID, &nuSanreg, &noProduto, &dsSubstancia, &noLaboratorio,
+			&nuEan1, &nuEan2, &nuEan3, &dsClasseTerapeutica, &dsApresentacao,
+			&tpProduto, &tpRegimePreco, &dsTarja, &dtReferencia,
+			&vrPFSemImpostos, &vrPMCSemImpostos, &nuCnpj); err != nil {
+			return nil, fmt.Errorf("scan cmed: %w", err)
+		}
+		doc := map[string]interface{}{
+			"co_seq_id": coSeqID,
+		}
+		if nuSanreg != nil {
+			doc["nu_sanreg"] = fmt.Sprintf("%d", *nuSanreg)
+		}
+		if noProduto != nil {
+			doc["no_produto"] = *noProduto
+		}
+		if dsSubstancia != nil {
+			doc["ds_substancia"] = *dsSubstancia
+		}
+		if noLaboratorio != nil {
+			doc["no_laboratorio"] = *noLaboratorio
+		}
+		if nuEan1 != nil {
+			doc["nu_ean1"] = *nuEan1
+		}
+		if nuEan2 != nil {
+			doc["nu_ean2"] = *nuEan2
+		}
+		if nuEan3 != nil {
+			doc["nu_ean3"] = *nuEan3
+		}
+		if dsClasseTerapeutica != nil {
+			doc["ds_classe_terapeutica"] = *dsClasseTerapeutica
+		}
+		if dsApresentacao != nil {
+			doc["ds_apresentacao"] = *dsApresentacao
+		}
+		if tpProduto != nil {
+			doc["tp_produto"] = *tpProduto
+		}
+		if tpRegimePreco != nil {
+			doc["tp_regime_preco"] = *tpRegimePreco
+		}
+		if dsTarja != nil {
+			doc["ds_tarja"] = *dsTarja
+		}
+	if dtReferencia != nil {
+		doc["dt_referencia"] = dtReferencia.Format("2006-01-02")
+	}
+		if vrPFSemImpostos != nil {
+			doc["vr_pf_sem_impostos"] = *vrPFSemImpostos
+		}
+		if vrPMCSemImpostos != nil {
+			doc["vr_pmc_sem_impostos"] = *vrPMCSemImpostos
 		}
 		if nuCnpj != nil {
 			doc["nu_cnpj"] = *nuCnpj

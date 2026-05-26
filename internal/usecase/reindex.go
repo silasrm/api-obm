@@ -58,5 +58,15 @@ func (u *ReindexUsecase) Reindex(ctx context.Context) (map[string]int64, error) 
 	indexed["supplier"] = int64(len(suppDocs))
 	log.Printf("Indexed %d Suppliers", len(suppDocs))
 
+	cmedDocs, err := u.syncRepo.GetAllCMED(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("get cmed: %w", err)
+	}
+	if err := u.meiliRepo.IndexCMEDs(ctx, cmedDocs); err != nil {
+		return nil, fmt.Errorf("index cmed: %w", err)
+	}
+	indexed["cmed"] = int64(len(cmedDocs))
+	log.Printf("Indexed %d CMED records", len(cmedDocs))
+
 	return indexed, nil
 }

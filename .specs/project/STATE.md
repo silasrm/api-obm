@@ -4,13 +4,17 @@
 
 - D1: OBM = **Ontologia Brasileira de Medicamentos** (not "Observatorio") — corrected across all files
 - D2: Import is always full-replace (`DROP SCHEMA` + recreate) — no incremental updates
-- D3: Meilisearch indexes only VMP/AMP/Supplier (expand later)
+- D3: Meilisearch indexes VMP/AMP/Supplier/CMED (expand later)
 - D4: SQL dump too large for GitHub (137MB > 100MB limit) — removed from git, documented as separate download
 - D5: Streaming pipeline via `io.Pipe` — converted SQL never touches disk (except `--convert-only`)
 - D6: ZIP extraction requires temp file (Go `archive/zip` needs `io.ReaderAt`)
 - D7: Domain slugs use hyphens (e.g. `legal-category`) not underscores
 - D8: No single transaction for import — autocommit per statement (same as `psql -f`)
 - D9: `obm_metadata` as simple key-value table (not a separate schema)
+- D10: CMED Conformidade table is independent from OBM tables — no FK constraint, JOIN via nu_sanreg
+- D11: Redis for cache with graceful degradation — app works without Redis (no cache, direct PG query)
+- D12: `nu_sanreg` (Registro Sanitário) is the join key between AMPP and CMED Conformidade
+- D13: CMED import CLI uses `--header-row` (default 42) for flexible XLSX header mapping
 
 ## Blockers
 
@@ -25,10 +29,11 @@
 
 ## Deferred
 
-- Expanding Meilisearch indexes beyond VMP/AMP/Supplier → v1.2.0
+- Expanding Meilisearch indexes beyond VMP/AMP/Supplier/CMED → v1.2.0
 - Scheduled/automatic imports → v1.2.0
 - Downloading from portal URL (access is restricted) → no ETA
 - CSV/XML/JSON input formats → no ETA
+- AMPP index in Meilisearch → v1.2.0
 
 ## Lessons
 
