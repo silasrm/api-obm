@@ -576,6 +576,8 @@ Dados de preços regulados pela **CMED** (Câmara de Regulação do Mercado de M
 | `GET` | `/api/v1/cmed/ean/:ean` | Buscar por código EAN |
 | `GET` | `/api/v1/cmed/:id/historico` | Histórico de preços por versão |
 | `GET` | `/api/v1/ampp/:id/cmed` | JOIN AMPP + dados CMED (com cache Redis) |
+| `GET` | `/api/v1/amp/:id/cmed` | JOIN AMP + VMP pai + dados CMED (com cache Redis) |
+| `GET` | `/api/v1/suppliers/:id/cmed` | JOIN Fornecedor + lista de produtos CMED (com cache Redis) |
 
 **Parâmetros de listagem (`GET /api/v1/cmed`):**
 
@@ -703,7 +705,117 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 }
 ```
 
-> **Cache:** O endpoint `/ampp/:id/cmed` utiliza cache Redis com TTL de 24h. Se o Redis estiver indisponível, a API funciona normalmente (sem cache, com query direta no PostgreSQL).
+> **Cache:** Os endpoints `/ampp/:id/cmed`, `/amp/:id/cmed` e `/suppliers/:id/cmed` utilizam cache Redis com TTL de 24h. Se o Redis estiver indisponível, a API funciona normalmente (sem cache, com query direta no PostgreSQL).
+
+### JOIN AMP + CMED
+
+Retorna dados do AMP, VMP pai e preço CMED em uma única chamada. O JOIN é feito via `AMP.nu_nreg` (Registro Sanitário) = `CMED.nu_sanreg`.
+
+**Parâmetros:**
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-----------|
+| `dt_referencia` | string | Data de referência no formato `YYYY-MM-DD` (opcional, padrão: mais recente) |
+
+```bash
+# AMP + VMP + CMED
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/amp/1/cmed"
+
+# Com data de referência específica
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/amp/1/cmed?dt_referencia=2025-05-08"
+```
+
+**Resposta:**
+
+```json
+{
+  "amp": {
+    "co_seq_id": 1,
+    "nu_apid": "9876543",
+    "no_nm": "Paracetamol 500mg comprimido revestido — Medley",
+    "co_vpid": 1234,
+    "co_suppcd": 200,
+    "nu_nreg": 12345,
+    "st_registro_ativo": "ACTIVE"
+  },
+  "vmp": {
+    "co_seq_id": 1234,
+    "no_nm": "Paracetamol 500mg comprimido",
+    "nu_vpid": "3456789"
+  },
+  "cmed": {
+    "co_seq_id": 81256,
+    "nu_sanreg": 12345,
+    "no_produto": "PARACETAMOL MEDLEY",
+    "vr_pf_sem_impostos": 4.50,
+    "vr_pmc_sem_impostos": 6.20,
+    "ds_tarja": "Sem Tarja",
+    "dt_referencia": "2025-05-08"
+  }
+}
+```
+
+### JOIN Fornecedor + CMED
+
+Retorna dados do fornecedor e lista de produtos CMED associados. O JOIN é feito via `Supplier.nu_cnpj` = `CMED.nu_cnpj` com normalização (remove pontuação do CNPJ).
+
+**Parâmetros:**
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-----------|
+| `dt_referencia` | string | Data de referência no formato `YYYY-MM-DD` (opcional, padrão: mais recente) |
+
+```bash
+# Fornecedor + lista de produtos CMED
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/suppliers/1/cmed"
+
+# Com data de referência específica
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/suppliers/1/cmed?dt_referencia=2025-05-08"
+```
+
+**Resposta:**
+
+```json
+{
+  "supplier": {
+    "co_seq_id": 1,
+    "no_descr": "MEDLEY INDUSTRIA FARMACEUTICA",
+    "nu_cnpj": "12.345.678/0001-90",
+    "st_registro_ativo": "ACTIVE"
+  },
+  "cmed": [
+    {
+      "co_seq_id": 81256,
+      "nu_sanreg": 12345,
+      "no_produto": "PARACETAMOL MEDLEY",
+      "vr_pf_sem_impostos": 4.50,
+      "vr_pmc_sem_impostos": 6.20,
+      "ds_tarja": "Sem Tarja",
+      "dt_referencia": "2025-05-08"
+    },
+    {
+      "co_seq_id": 81257,
+      "nu_sanreg": 12346,
+      "no_produto": "LOSARTANA MEDLEY",
+      "vr_pf_sem_impostos": 12.30,
+      "vr_pmc_sem_impostos": 15.80,
+      "ds_tarja": "Tarja Vermelha",
+      "dt_referencia": "2025-05-08"
+    }
+  ]
+}
+```
+
+### Mecanismos de JOIN CMED
+
+| JOIN | Chave OBM | Chave CMED | Tipo | Retorno |
+|------|-----------|------------|------|---------|
+| AMP ↔ CMED | `AMP.nu_nreg` (Registro Sanitário) | `CMED.nu_sanreg` | Exato | Registro CMED único por data |
+| Supplier ↔ CMED | `Supplier.nu_cnpj` | `CMED.nu_cnpj` | Exato com normalização de CNPJ (remove não-dígitos) | Lista de produtos CMED |
 
 **Busca global com CMED:**
 
@@ -1416,6 +1528,38 @@ curl -s -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8094/api/v1/cmed/2/historico" | jq '.[] | {dt_referencia, no_produto, vr_pf_sem_impostos, vr_pmc_sem_impostos}'
 ```
 
+### Exemplo 13: Consultar AMP com dados de preço CMED
+
+```bash
+# Dados completos: AMP + VMP pai + preço regulado (CMED)
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/amp/1/cmed" | jq
+
+# Apenas o preço CMED do AMP
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/amp/1/cmed" | jq '.cmed | {no_produto, vr_pf_sem_impostos, vr_pmc_sem_impostos, ds_tarja}'
+
+# Com data de referência específica
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/amp/1/cmed?dt_referencia=2025-05-08" | jq
+```
+
+### Exemplo 14: Consultar fornecedor com lista de produtos CMED
+
+```bash
+# Dados do fornecedor + todos os produtos CMED associados
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/suppliers/1/cmed" | jq
+
+# Apenas a lista de produtos CMED do fornecedor
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/suppliers/1/cmed" | jq '.cmed[] | {no_produto, vr_pf_sem_impostos, ds_tarja}'
+
+# Com data de referência específica
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8094/api/v1/suppliers/1/cmed?dt_referencia=2025-05-08" | jq
+```
+
 ---
 
 ## Tabela Completa de Rotas
@@ -1439,6 +1583,8 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 | `GET` | `/api/v1/ampp` | Sim | Listar AMPPs |
 | `GET` | `/api/v1/ampp/:id` | Sim | AMPP por ID |
 | `GET` | `/api/v1/ampp/:id/cmed` | Sim | AMPP + dados CMED (JOIN com cache Redis) |
+| `GET` | `/api/v1/amp/:id/cmed` | Sim | AMP + VMP + dados CMED (JOIN com cache Redis) |
+| `GET` | `/api/v1/suppliers/:id/cmed` | Sim | Fornecedor + lista CMED (JOIN com cache Redis) |
 | `GET` | `/api/v1/cmed` | Sim | Listar CMED Conformidade |
 | `GET` | `/api/v1/cmed/:id` | Sim | CMED por ID |
 | `GET` | `/api/v1/cmed/registro/:registro` | Sim | CMED por Registro Sanitário |

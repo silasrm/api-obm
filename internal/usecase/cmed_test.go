@@ -33,6 +33,10 @@ func (m *mockCMEDRepo) GetByEAN(ctx context.Context, ean string, dtReferencia st
 	return m.cmed, m.err
 }
 
+func (m *mockCMEDRepo) GetByCNPJ(ctx context.Context, cnpj string, dtReferencia string) ([]entity.CMEDConformidade, error) {
+	return nil, nil
+}
+
 func (m *mockCMEDRepo) List(ctx context.Context, filter repository.CMEDFilterParams) (*entity.CursorPage[entity.CMEDConformidade], error) {
 	m.lastFilter = filter
 	if m.listErr != nil {

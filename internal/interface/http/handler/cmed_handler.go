@@ -11,12 +11,14 @@ import (
 )
 
 type CMEDHandler struct {
-	cmedUC     *usecase.CMEDUsecase
-	amppCmedUC *usecase.AMPPCMEDUsecase
+	cmedUC         *usecase.CMEDUsecase
+	amppCmedUC     *usecase.AMPPCMEDUsecase
+	ampCmedUC      *usecase.AMPCMEDUsecase
+	supplierCmedUC *usecase.SupplierCMEDUsecase
 }
 
-func NewCMEDHandler(cmedUC *usecase.CMEDUsecase, amppCmedUC *usecase.AMPPCMEDUsecase) *CMEDHandler {
-	return &CMEDHandler{cmedUC: cmedUC, amppCmedUC: amppCmedUC}
+func NewCMEDHandler(cmedUC *usecase.CMEDUsecase, amppCmedUC *usecase.AMPPCMEDUsecase, ampCmedUC *usecase.AMPCMEDUsecase, supplierCmedUC *usecase.SupplierCMEDUsecase) *CMEDHandler {
+	return &CMEDHandler{cmedUC: cmedUC, amppCmedUC: amppCmedUC, ampCmedUC: ampCmedUC, supplierCmedUC: supplierCmedUC}
 }
 
 func (h *CMEDHandler) List(c *gin.Context) {
@@ -144,6 +146,42 @@ func (h *CMEDHandler) GetAMPPWithCMED(c *gin.Context) {
 	}
 	if result == nil {
 		c.JSON(http.StatusNotFound, dto.ErrorResponse{Error: "not found", Code: http.StatusNotFound})
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
+}
+
+func (h *CMEDHandler) GetAMPWithCMED(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, dto.ErrorResponse{Error: "invalid id", Code: http.StatusBadRequest})
+		return
+	}
+
+	dtReferencia := c.Query("dt_referencia")
+
+	result, err := h.ampCmedUC.GetAMPWithCMED(c.Request.Context(), id, dtReferencia)
+	if err != nil {
+		c.JSON(http.StatusNotFound, dto.ErrorResponse{Error: err.Error(), Code: http.StatusNotFound})
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
+}
+
+func (h *CMEDHandler) GetSupplierWithCMED(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, dto.ErrorResponse{Error: "invalid id", Code: http.StatusBadRequest})
+		return
+	}
+
+	dtReferencia := c.Query("dt_referencia")
+
+	result, err := h.supplierCmedUC.GetSupplierWithCMED(c.Request.Context(), id, dtReferencia)
+	if err != nil {
+		c.JSON(http.StatusNotFound, dto.ErrorResponse{Error: err.Error(), Code: http.StatusNotFound})
 		return
 	}
 

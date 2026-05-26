@@ -74,6 +74,8 @@ func main() {
 	reindexUseCase := usecase.NewReindexUsecase(syncRepo, meiliRepo)
 	cmedUseCase := usecase.NewCMEDUsecase(cmedRepo, cacheRepo)
 	amppCmedUseCase := usecase.NewAMPPCMEDUsecase(amppRepo, vmpRepo, ampRepo, cmedRepo, cacheRepo)
+	ampCmedUseCase := usecase.NewAMPCMEDUsecase(ampRepo, vmpRepo, cmedRepo, cacheRepo)
+	supplierCmedUseCase := usecase.NewSupplierCMEDUsecase(supplierRepo, cmedRepo, cacheRepo)
 
 	authHandler := handler.NewAuthHandler(authUseCase)
 	searchHandler := handler.NewSearchHandler(searchUseCase)
@@ -83,7 +85,7 @@ func main() {
 	domainHandler := handler.NewDomainHandler(domainUseCase)
 	genericHandler := handler.NewGenericHandler(genericUseCase)
 	adminHandler := handler.NewAdminHandler(reindexUseCase, pgPool, meiliClient)
-	cmedHandler := handler.NewCMEDHandler(cmedUseCase, amppCmedUseCase)
+	cmedHandler := handler.NewCMEDHandler(cmedUseCase, amppCmedUseCase, ampCmedUseCase, supplierCmedUseCase)
 
 	if cfg.Sync.OnStartup {
 		log.Println("Sync on startup enabled, running reindex...")

@@ -42,3 +42,11 @@
 - [x] Redis cache with graceful degradation
 - [x] Redis service in docker-compose
 - [ ] Integration test for CMED import pipeline
+
+## v1.4.0 — CMED Extended Joins
+
+- [x] CMEDRepository.GetByCNPJ with CNPJ normalization (`internal/domain/repository/cnpj.go`)
+- [x] AMP+CMED JOIN endpoint with Redis cache (`GET /api/v1/amp/:id/cmed`) via `AMP.nu_nreg`
+- [x] Supplier+CMED JOIN endpoint with Redis cache (`GET /api/v1/suppliers/:id/cmed`) via `Supplier.nu_cnpj`
+- [x] AMPCMEDUsecase + SupplierCMEDUsecase with graceful degradation
+- [x] 23 new unit tests + handler tests (105 total)

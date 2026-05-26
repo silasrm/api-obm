@@ -5,49 +5,95 @@
 ## Versão Atual
 
 ```
-Versão: 1.1.0
-Release Date: 2026-05-24
+Versão: 1.4.0
+Release Date: 2026-05-25
 Timezone: America/Sao_Paulo
 Status: Released
 ```
 
-### v1.1.0 (2026-05-24)
+### v1.4.0 (2026-05-25)
 
 **Status:** Released
 
 **Mudanças:**
 
-- feat: CLI de importação (`cmd/import/`) com pipeline completo — resolução de fonte (ZIP, SQL, gzip, MySQL), conversão MySQL→PostgreSQL, importação via streaming, validação pós-importação, rastreamento de metadados e reindexação do Meilisearch
-- feat: Conversor MySQL→PostgreSQL refatorado como pacote reutilizável (`internal/importer/converter.go`)
-- feat: Resolvedor de fonte com suporte a ZIP, SQL, SQL.GZ e URI `mysql://` (`internal/importer/source.go`)
-- feat: Importador PostgreSQL com streaming via `io.Pipe` e progresso em tempo real (`internal/importer/pgimporter.go`)
-- feat: Validador pós-importação com contagem de registros e verificação de integridade referencial (`internal/importer/validator.go`)
-- feat: Gerenciador de metadados da importação — tabela `obm_metadata` (`internal/importer/metadata.go`)
-- feat: Orquestrador de pipeline com suporte a `--convert-only`, `--reindex-only`, `--skip-index`, `--validate`, `--full` (`internal/importer/pipeline.go`)
-- feat: Documentação do projeto (.specs/project/ — PROJECT.md, ROADMAP.md, STATE.md)
-- fix: Revisão ortográfica completa em português brasileiro em todas as mensagens do importador e documentação
-- fix: Binário `import` adicionado ao `.gitignore`
-- refactor: `scripts/convert_sql.go` agora é um invólucro fino chamando `internal/importer/converter.go`
+- feat: Endpoint AMP+CMED (`GET /api/v1/amp/:id/cmed`) via `AMP.nu_nreg = CMED.nu_sanreg` — retorna AMP + VMP pai + preço CMED
+- feat: Endpoint Supplier+CMED (`GET /api/v1/suppliers/:id/cmed`) via `Supplier.nu_cnpj = CMED.nu_cnpj` — retorna Fornecedor + lista de produtos CMED
+- feat: CMEDRepository.GetByCNPJ com normalização de CNPJ (remove não-dígitos antes do JOIN)
+- feat: AMPCMEDUsecase + SupplierCMEDUsecase com cache Redis e graceful degradation
+- feat: 23 novos testes unitários e de handler (105 total)
 
 **Arquivos novos:**
 
-- `cmd/import/main.go` — Entry point do CLI de importação
-- `internal/importer/converter.go` — Conversor MySQL→PostgreSQL (pacote reutilizável)
-- `internal/importer/source.go` — Resolvedor de fonte (ZIP/SQL/gzip/MySQL)
-- `internal/importer/pgimporter.go` — Importador PostgreSQL com streaming
-- `internal/importer/validator.go` — Validador pós-importação
-- `internal/importer/metadata.go` — Gerenciador de metadados (tabela `obm_metadata`)
-- `internal/importer/pipeline.go` — Orquestrador do pipeline de importação
-- `.specs/project/PROJECT.md` — Visão, objetivos, stack e arquitetura do projeto
-- `.specs/project/ROADMAP.md` — Roadmap de funcionalidades e milestones
-- `.specs/project/STATE.md` — Memória persistente (decisões, bloqueios, lições)
-- `docs/release-notes/v1.1.0.md` — Release notes desta versão
+- `internal/usecase/amp_cmed.go` — Usecase JOIN AMP+CMED com cache Redis
+- `internal/usecase/supplier_cmed.go` — Usecase JOIN Supplier+CMED com cache Redis
+- `internal/usecase/amp_cmed_test.go` — Testes usecase AMP-CMED
+- `internal/usecase/supplier_cmed_test.go` — Testes usecase Supplier-CMED
+- `internal/interface/http/handler/amp_cmed_handler.go` — Handler HTTP AMP+CMED
+- `internal/interface/http/handler/supplier_cmed_handler.go` — Handler HTTP Supplier+CMED
+- `internal/interface/http/handler/amp_cmed_handler_test.go` — Testes handler AMP+CMED
+- `internal/interface/http/handler/supplier_cmed_handler_test.go` — Testes handler Supplier+CMED
 
 **Arquivos modificados:**
 
-- `scripts/convert_sql.go` — Refatorado para invólucro fino do pacote `internal/importer`
-- `README.md` — Seção dedicada "CLI de Importação" + revisão ortográfica pt-BR
-- `.gitignore` — Adicionado binário `import`
+- `internal/domain/repository/interfaces.go` — Adicionados GetByRegistroSanitário e GetByCNPJ no CMEDRepository
+- `internal/infrastructure/persistence/postgres/cmed_repo.go` — Implementação GetByCNPJ com normalização de CNPJ
+- `internal/interface/http/router/router.go` — Adicionadas rotas `/amp/:id/cmed` e `/suppliers/:id/cmed`
+- `cmd/api/main.go` — Wiring de AMPCMEDUsecase, SupplierCMEDUsecase e handlers
+- `README.md` — Seções JOIN AMP+CMED, JOIN Fornecedor+CMED, Mecanismos de JOIN, exemplos 13-14, tabela de rotas atualizada
+
+### v1.3.0 (2026-05-25)
+
+**Status:** Released
+
+**Mudanças:**
+
+- feat: Integração CMED Conformidade de Preços — tabela `tb_cmed_conformidade` com versionamento por data de referência
+- feat: Endpoints CMED — listagem com filtros (nome, registro, EAN, tarja, tipo, regime), busca por ID, Registro Sanitário, EAN e histórico de preços
+- feat: JOIN AMPP+CMED com cache Redis (`GET /api/v1/ampp/:id/cmed`) — dados ontológicos + preço regulado em uma única chamada
+- feat: CLI de importação CMED (`cmd/cmed_import/`) — parse XLSX com `--header-row` configurável (default 42), UPSERT batch, invalidação de cache e reindexação Meilisearch
+- feat: Index Meilisearch `obm_cmed` — CMED incluído na busca global com filtros por tarja e registro sanitário
+- feat: Redis no Docker Compose com graceful degradation — API funciona sem Redis (sem cache)
+- feat: 32 testes unitários (CMED usecase, AMPP-CMED usecase, CMED handler)
+- feat: Documentação completa — seção CMED no README com exemplos, CLI de Importação CMED, variáveis Redis no .env
+- fix: Conversão `dt_referencia::text` no cmed_repo.go para compatibilidade pgx com tipo DATE do PostgreSQL
+- fix: Indentação YAML do docker-compose.yml (SYNC_ON_STARTUP, GIN_MODE, REDIS_HOST, restart)
+
+**Arquivos novos:**
+
+- `migrations/postgres/002_cmed_conformidade.sql` — DDL da tabela CMED
+- `internal/domain/entity/cmed.go` — Entidade CMEDConformidade
+- `internal/infrastructure/persistence/postgres/cmed_repo.go` — Repositório PostgreSQL CMED
+- `internal/infrastructure/persistence/redis/client.go` — Cliente Redis com cache
+- `internal/usecase/cmed.go` — Usecase CMED
+- `internal/usecase/ampp_cmed.go` — Usecase JOIN AMPP+CMED com cache
+- `internal/interface/http/handler/cmed_handler.go` — Handler HTTP CMED
+- `cmd/cmed_import/main.go` — CLI importação CMED
+- `internal/usecase/cmed_test.go` — Testes usecase CMED
+- `internal/usecase/ampp_cmed_test.go` — Testes usecase AMPP-CMED
+- `internal/interface/http/handler/cmed_handler_test.go` — Testes handler CMED
+- `.specs/features/cmed-conformidade/spec.md` — Spec com 23 requisitos rastreáveis
+- `.specs/features/cmed-conformidade/design.md` — Design arquitetural
+- `.specs/features/cmed-conformidade/tasks.md` — 17 tasks com validação cruzada
+
+**Arquivos modificados:**
+
+- `docker-compose.yml` — Adicionado serviço Redis, depends_on, variáveis de ambiente
+- `internal/infrastructure/config/config.go` — Adicionado RedisConfig
+- `.env.example` — Adicionadas variáveis REDIS_*
+- `go.mod` / `go.sum` — Adicionados go-redis/v9 e excelize/v2
+- `internal/domain/repository/interfaces.go` — Adicionados CMEDRepository, CMEDFilterParams, GetAllCMED
+- `internal/infrastructure/persistence/postgres/sync_repo.go` — Adicionado GetAllCMED
+- `internal/infrastructure/persistence/meilisearch/indexer.go` — Adicionado index cmed e IndexCMEDs
+- `internal/infrastructure/persistence/meilisearch/client.go` — Adicionado cmed como entidade default e mapeamento de hits
+- `internal/interface/http/dto/dto.go` — Adicionados DTOs CMED e filtros tarja/registro
+- `internal/interface/http/handler/search_handler.go` — Adicionados filter[tarja] e filter[registro]
+- `internal/interface/http/router/router.go` — Adicionadas rotas CMED e /ampp/:id/cmed
+- `cmd/api/main.go` — Wiring de CMEDRepo, CacheRepo, usecases e handler
+- `internal/usecase/reindex.go` — Adicionado step CMED ao reindex
+- `README.md` — Seções CMED Conformidade, CLI Importação CMED, exemplos 8-12, variáveis Redis, tabela de rotas atualizada
+- `.specs/project/ROADMAP.md` — Adicionada v1.3.0
+- `.specs/project/STATE.md` — Adicionadas decisões D10-D13
 
 ### v1.0.0 (2026-05-24)
 
@@ -120,5 +166,7 @@ Status: Released
 
 | Versão | Data | Descrição |
 |--------|------|-----------|
+| `v1.4.0` | 25/05/2026 | **feat: CMED Extended Joins** — Endpoints AMP+CMED e Supplier+CMED. Normalização de CNPJ. Cache Redis com graceful degradation. 23 testes. |
+| `v1.3.0` | 25/05/2026 | **feat: CMED Conformidade** — Integração preços regulados ANVISA. Endpoints CMED (list, ID, registro, EAN, histórico). JOIN AMPP+CMED com cache Redis. CLI importação XLSX. Index Meilisearch obm_cmed. Redis no Docker Compose. 32 testes. |
 | `v1.1.0` | 24/05/2026 | **feat: CLI de importação** — Pipeline completo de importação (ZIP/SQL/MySQL → PostgreSQL + Meilisearch). Conversor refatorado como pacote reutilizável. Validação pós-importação. Metadados. Revisão ortográfica pt-BR. |
 | `v1.0.0` | 24/05/2026 | **feat: Release inicial da API OBM** — API REST completa com endpoints para VMP, AMP, VTM, VMPP, AMPP, DCB, Ingredientes, Fornecedores e Domínios. Busca global Meilisearch. Autenticação JWT. Swagger UI. Postman. Docker Compose. Testes. Documentação de usuário. |

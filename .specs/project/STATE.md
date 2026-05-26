@@ -15,6 +15,9 @@
 - D11: Redis for cache with graceful degradation — app works without Redis (no cache, direct PG query)
 - D12: `nu_sanreg` (Registro Sanitário) is the join key between AMPP and CMED Conformidade
 - D13: CMED import CLI uses `--header-row` (default 42) for flexible XLSX header mapping
+- D14: `AMP.nu_nreg` is the join key between AMP and CMED — same ANVISA Registro Sanitário as `nu_sanreg`
+- D15: CNPJ normalization done in Go (strip non-digits) before SQL query — simpler, testable, no SQL function dependency
+- D16: Supplier+CMED returns list (1 CNPJ → N products); AMP+CMED returns single record (1 nu_nreg → 1 price per date)
 
 ## Blockers
 

@@ -16,10 +16,11 @@ import (
 )
 
 type mockCMEDRepoForHandler struct {
-	cmed      *entity.CMEDConformidade
-	page      *entity.CursorPage[entity.CMEDConformidade]
-	historico []entity.CMEDConformidade
-	err       error
+	cmed        *entity.CMEDConformidade
+	page        *entity.CursorPage[entity.CMEDConformidade]
+	historico   []entity.CMEDConformidade
+	cnpjResults []entity.CMEDConformidade
+	err         error
 }
 
 func (m *mockCMEDRepoForHandler) GetByID(ctx context.Context, id int64) (*entity.CMEDConformidade, error) {
@@ -32,6 +33,10 @@ func (m *mockCMEDRepoForHandler) GetByNuSanReg(ctx context.Context, nuSanReg int
 
 func (m *mockCMEDRepoForHandler) GetByEAN(ctx context.Context, ean string, dtReferencia string) (*entity.CMEDConformidade, error) {
 	return m.cmed, m.err
+}
+
+func (m *mockCMEDRepoForHandler) GetByCNPJ(ctx context.Context, cnpj string, dtReferencia string) ([]entity.CMEDConformidade, error) {
+	return m.cnpjResults, m.err
 }
 
 func (m *mockCMEDRepoForHandler) List(ctx context.Context, filter repository.CMEDFilterParams) (*entity.CursorPage[entity.CMEDConformidade], error) {
@@ -93,18 +98,29 @@ func (m *mockAMPRepoForCMEDHandler) List(ctx context.Context, filter repository.
 	return nil, nil
 }
 
-func newCMEDHandler(repos ...interface{}) *usecase.CMEDUsecase {
-	repo := &mockCMEDRepoForHandler{}
-	if len(repos) > 0 {
-		if r, ok := repos[0].(*mockCMEDRepoForHandler); ok {
-			repo = r
-		}
-	}
-	return usecase.NewCMEDUsecase(repo, nil)
+type mockSupplierRepoForHandler struct {
+	supplier interface{}
+	err      error
 }
 
-func newAMPPCMEDHandler(amppRepo repository.AMPPRepository, vmpRepo repository.VMPRepository, ampRepo repository.AMPRepository, cmedRepo repository.CMEDRepository) *usecase.AMPPCMEDUsecase {
-	return usecase.NewAMPPCMEDUsecase(amppRepo, vmpRepo, ampRepo, cmedRepo, nil)
+func (m *mockSupplierRepoForHandler) GetByID(ctx context.Context, id int64) (interface{}, error) {
+	return m.supplier, m.err
+}
+
+func (m *mockSupplierRepoForHandler) List(ctx context.Context, filter repository.FilterParams) (interface{}, error) {
+	return nil, nil
+}
+
+func newCMEDHandlerWithMocks(cmedRepo *mockCMEDRepoForHandler, amppRepo *mockAMPPRepoForHandler, ampRepo *mockAMPRepoForCMEDHandler, vmpRepo *mockVMPRepoForCMEDHandler, supplierRepo *mockSupplierRepoForHandler) *CMEDHandler {
+	uc := usecase.NewCMEDUsecase(cmedRepo, nil)
+	amppUC := usecase.NewAMPPCMEDUsecase(amppRepo, vmpRepo, ampRepo, cmedRepo, nil)
+	ampUC := usecase.NewAMPCMEDUsecase(ampRepo, vmpRepo, cmedRepo, nil)
+	supplierUC := usecase.NewSupplierCMEDUsecase(supplierRepo, cmedRepo, nil)
+	return NewCMEDHandler(uc, amppUC, ampUC, supplierUC)
+}
+
+func defaultMockRepos(cmedRepo *mockCMEDRepoForHandler) (*mockAMPPRepoForHandler, *mockAMPRepoForCMEDHandler, *mockVMPRepoForCMEDHandler, *mockSupplierRepoForHandler) {
+	return &mockAMPPRepoForHandler{}, &mockAMPRepoForCMEDHandler{}, &mockVMPRepoForCMEDHandler{}, &mockSupplierRepoForHandler{}
 }
 
 func TestCMEDHandler_List_Success(t *testing.T) {
@@ -112,13 +128,11 @@ func TestCMEDHandler_List_Success(t *testing.T) {
 	sanReg := int64(12345)
 	page := &entity.CursorPage[entity.CMEDConformidade]{
 		Items: []entity.CMEDConformidade{{COSeqID: 1, NUSanReg: &sanReg, NOProduto: strPtrHandler("Test")}},
-		Total: 1,
-		Limit: 20,
+		Total: 1, Limit: 20,
 	}
 	repo := &mockCMEDRepoForHandler{page: page}
-	uc := usecase.NewCMEDUsecase(repo, nil)
-	amppUC := newAMPPCMEDHandler(&mockAMPPRepoForHandler{}, &mockVMPRepoForCMEDHandler{}, &mockAMPRepoForCMEDHandler{}, repo)
-	handler := NewCMEDHandler(uc, amppUC)
+	ampp, amp, vmp, sup := defaultMockRepos(repo)
+	handler := newCMEDHandlerWithMocks(repo, ampp, amp, vmp, sup)
 
 	r := gin.New()
 	r.GET("/api/v1/cmed", handler.List)
@@ -133,11 +147,9 @@ func TestCMEDHandler_List_Success(t *testing.T) {
 func TestCMEDHandler_GetByID_Success(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	sanReg := int64(12345)
-	cmed := &entity.CMEDConformidade{COSeqID: 1, NUSanReg: &sanReg}
-	repo := &mockCMEDRepoForHandler{cmed: cmed}
-	uc := usecase.NewCMEDUsecase(repo, nil)
-	amppUC := newAMPPCMEDHandler(&mockAMPPRepoForHandler{}, &mockVMPRepoForCMEDHandler{}, &mockAMPRepoForCMEDHandler{}, repo)
-	handler := NewCMEDHandler(uc, amppUC)
+	repo := &mockCMEDRepoForHandler{cmed: &entity.CMEDConformidade{COSeqID: 1, NUSanReg: &sanReg}}
+	ampp, amp, vmp, sup := defaultMockRepos(repo)
+	handler := newCMEDHandlerWithMocks(repo, ampp, amp, vmp, sup)
 
 	r := gin.New()
 	r.GET("/api/v1/cmed/:id", handler.GetByID)
@@ -152,9 +164,8 @@ func TestCMEDHandler_GetByID_Success(t *testing.T) {
 func TestCMEDHandler_GetByID_NotFound(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	repo := &mockCMEDRepoForHandler{cmed: nil, err: fmt.Errorf("not found")}
-	uc := usecase.NewCMEDUsecase(repo, nil)
-	amppUC := newAMPPCMEDHandler(&mockAMPPRepoForHandler{}, &mockVMPRepoForCMEDHandler{}, &mockAMPRepoForCMEDHandler{}, &mockCMEDRepoForHandler{})
-	handler := NewCMEDHandler(uc, amppUC)
+	ampp, amp, vmp, sup := defaultMockRepos(repo)
+	handler := newCMEDHandlerWithMocks(repo, ampp, amp, vmp, sup)
 
 	r := gin.New()
 	r.GET("/api/v1/cmed/:id", handler.GetByID)
@@ -169,9 +180,8 @@ func TestCMEDHandler_GetByID_NotFound(t *testing.T) {
 func TestCMEDHandler_GetByID_InvalidID(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	repo := &mockCMEDRepoForHandler{}
-	uc := usecase.NewCMEDUsecase(repo, nil)
-	amppUC := newAMPPCMEDHandler(&mockAMPPRepoForHandler{}, &mockVMPRepoForCMEDHandler{}, &mockAMPRepoForCMEDHandler{}, repo)
-	handler := NewCMEDHandler(uc, amppUC)
+	ampp, amp, vmp, sup := defaultMockRepos(repo)
+	handler := newCMEDHandlerWithMocks(repo, ampp, amp, vmp, sup)
 
 	r := gin.New()
 	r.GET("/api/v1/cmed/:id", handler.GetByID)
@@ -186,11 +196,9 @@ func TestCMEDHandler_GetByID_InvalidID(t *testing.T) {
 func TestCMEDHandler_GetByRegistro_Success(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	sanReg := int64(12345)
-	cmed := &entity.CMEDConformidade{COSeqID: 1, NUSanReg: &sanReg}
-	repo := &mockCMEDRepoForHandler{cmed: cmed}
-	uc := usecase.NewCMEDUsecase(repo, nil)
-	amppUC := newAMPPCMEDHandler(&mockAMPPRepoForHandler{}, &mockVMPRepoForCMEDHandler{}, &mockAMPRepoForCMEDHandler{}, repo)
-	handler := NewCMEDHandler(uc, amppUC)
+	repo := &mockCMEDRepoForHandler{cmed: &entity.CMEDConformidade{COSeqID: 1, NUSanReg: &sanReg}}
+	ampp, amp, vmp, sup := defaultMockRepos(repo)
+	handler := newCMEDHandlerWithMocks(repo, ampp, amp, vmp, sup)
 
 	r := gin.New()
 	r.GET("/api/v1/cmed/registro/:registro", handler.GetByRegistro)
@@ -205,9 +213,8 @@ func TestCMEDHandler_GetByRegistro_Success(t *testing.T) {
 func TestCMEDHandler_GetByRegistro_InvalidID(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	repo := &mockCMEDRepoForHandler{}
-	uc := usecase.NewCMEDUsecase(repo, nil)
-	amppUC := newAMPPCMEDHandler(&mockAMPPRepoForHandler{}, &mockVMPRepoForCMEDHandler{}, &mockAMPRepoForCMEDHandler{}, repo)
-	handler := NewCMEDHandler(uc, amppUC)
+	ampp, amp, vmp, sup := defaultMockRepos(repo)
+	handler := newCMEDHandlerWithMocks(repo, ampp, amp, vmp, sup)
 
 	r := gin.New()
 	r.GET("/api/v1/cmed/registro/:registro", handler.GetByRegistro)
@@ -221,11 +228,9 @@ func TestCMEDHandler_GetByRegistro_InvalidID(t *testing.T) {
 
 func TestCMEDHandler_GetByEAN_Success(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	cmed := &entity.CMEDConformidade{COSeqID: 1, NUEAN1: strPtrHandler("789123")}
-	repo := &mockCMEDRepoForHandler{cmed: cmed}
-	uc := usecase.NewCMEDUsecase(repo, nil)
-	amppUC := newAMPPCMEDHandler(&mockAMPPRepoForHandler{}, &mockVMPRepoForCMEDHandler{}, &mockAMPRepoForCMEDHandler{}, repo)
-	handler := NewCMEDHandler(uc, amppUC)
+	repo := &mockCMEDRepoForHandler{cmed: &entity.CMEDConformidade{COSeqID: 1, NUEAN1: strPtrHandler("789123")}}
+	ampp, amp, vmp, sup := defaultMockRepos(repo)
+	handler := newCMEDHandlerWithMocks(repo, ampp, amp, vmp, sup)
 
 	r := gin.New()
 	r.GET("/api/v1/cmed/ean/:ean", handler.GetByEAN)
@@ -240,9 +245,8 @@ func TestCMEDHandler_GetByEAN_Success(t *testing.T) {
 func TestCMEDHandler_GetByEAN_NotFound(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	repo := &mockCMEDRepoForHandler{cmed: nil, err: nil}
-	uc := usecase.NewCMEDUsecase(repo, nil)
-	amppUC := newAMPPCMEDHandler(&mockAMPPRepoForHandler{}, &mockVMPRepoForCMEDHandler{}, &mockAMPRepoForCMEDHandler{}, repo)
-	handler := NewCMEDHandler(uc, amppUC)
+	ampp, amp, vmp, sup := defaultMockRepos(repo)
+	handler := newCMEDHandlerWithMocks(repo, ampp, amp, vmp, sup)
 
 	r := gin.New()
 	r.GET("/api/v1/cmed/ean/:ean", handler.GetByEAN)
@@ -257,15 +261,13 @@ func TestCMEDHandler_GetByEAN_NotFound(t *testing.T) {
 func TestCMEDHandler_GetHistorico_Success(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	sanReg := int64(12345)
-	cmed := &entity.CMEDConformidade{COSeqID: 1, NUSanReg: &sanReg}
 	historico := []entity.CMEDConformidade{
 		{COSeqID: 1, NUSanReg: &sanReg, DTReferencia: "2024-01-01"},
 		{COSeqID: 2, NUSanReg: &sanReg, DTReferencia: "2024-02-01"},
 	}
-	repo := &mockCMEDRepoForHandler{cmed: cmed, historico: historico}
-	uc := usecase.NewCMEDUsecase(repo, nil)
-	amppUC := newAMPPCMEDHandler(&mockAMPPRepoForHandler{}, &mockVMPRepoForCMEDHandler{}, &mockAMPRepoForCMEDHandler{}, repo)
-	handler := NewCMEDHandler(uc, amppUC)
+	repo := &mockCMEDRepoForHandler{historico: historico}
+	ampp, amp, vmp, sup := defaultMockRepos(repo)
+	handler := newCMEDHandlerWithMocks(repo, ampp, amp, vmp, sup)
 
 	r := gin.New()
 	r.GET("/api/v1/cmed/:id/historico", handler.GetHistorico)
@@ -280,9 +282,8 @@ func TestCMEDHandler_GetHistorico_Success(t *testing.T) {
 func TestCMEDHandler_GetHistorico_InvalidID(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	repo := &mockCMEDRepoForHandler{}
-	uc := usecase.NewCMEDUsecase(repo, nil)
-	amppUC := newAMPPCMEDHandler(&mockAMPPRepoForHandler{}, &mockVMPRepoForCMEDHandler{}, &mockAMPRepoForCMEDHandler{}, repo)
-	handler := NewCMEDHandler(uc, amppUC)
+	ampp, amp, vmp, sup := defaultMockRepos(repo)
+	handler := newCMEDHandlerWithMocks(repo, ampp, amp, vmp, sup)
 
 	r := gin.New()
 	r.GET("/api/v1/cmed/:id/historico", handler.GetHistorico)
@@ -297,20 +298,16 @@ func TestCMEDHandler_GetHistorico_InvalidID(t *testing.T) {
 func TestCMEDHandler_GetAMPPWithCMED_Success(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	sanReg := sql.NullInt64{Int64: 12345, Valid: true}
-	ampp := &entity.AMPP{COSeqID: 1, COApID: 10, NUSanReg: sanReg}
-	amp := &entity.AMP{COSeqID: 10, COVpID: 20}
-	vmp := &entity.VMP{COSeqID: 20, NONm: "Test VMP"}
+	amppEnt := &entity.AMPP{COSeqID: 1, COApID: 10, NUSanReg: sanReg}
+	ampEnt := &entity.AMP{COSeqID: 10, COVpID: 20}
+	vmpEnt := &entity.VMP{COSeqID: 20, NONm: "Test VMP"}
 	cmedSanReg := int64(12345)
-	cmed := &entity.CMEDConformidade{COSeqID: 100, NUSanReg: &cmedSanReg}
-
-	cmedRepo := &mockCMEDRepoForHandler{cmed: cmed}
-	amppRepo := &mockAMPPRepoForHandler{ampp: ampp}
-	ampRepo := &mockAMPRepoForCMEDHandler{amp: amp}
-	vmpRepo := &mockVMPRepoForCMEDHandler{vmp: vmp}
-
-	uc := usecase.NewCMEDUsecase(cmedRepo, nil)
-	amppUC := newAMPPCMEDHandler(amppRepo, vmpRepo, ampRepo, cmedRepo)
-	handler := NewCMEDHandler(uc, amppUC)
+	cmedRepo := &mockCMEDRepoForHandler{cmed: &entity.CMEDConformidade{COSeqID: 100, NUSanReg: &cmedSanReg}}
+	amppRepo := &mockAMPPRepoForHandler{ampp: amppEnt}
+	ampRepo := &mockAMPRepoForCMEDHandler{amp: ampEnt}
+	vmpRepo := &mockVMPRepoForCMEDHandler{vmp: vmpEnt}
+	supRepo := &mockSupplierRepoForHandler{}
+	handler := newCMEDHandlerWithMocks(cmedRepo, amppRepo, ampRepo, vmpRepo, supRepo)
 
 	r := gin.New()
 	r.GET("/api/v1/cmed/ampp/:id", handler.GetAMPPWithCMED)
@@ -322,6 +319,117 @@ func TestCMEDHandler_GetAMPPWithCMED_Success(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 }
 
-func strPtrHandler(s string) *string {
-	return &s
+func TestCMEDHandler_GetAMPWithCMED_Success(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	nuNReg := sql.NullInt64{Int64: 12345, Valid: true}
+	ampEnt := &entity.AMP{COSeqID: 10, COVpID: 20, NUNReg: nuNReg}
+	vmpEnt := &entity.VMP{COSeqID: 20, NONm: "Test VMP"}
+	cmedSanReg := int64(12345)
+	cmedRepo := &mockCMEDRepoForHandler{cmed: &entity.CMEDConformidade{COSeqID: 100, NUSanReg: &cmedSanReg}}
+	amppRepo := &mockAMPPRepoForHandler{}
+	ampRepo := &mockAMPRepoForCMEDHandler{amp: ampEnt}
+	vmpRepo := &mockVMPRepoForCMEDHandler{vmp: vmpEnt}
+	supRepo := &mockSupplierRepoForHandler{}
+	handler := newCMEDHandlerWithMocks(cmedRepo, amppRepo, ampRepo, vmpRepo, supRepo)
+
+	r := gin.New()
+	r.GET("/api/v1/amp/:id/cmed", handler.GetAMPWithCMED)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/api/v1/amp/10/cmed", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
 }
+
+func TestCMEDHandler_GetAMPWithCMED_NotFound(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	cmedRepo := &mockCMEDRepoForHandler{}
+	ampRepo := &mockAMPRepoForCMEDHandler{err: fmt.Errorf("not found")}
+	amppRepo := &mockAMPPRepoForHandler{}
+	vmpRepo := &mockVMPRepoForCMEDHandler{}
+	supRepo := &mockSupplierRepoForHandler{}
+	handler := newCMEDHandlerWithMocks(cmedRepo, amppRepo, ampRepo, vmpRepo, supRepo)
+
+	r := gin.New()
+	r.GET("/api/v1/amp/:id/cmed", handler.GetAMPWithCMED)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/api/v1/amp/999/cmed", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusNotFound, w.Code)
+}
+
+func TestCMEDHandler_GetAMPWithCMED_InvalidID(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	cmedRepo := &mockCMEDRepoForHandler{}
+	ampp, amp, vmp, sup := defaultMockRepos(cmedRepo)
+	handler := newCMEDHandlerWithMocks(cmedRepo, ampp, amp, vmp, sup)
+
+	r := gin.New()
+	r.GET("/api/v1/amp/:id/cmed", handler.GetAMPWithCMED)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/api/v1/amp/abc/cmed", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+}
+
+func TestCMEDHandler_GetSupplierWithCMED_Success(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	supplier := &entity.Supplier{COSeqID: 5, NODescr: "Test Lab", NUCnpj: sql.NullString{String: "12345678000100", Valid: true}}
+	cmedRepo := &mockCMEDRepoForHandler{cnpjResults: []entity.CMEDConformidade{{COSeqID: 100}}}
+	amppRepo := &mockAMPPRepoForHandler{}
+	ampRepo := &mockAMPRepoForCMEDHandler{}
+	vmpRepo := &mockVMPRepoForCMEDHandler{}
+	supRepo := &mockSupplierRepoForHandler{supplier: supplier}
+	handler := newCMEDHandlerWithMocks(cmedRepo, amppRepo, ampRepo, vmpRepo, supRepo)
+
+	r := gin.New()
+	r.GET("/api/v1/suppliers/:id/cmed", handler.GetSupplierWithCMED)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/api/v1/suppliers/5/cmed", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+}
+
+func TestCMEDHandler_GetSupplierWithCMED_NotFound(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	cmedRepo := &mockCMEDRepoForHandler{}
+	supRepo := &mockSupplierRepoForHandler{err: fmt.Errorf("not found")}
+	amppRepo := &mockAMPPRepoForHandler{}
+	ampRepo := &mockAMPRepoForCMEDHandler{}
+	vmpRepo := &mockVMPRepoForCMEDHandler{}
+	handler := newCMEDHandlerWithMocks(cmedRepo, amppRepo, ampRepo, vmpRepo, supRepo)
+
+	r := gin.New()
+	r.GET("/api/v1/suppliers/:id/cmed", handler.GetSupplierWithCMED)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/api/v1/suppliers/999/cmed", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusNotFound, w.Code)
+}
+
+func TestCMEDHandler_GetSupplierWithCMED_InvalidID(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	cmedRepo := &mockCMEDRepoForHandler{}
+	ampp, amp, vmp, sup := defaultMockRepos(cmedRepo)
+	handler := newCMEDHandlerWithMocks(cmedRepo, ampp, amp, vmp, sup)
+
+	r := gin.New()
+	r.GET("/api/v1/suppliers/:id/cmed", handler.GetSupplierWithCMED)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/api/v1/suppliers/abc/cmed", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+}
+
+func strPtrHandler(s string) *string { return &s }

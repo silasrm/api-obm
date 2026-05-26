@@ -84,6 +84,7 @@ type CMEDRepository interface {
 	GetByID(ctx context.Context, id int64) (*entity.CMEDConformidade, error)
 	GetByNuSanReg(ctx context.Context, nuSanReg int64, dtReferencia string) (*entity.CMEDConformidade, error)
 	GetByEAN(ctx context.Context, ean string, dtReferencia string) (*entity.CMEDConformidade, error)
+	GetByCNPJ(ctx context.Context, cnpj string, dtReferencia string) ([]entity.CMEDConformidade, error)
 	List(ctx context.Context, filter CMEDFilterParams) (*entity.CursorPage[entity.CMEDConformidade], error)
 	GetHistorico(ctx context.Context, nuSanReg int64) ([]entity.CMEDConformidade, error)
 	UpsertBatch(ctx context.Context, records []entity.CMEDConformidade) (int64, error)

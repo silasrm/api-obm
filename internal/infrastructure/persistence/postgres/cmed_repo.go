@@ -123,6 +123,28 @@ func (r *CMEDRepo) GetByEAN(ctx context.Context, ean string, dtReferencia string
 	return c, nil
 }
 
+func (r *CMEDRepo) GetByCNPJ(ctx context.Context, cnpj string, dtReferencia string) ([]entity.CMEDConformidade, error) {
+	normalized := repository.NormalizeCNPJ(cnpj)
+	if normalized == "" {
+		return nil, nil
+	}
+	var query string
+	var args []interface{}
+	if dtReferencia != "" {
+		query = fmt.Sprintf("SELECT %s FROM tb_cmed_conformidade WHERE REGEXP_REPLACE(nu_cnpj, '[^0-9]', '', 'g') = $1 AND dt_referencia = $2 AND st_registro_ativo = 'ACTIVE' ORDER BY no_produto", cmedColumns)
+		args = []interface{}{normalized, dtReferencia}
+	} else {
+		query = fmt.Sprintf("SELECT %s FROM tb_cmed_conformidade c1 WHERE REGEXP_REPLACE(nu_cnpj, '[^0-9]', '', 'g') = $1 AND st_registro_ativo = 'ACTIVE' AND dt_referencia = (SELECT MAX(dt_referencia) FROM tb_cmed_conformidade c2 WHERE c2.nu_sanreg = c1.nu_sanreg) ORDER BY no_produto", cmedColumns)
+		args = []interface{}{normalized}
+	}
+	rows, err := r.pool.Query(ctx, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("query cmed by cnpj: %w", err)
+	}
+	defer rows.Close()
+	return scanCMEDRows(rows)
+}
+
 func (r *CMEDRepo) List(ctx context.Context, filter repository.CMEDFilterParams) (*entity.CursorPage[entity.CMEDConformidade], error) {
 	limit := filter.Limit
 	if limit <= 0 || limit > 100 {

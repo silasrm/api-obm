@@ -77,6 +77,10 @@ func (m *mockCMEDRepoForAMPP) GetByEAN(ctx context.Context, ean string, dtRefere
 	return nil, nil
 }
 
+func (m *mockCMEDRepoForAMPP) GetByCNPJ(ctx context.Context, cnpj string, dtReferencia string) ([]entity.CMEDConformidade, error) {
+	return nil, nil
+}
+
 func (m *mockCMEDRepoForAMPP) List(ctx context.Context, filter repository.CMEDFilterParams) (*entity.CursorPage[entity.CMEDConformidade], error) {
 	return nil, nil
 }

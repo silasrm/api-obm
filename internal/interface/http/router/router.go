@@ -42,6 +42,7 @@ func SetupRouter(
 		api.GET("/amp", ampHandler.List)
 		api.GET("/amp/:id", ampHandler.GetByID)
 		api.GET("/amp/:id/detail", ampHandler.GetDetail)
+		api.GET("/amp/:id/cmed", cmedHandler.GetAMPWithCMED)
 
 		api.GET("/vtm", genericHandler.ListVTM)
 		api.GET("/vtm/:id", genericHandler.GetVTM)
@@ -55,6 +56,7 @@ func SetupRouter(
 
 		api.GET("/suppliers", supplierHandler.List)
 		api.GET("/suppliers/:id", supplierHandler.GetByID)
+		api.GET("/suppliers/:id/cmed", cmedHandler.GetSupplierWithCMED)
 
 		api.GET("/dcb", genericHandler.ListDCB)
 		api.GET("/dcb/:id", genericHandler.GetDCB)
